@@ -1,18 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:background="@color/app_background"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/padding_16"
+    android:paddingTop="14dp"
+    android:paddingBottom="@dimen/padding_16">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_gravity="start"
+        android:text="@string/app_name"
+        android:textColor="@color/white"
+        android:textSize="@dimen/primary_text_size"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:typeface="sans"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/zero"
+        android:layout_marginTop="40dp"
+        android:layout_weight="1"
+        android:text="@string/bot_find"
+        android:textSize="@dimen/primary_text_size"
+        android:gravity="center"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/black"
+        app:cornerRadius="16dp"
+        app:icon="@drawable/find"
+        app:iconGravity="textStart"
+        app:iconPadding="@dimen/icon_indentation"
+        app:iconTint="@color/black"
+        android:textAllCaps="false"/>
+
+    <Button
+        android:typeface="sans"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/zero"
+        android:layout_marginVertical="@dimen/padding_16"
+        android:layout_weight="1"
+        android:text="@string/bot_media"
+        android:textSize="@dimen/primary_text_size"
+        android:gravity="center"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/black"
+        app:cornerRadius="@dimen/padding_16"
+        app:icon="@drawable/media"
+        app:iconGravity="textStart"
+        app:iconPadding="@dimen/icon_indentation"
+        app:iconTint="@color/black"
+        android:textAllCaps="false"/>
+
+    <Button
+        android:typeface="sans"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/zero"
+        android:layout_weight="1"
+        android:layout_marginBottom="28dp"
+        android:text="@string/bot_settings"
+        android:textSize="@dimen/primary_text_size"
+        android:gravity="center"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/black"
+        app:cornerRadius="@dimen/padding_16"
+        app:icon="@drawable/seting"
+        app:iconGravity="textStart"
+        app:iconPadding="@dimen/icon_indentation"
+        app:iconTint="@color/black"
+        android:textAllCaps="false"/>
+
+</LinearLayout>

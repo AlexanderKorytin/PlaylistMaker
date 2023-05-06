@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/set_background"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/zero"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/padding_20"
+            android:paddingTop="@dimen/padding_20"
+            android:src="@drawable/back"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="28dp"
+            android:layout_marginTop="14dp"
+            android:text="@string/bot_settings"
+            android:textSize="@dimen/primary_text_size" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/zero"
+        android:layout_weight="2"
+        android:orientation="vertical">
+
+        <Switch
+            android:fontFamily="sans-serif"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/zero"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/padding_16"
+            android:textSize="@dimen/set_text_size"
+            android:text="@string/dark_theme"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+        <Button
+            android:typeface="sans"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/zero"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/padding_16"
+            android:text="@string/share_app"
+            android:gravity="start"
+            android:textSize="@dimen/set_text_size"
+            android:backgroundTint="@color/set_background"
+            android:textColor="@color/black"
+            app:icon="@drawable/share"
+            app:iconGravity="end"
+            app:iconTint="#AEAFB4"
+            android:textAllCaps="false"/>
+
+        <Button
+            android:typeface="sans"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/zero"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/padding_16"
+            android:text="@string/write_support"
+            android:gravity="start"
+            android:textSize="@dimen/set_text_size"
+            android:backgroundTint="@color/set_background"
+            android:textColor="@color/black"
+            app:icon="@drawable/light_mode"
+            app:iconGravity="end"
+            app:iconTint="#AEAFB4"
+            android:textAllCaps="false"/>
+
+        <Button
+            android:typeface="sans"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/zero"
+            android:layout_weight="1"
+            android:backgroundTint="@color/set_background"
+            android:gravity="start"
+            android:paddingLeft="@dimen/padding_16"
+            android:text="@string/user_agreement"
+            android:textColor="@color/black"
+            android:textSize="@dimen/set_text_size"
+            app:icon="@drawable/nextpage"
+            app:iconGravity="end"
+            app:iconTint="#AEAFB4"
+            android:textAllCaps="false"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/zero"
+        android:layout_weight="3">
+
+    </LinearLayout>
+
+</LinearLayout>
+
