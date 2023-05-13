@@ -12,8 +12,8 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        val back = findViewById<ImageView>(R.id.backSetting)
-        back.setOnClickListener{
+        val back = findViewById<LinearLayout>(R.id.backSetting)
+        back.setOnClickListener {
             val backIntent = Intent(this, MainActivity::class.java)
             startActivity(backIntent)
         }

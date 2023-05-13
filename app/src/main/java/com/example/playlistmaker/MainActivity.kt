@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
         val findIntent = Intent(this, FindActivity::class.java)
         val buttonFindOnClickListener = object : View.OnClickListener {
             override fun onClick(p0: View?) {
-                  startActivity(findIntent)
+                startActivity(findIntent)
             }
         }
 
@@ -28,13 +28,13 @@ class MainActivity : AppCompatActivity() {
         buttonMedia.setOnClickListener {
             val mediaIntent = Intent(this, MediaActivity::class.java)
             startActivity(mediaIntent)
-           // Toast.makeText(this@MainActivity, "Нажали кнопку Медиатека!", Toast.LENGTH_SHORT).show()
+            // Toast.makeText(this@MainActivity, "Нажали кнопку Медиатека!", Toast.LENGTH_SHORT).show()
         }
 
         buttonSettings.setOnClickListener {
             val settinsIntent = Intent(this, SettingsActivity::class.java)
             startActivity(settinsIntent)
-           // Toast.makeText(this@MainActivity, "Нажали кнопку Настройки!", Toast.LENGTH_SHORT).show()
+            // Toast.makeText(this@MainActivity, "Нажали кнопку Настройки!", Toast.LENGTH_SHORT).show()
         }
 
     }
