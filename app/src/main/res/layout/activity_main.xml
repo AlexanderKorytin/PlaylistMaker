@@ -71,7 +71,7 @@
         android:textSize="@dimen/primary_text_size"
         android:typeface="sans"
         app:cornerRadius="@dimen/padding_16"
-        app:icon="@drawable/seting"
+        app:icon="@drawable/setting"
         app:iconGravity="textStart"
         app:iconPadding="@dimen/icon_indentation"
         app:iconTint="@color/black" />
