@@ -45,6 +45,7 @@
 
     <TextView
         android:layout_width="match_parent"
+        android:foreground="?selectableItemBackground"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/set_background"
         android:paddingVertical="21dp"
@@ -58,6 +59,7 @@
 
     <TextView
         android:layout_width="match_parent"
+        android:foreground="?selectableItemBackground"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/set_background"
         android:paddingVertical="21dp"
@@ -71,6 +73,7 @@
 
     <TextView
         android:layout_width="match_parent"
+        android:foreground="?selectableItemBackground"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/set_background"
         android:paddingVertical="21dp"

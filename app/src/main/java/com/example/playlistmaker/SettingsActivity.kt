@@ -16,6 +16,5 @@ class SettingsActivity : AppCompatActivity() {
         back.setOnClickListener {
             finish()
         }
-
     }
 }
