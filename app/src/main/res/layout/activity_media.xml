@@ -29,6 +29,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="14dp"
             android:layout_marginBottom="@dimen/padding_16"
+            android:textColor="@color/black"
             android:text="@string/bot_media"
             android:textSize="@dimen/primary_text_size" />
     </LinearLayout>

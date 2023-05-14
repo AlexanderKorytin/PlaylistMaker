@@ -4,6 +4,8 @@
     <dimen name="set_text_size">16sp</dimen>
     <dimen name="icon_indentation">8dp</dimen>
     <dimen name="padding_16">16dp</dimen>
+    <dimen name="padding_12">12dp</dimen>
+    <dimen name="padding_21">21dp</dimen>
     <dimen name="padding_20">20dp</dimen>
     <dimen name="zero">0dp</dimen>
 </resources>
