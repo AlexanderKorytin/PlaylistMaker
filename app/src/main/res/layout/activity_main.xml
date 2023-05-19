@@ -1,79 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/app_background"
-    android:orientation="vertical"
+    style="@style/LinearLayoutStyle"
     android:paddingHorizontal="@dimen/padding_16"
     android:paddingTop="14dp"
-    android:paddingBottom="28dp">
+    android:paddingBottom="@dimen/padding_12">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/TextViewStyle"
         android:layout_gravity="start"
         android:text="@string/app_name"
-        android:textColor="@color/white"
-        android:textSize="@dimen/primary_text_size" />
+        android:layout_marginBottom="40dp"/>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/find"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/zero"
-        android:layout_marginTop="40dp"
-        android:layout_weight="1"
-        android:backgroundTint="@color/white"
-        android:foreground="?selectableItemBackground"
-        android:gravity="center"
+        style="@style/MainButtonStyle"
         android:text="@string/bot_find"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:textSize="@dimen/primary_text_size"
-        android:typeface="sans"
-        app:cornerRadius="16dp"
-        app:icon="@drawable/find"
-        app:iconGravity="textStart"
-        app:iconPadding="@dimen/icon_indentation"
-        app:iconTint="@color/black" />
+        app:icon="@drawable/find" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/media"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/zero"
-        android:layout_marginVertical="@dimen/padding_16"
-        android:layout_weight="1"
-        android:backgroundTint="@color/white"
-        android:foreground="?selectableItemBackground"
-        android:gravity="center"
+        style="@style/MainButtonStyle"
         android:text="@string/bot_media"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:textSize="@dimen/primary_text_size"
-        android:typeface="sans"
-        app:cornerRadius="@dimen/padding_16"
-        app:icon="@drawable/media"
-        app:iconGravity="textStart"
-        app:iconPadding="@dimen/icon_indentation"
-        app:iconTint="@color/black" />
+        app:icon="@drawable/media" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/settings"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/zero"
-        android:layout_weight="1"
-        android:backgroundTint="@color/white"
-        android:foreground="?selectableItemBackground"
-        android:gravity="center"
+        style="@style/MainButtonStyle"
         android:text="@string/bot_settings"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:textSize="@dimen/primary_text_size"
-        android:typeface="sans"
-        app:cornerRadius="@dimen/padding_16"
-        app:icon="@drawable/setting"
-        app:iconGravity="textStart"
-        app:iconPadding="@dimen/icon_indentation"
-        app:iconTint="@color/black" />
+        app:icon="@drawable/setting" />
 
 </LinearLayout>
