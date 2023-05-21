@@ -44,16 +44,19 @@
         tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <TextView
+        android:id="@+id/shareApp"
         style="@style/SettingsTextViewStile"
         android:text="@string/share_app"
         app:drawableEndCompat="@drawable/share" />
 
     <TextView
+        android:id="@+id/writeToSupport"
         style="@style/SettingsTextViewStile"
         android:text="@string/write_support"
         app:drawableEndCompat="@drawable/support" />
 
     <TextView
+        android:id="@+id/userAgreement"
         style="@style/SettingsTextViewStile"
         android:text="@string/user_agreement"
         app:drawableEndCompat="@drawable/nextpage" />
