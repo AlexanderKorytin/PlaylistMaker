@@ -4,12 +4,15 @@
     <style name="Theme.SettingsActivity" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/app_background_night</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimaryVariant">@color/app_background_night</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/app_background_night</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorSecondaryVariant">@color/white</item>
         <item name="colorOnSecondary">@color/white</item>
+        <item name="thumbTint">@color/switchSettingsColor_night</item>
+        <item name="trackTint">@color/switchSettingsColorVariant_night</item>
+        <item name="android:checked">true</item>
     </style>
 
 </resources>
