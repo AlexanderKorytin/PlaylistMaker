@@ -11,5 +11,6 @@
     <string name="mail_support_massege" translatable="true">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="user_agreement_uri" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
     <string name="share_app_text" translatable="false">https://practicum.yandex.ru/profile/android-developer/</string>
+    <string name="my_email_adress" translatable="false">koritin@list.ru</string>
 
 </resources>
