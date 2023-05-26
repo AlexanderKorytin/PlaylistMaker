@@ -28,7 +28,7 @@ class SettingsActivity : AppCompatActivity() {
             finish()
         }
 
-       nightTheme.setOnCheckedChangeListener { _, checkedId ->
+        nightTheme.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 true -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
@@ -47,14 +47,21 @@ class SettingsActivity : AppCompatActivity() {
             val message = getString(R.string.mail_support_massege)
             val writeSupportIntent = Intent(Intent.ACTION_SENDTO)
             writeSupportIntent.data = Uri.parse("mailto:")
-            writeSupportIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.my_email_adress)))
-            writeSupportIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.mail_support_subject))
+            writeSupportIntent.putExtra(
+                Intent.EXTRA_EMAIL,
+                arrayOf(getString(R.string.my_email_adress))
+            )
+            writeSupportIntent.putExtra(
+                Intent.EXTRA_SUBJECT,
+                getString(R.string.mail_support_subject)
+            )
             writeSupportIntent.putExtra(Intent.EXTRA_TEXT, message)
             startActivity(writeSupportIntent)
         }
 
-        userAgreement.setOnClickListener{
-            val userAgreementIntent = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.user_agreement_uri)))
+        userAgreement.setOnClickListener {
+            val userAgreementIntent =
+                Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.user_agreement_uri)))
             startActivity(userAgreementIntent)
         }
 
