@@ -20,6 +20,14 @@
         <item name="iconTint">?attr/colorOnSecondary</item>
     </style>
 
+    <style name="Track_ViewTextStyle" >
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+    </style>
+
     <style name="SettingsTextViewSwitchStile">
         <item name="android:layout_width">match_parent</item>
         <item name="android:foreground">?selectableItemBackground</item>
