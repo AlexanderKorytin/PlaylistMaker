@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 
 class FindActivity : AppCompatActivity() {
     companion object {
-        const val SEARCH_QUERY = "SEARCH_QUERY"
-        var text_Search = ""
+        private const val SEARCH_QUERY = "SEARCH_QUERY"
+        private var textSearch = ""
         val trackList: ArrayList<Track> = arrayListOf(
             Track(
                 "Smells Like Teen Spirit",
@@ -51,14 +51,14 @@ class FindActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(SEARCH_QUERY, text_Search)
+        outState.putString(SEARCH_QUERY, textSearch)
     }
 
     override fun onRestoreInstanceState(
         savedInstanceState: Bundle
     ) {
         super.onRestoreInstanceState(savedInstanceState)
-        text_Search = savedInstanceState.getString(SEARCH_QUERY, "")
+        textSearch = savedInstanceState.getString(SEARCH_QUERY, "")
     }
 
     @SuppressLint("MissingInflatedId")
@@ -74,7 +74,7 @@ class FindActivity : AppCompatActivity() {
         trackRecyclerView.layoutManager = LinearLayoutManager(this)
         trackRecyclerView.adapter = FindAdapter(trackList)
 
-        searchEditText.setText(text_Search)
+        searchEditText.setText(textSearch)
 
         clearButton.setOnClickListener {
             searchEditText.setText("")
@@ -90,7 +90,7 @@ class FindActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                text_Search = searchEditText.text.toString()
+                textSearch = searchEditText.text.toString()
                 clearButton.visibility = clearButtonVisibility(s)
             }
 

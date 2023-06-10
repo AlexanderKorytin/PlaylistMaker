@@ -11,10 +11,7 @@ class FindAdapter(val listTrack: ArrayList<Track>) : RecyclerView.Adapter<FindVi
         return FindViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return trackList.size
-    }
-
+    override fun getItemCount() = trackList.size
 
     override fun onBindViewHolder(holder: FindViewHolder, position: Int) {
         holder.bind(listTrack[position])
