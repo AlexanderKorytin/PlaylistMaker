@@ -15,8 +15,7 @@
         android:layout_marginVertical="@dimen/padding_8"
         android:layout_marginStart="13dp"
         android:background="@drawable/rounded_track_icon"
-        android:backgroundTint="?attr/colorPrimaryVariant"
-        app:tint="@color/icon_settings" />
+        android:backgroundTint="?attr/colorPrimaryVariant" />
 
     <LinearLayout
         android:layout_width="@dimen/zero"
