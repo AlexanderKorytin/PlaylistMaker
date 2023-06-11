@@ -1,13 +1,13 @@
 package com.example.playlistmaker
 
+import android.content.Context
+import android.util.TypedValue
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import java.util.zip.Inflater
 
 class FindViewHolder(private val parentView: View) : RecyclerView.ViewHolder(parentView) {
 
@@ -15,7 +15,7 @@ class FindViewHolder(private val parentView: View) : RecyclerView.ViewHolder(par
     private val trackName: TextView = parentView.findViewById(R.id.trackName)
     private val artistName: TextView = parentView.findViewById(R.id.artistName)
     private val trackTime: TextView = parentView.findViewById(R.id.trackTime)
-    private val radiusIconTrack = 2
+    private val radiusIconTrack = dpToPx(2f, parentView.context)
 
     fun bind(track: Track) {
         trackName.text = track.trackName
@@ -28,5 +28,11 @@ class FindViewHolder(private val parentView: View) : RecyclerView.ViewHolder(par
             .centerCrop()
             .transform(RoundedCorners(radiusIconTrack))
             .into(trackIcon)
+    }
+    private fun dpToPx(dp: Float, context: Context): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp,
+            context.resources.displayMetrics).toInt()
     }
 }
