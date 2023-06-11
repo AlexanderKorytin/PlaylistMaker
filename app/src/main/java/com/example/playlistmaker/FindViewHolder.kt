@@ -15,7 +15,8 @@ class FindViewHolder(private val parentView: View) : RecyclerView.ViewHolder(par
     private val trackName: TextView = parentView.findViewById(R.id.trackName)
     private val artistName: TextView = parentView.findViewById(R.id.artistName)
     private val trackTime: TextView = parentView.findViewById(R.id.trackTime)
-    private val radiusIconTrack = dpToPx(2f, parentView.context)
+    private val radiusIconTrackDp = 2.0f
+    private val radiusIconTrackPx = dpToPx(radiusIconTrackDp, parentView.context)
 
     fun bind(track: Track) {
         trackName.text = track.trackName
@@ -26,7 +27,7 @@ class FindViewHolder(private val parentView: View) : RecyclerView.ViewHolder(par
             .load(track.artworkUrl100)
             .placeholder(R.drawable.placeholdersnake)
             .centerCrop()
-            .transform(RoundedCorners(radiusIconTrack))
+            .transform(RoundedCorners(radiusIconTrackPx))
             .into(trackIcon)
     }
     private fun dpToPx(dp: Float, context: Context): Int {
