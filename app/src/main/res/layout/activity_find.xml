@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/LinearLayoutStyle">
+   style="@style/LinearLayoutStyle">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,10 +25,10 @@
 
     <EditText
         android:id="@+id/menuFind_SearchEditText"
-        android:saveEnabled="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/padding_16"
+        android:layout_marginVertical="@dimen/padding_8"
         android:paddingHorizontal="13dp"
         android:paddingVertical="8.5dp"
         android:background="@drawable/rounded_edittext"
@@ -57,5 +57,10 @@
             android:visibility="gone" />
 
     </RelativeLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tracksList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/padding_16"/>
 
 </LinearLayout>
