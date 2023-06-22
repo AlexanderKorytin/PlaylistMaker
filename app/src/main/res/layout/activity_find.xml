@@ -75,18 +75,19 @@
             android:id="@+id/placeholder_find_view_group"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
             android:orientation="vertical"
             android:visibility="gone">
 
             <ImageView
                 android:id="@+id/placeholder_find_tint"
-                android:paddingTop="102dp"
+                android:layout_marginTop="102dp"
                 android:layout_width="@dimen/padding_120"
-                android:layout_height="@dimen/padding_120"/>
+                android:layout_height="@dimen/padding_120"
+                android:scaleType="centerCrop"
+                android:layout_gravity="center"/>
 
             <TextView
-                android:id="@+id/placeholder_text"
+                android:id="@+id/placeholder_find_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/padding_24"

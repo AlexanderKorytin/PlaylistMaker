@@ -9,6 +9,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class FindViewHolder(private val parentView: View) : RecyclerView.ViewHolder(parentView) {
 
@@ -22,7 +24,7 @@ class FindViewHolder(private val parentView: View) : RecyclerView.ViewHolder(par
     fun bind(track: Track) {
         trackName.text = track.trackName
         artistName.text = track.artistName
-        trackTime.text = track.trackTimeMillis
+        trackTime.text = track.getTrackTime()
         Glide
             .with(parentView.context)
             .load(track.artworkUrl100)
