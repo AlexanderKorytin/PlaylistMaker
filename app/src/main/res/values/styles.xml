@@ -81,5 +81,4 @@
         <item name="android:layout_marginTop">14dp</item>
         <item name="android:layout_marginBottom">@dimen/padding_16</item>
     </style>
-
 </resources>

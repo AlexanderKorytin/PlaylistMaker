@@ -2,6 +2,7 @@ package com.example.playlistmaker
 
 import android.content.Context
 import android.util.TypedValue
+import android.util.TypedValue.COMPLEX_UNIT_DIP
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -21,7 +22,7 @@ class FindViewHolder(private val parentView: View) : RecyclerView.ViewHolder(par
     fun bind(track: Track) {
         trackName.text = track.trackName
         artistName.text = track.artistName
-        trackTime.text = track.trackTime
+        trackTime.text = track.trackTimeMillis
         Glide
             .with(parentView.context)
             .load(track.artworkUrl100)
@@ -32,8 +33,8 @@ class FindViewHolder(private val parentView: View) : RecyclerView.ViewHolder(par
     }
     private fun dpToPx(dp: Float, context: Context): Int {
         return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            dp,
+            COMPLEX_UNIT_DIP,
+            dp+0.5f,
             context.resources.displayMetrics).toInt()
     }
 }

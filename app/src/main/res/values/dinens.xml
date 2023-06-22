@@ -11,4 +11,8 @@
     <dimen name="zero">0dp</dimen>
     <dimen name="roundIconTrack">2dp</dimen>
     <dimen name="TrackIconSize">45dp</dimen>
+    <dimen name="padding_6">6dp</dimen>
+    <dimen name="padding_120">120dp</dimen>
+    <dimen name="padding_24">24dp</dimen>
+    <dimen name="padding_4">4dp</dimen>
 </resources>

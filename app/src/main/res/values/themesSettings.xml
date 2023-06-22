@@ -12,6 +12,7 @@
         <item name="colorOnSecondary">@color/icon_settings</item>
         <item name="thumbTint">@color/switchSettingsColor</item>
         <item name="trackTint">@color/switchSettingsColorVariant</item>
+        <item name="android:textColor">@color/app_background_night</item>
     </style>
 
 </resources>

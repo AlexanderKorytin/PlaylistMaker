@@ -12,5 +12,7 @@
     <string name="user_agreement_uri" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
     <string name="share_app_text" translatable="false">https://practicum.yandex.ru/profile/android-developer/</string>
     <string name="my_email_adress" translatable="false">koritin@list.ru</string>
-
+    <string name="placeholder_nothing_found_text" translatable="false">Ничего не нашлось</string>
+    <string name="placeholder_communication_problems_text" translatable="true">Проблемы со связью\n\nЗагрузка не удалась. Проверьте\nnподключение к интернету</string>
+    <string name="update" translatable="true">Обновить</string>
 </resources>

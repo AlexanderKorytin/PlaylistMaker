@@ -48,7 +48,7 @@ class FindActivity : AppCompatActivity() {
             )
         )
     }
-
+//---------------------------------------------------
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(SEARCH_QUERY, textSearch)
@@ -60,30 +60,30 @@ class FindActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         textSearch = savedInstanceState.getString(SEARCH_QUERY, "")
     }
-
+//---------------------------------------------------
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_find)
-
+//---------------------------------------------------
         val back = findViewById<ImageView>(R.id.backFind)
         val searchEditText = findViewById<EditText>(R.id.menuFind_SearchEditText)
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
-
+//---------------------------------------------------
         val trackRecyclerView = findViewById<RecyclerView>(R.id.tracksList)
         trackRecyclerView.layoutManager = LinearLayoutManager(this)
         trackRecyclerView.adapter = FindAdapter(trackList)
-
+//---------------------------------------------------
         searchEditText.setText(textSearch)
-
+//---------------------------------------------------
         clearButton.setOnClickListener {
             searchEditText.setText("")
         }
-
+//---------------------------------------------------
         back.setOnClickListener {
             finish()
         }
-
+//---------------------------------------------------
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // empty
@@ -102,7 +102,7 @@ class FindActivity : AppCompatActivity() {
     }
 
 }
-
+//---------------------------------------------------
 private fun clearButtonVisibility(s: CharSequence?): Int {
     return if (s.isNullOrEmpty()) {
         View.GONE
