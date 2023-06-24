@@ -104,7 +104,9 @@ class FindActivity : AppCompatActivity() {
             false
         }
 
-        updateButton.setOnClickListener { getMusic(textSearchLast) }
+        updateButton.setOnClickListener {
+            getMusic(textSearchLast)
+        }
 //---------------------------------------------------
         clearButton.setOnClickListener {
             searchEditText.setText("")
@@ -122,7 +124,6 @@ class FindActivity : AppCompatActivity() {
 //---------------------------------------------------
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // empty
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -131,7 +132,6 @@ class FindActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                // empty
             }
         }
         searchEditText.addTextChangedListener(simpleTextWatcher)
@@ -140,7 +140,7 @@ class FindActivity : AppCompatActivity() {
     //---------------------------------------------------
     private fun getMusic(text: String) {
         iTunesService
-            .searchTracks(textSearch)
+            .searchTracks(text)
             .enqueue(object : Callback<TracksResponse> {
                 override fun onResponse(
                     call: Call<TracksResponse>,
@@ -161,12 +161,14 @@ class FindActivity : AppCompatActivity() {
 
                         else -> {
                             setPlaceholderCommunicationProblems()
+                            textSearchLast = textSearch
                         }
                     }
                 }
 
                 override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
                     setPlaceholderCommunicationProblems()
+                    textSearchLast = textSearch
                 }
 
             })
@@ -196,7 +198,6 @@ class FindActivity : AppCompatActivity() {
         Glide.with(applicationContext).load(tintPlaceholderCP)
             .into(placeholderFindTint)
         trackRecyclerView.visibility = View.GONE
-        textSearchLast = textSearch
     }
 }
 
