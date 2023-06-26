@@ -13,6 +13,8 @@
         <item name="thumbTint">@color/switchSettingsColor_night</item>
         <item name="trackTint">@color/switchSettingsColorVariant_night</item>
         <item name="android:checked">true</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="background">@color/white</item>
     </style>
 
 </resources>
