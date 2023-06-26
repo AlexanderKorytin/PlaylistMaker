@@ -19,6 +19,7 @@ class FindViewHolder(private val parentView: View) : RecyclerView.ViewHolder(par
     private val artistName: TextView = parentView.findViewById(R.id.artistName)
     private val trackTime: TextView = parentView.findViewById(R.id.trackTime)
     private val radiusIconTrackDp = 2.0f
+    private val correction = 0.5f
     private val radiusIconTrackPx = dpToPx(radiusIconTrackDp, parentView.context)
 
     fun bind(track: Track) {
@@ -36,7 +37,7 @@ class FindViewHolder(private val parentView: View) : RecyclerView.ViewHolder(par
     private fun dpToPx(dp: Float, context: Context): Int {
         return TypedValue.applyDimension(
             COMPLEX_UNIT_DIP,
-            dp+0.5f,
+            dp+correction,
             context.resources.displayMetrics).toInt()
     }
 }

@@ -76,11 +76,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:gravity="center"
             android:visibility="gone">
 
             <ImageView
                 android:id="@+id/placeholder_find_tint"
-                android:layout_marginTop="102dp"
                 android:layout_width="@dimen/padding_120"
                 android:layout_height="@dimen/padding_120"
                 android:scaleType="centerCrop"

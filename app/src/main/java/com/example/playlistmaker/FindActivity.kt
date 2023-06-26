@@ -29,8 +29,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class FindActivity : AppCompatActivity() {
     companion object {
         private const val SEARCH_QUERY = "SEARCH_QUERY"
-        private var textSearch = ""
-        private var textSearchLast = ""
+        private const val baseUrlFilms = " https://itunes.apple.com"
     }
 
     private lateinit var plaseholderFindViewGroup: LinearLayout
@@ -40,9 +39,10 @@ class FindActivity : AppCompatActivity() {
     private lateinit var trackRecyclerView: RecyclerView
     private lateinit var tintPlaceholderNF: Drawable
     private lateinit var tintPlaceholderCP: Drawable
+    private var textSearch = ""
+    private var textSearchLast = ""
     private var trackList: ArrayList<Track> = ArrayList()
 
-    private val baseUrlFilms = " https://itunes.apple.com"
     private val retrofit = Retrofit
         .Builder()
         .baseUrl(baseUrlFilms)
@@ -72,14 +72,6 @@ class FindActivity : AppCompatActivity() {
         setContentView(R.layout.activity_find)
         // проверяем включена ли темная тема и устанавливаем для заглушек
         // соответсвующие изображения из ресурсов
-        if (isDarkThemeOn()) {
-            tintPlaceholderCP = getDrawable(R.drawable.communication_problems_dark_mode)!!
-            tintPlaceholderNF = getDrawable(R.drawable.nothing_found_dark_mode)!!
-
-        } else {
-            tintPlaceholderCP = getDrawable(R.drawable.communication_problems_light_mode)!!
-            tintPlaceholderNF = getDrawable(R.drawable.nothing_found_light_mode)!!
-        }
 
 //---------------------------------------------------
         val back = findViewById<ImageView>(R.id.backFind)
@@ -96,6 +88,7 @@ class FindActivity : AppCompatActivity() {
 //---------------------------------------------------
         searchEditText.setText(textSearch)
 //---------------------------------------------------
+// слушатель кнопки на клавиаруре
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 getMusic(textSearch)
@@ -103,7 +96,7 @@ class FindActivity : AppCompatActivity() {
             }
             false
         }
-
+// слушатель кнопки "обновить"
         updateButton.setOnClickListener {
             getMusic(textSearchLast)
         }
@@ -186,27 +179,19 @@ class FindActivity : AppCompatActivity() {
         updateButton.visibility = View.GONE
         trackRecyclerView.visibility = View.GONE
         placeholderFindText.text = getString(R.string.placeholder_nothing_found_text)
-        Glide.with(applicationContext).load(tintPlaceholderNF)
-            .into(placeholderFindTint)
+        placeholderFindTint.setImageDrawable(getDrawable(R.drawable.nothing_found))
     }
 
     private fun setPlaceholderCommunicationProblems() {
         plaseholderFindViewGroup.visibility = View.VISIBLE
         updateButton.visibility = View.VISIBLE
-        placeholderFindText.text =
-            getString(R.string.placeholder_communication_problems_text)
-        Glide.with(applicationContext).load(tintPlaceholderCP)
-            .into(placeholderFindTint)
         trackRecyclerView.visibility = View.GONE
+        placeholderFindText.text = getString(R.string.placeholder_communication_problems_text)
+        placeholderFindTint.setImageDrawable(getDrawable(R.drawable.communication_problem))
     }
 }
 
 //---------------------------------------------------
-
-private fun Context.isDarkThemeOn(): Boolean {
-    return resources.configuration.uiMode and
-            Configuration.UI_MODE_NIGHT_MASK == UI_MODE_NIGHT_YES
-}
 
 private fun clearButtonVisibility(s: CharSequence?): Int {
     return if (s.isNullOrEmpty()) {
