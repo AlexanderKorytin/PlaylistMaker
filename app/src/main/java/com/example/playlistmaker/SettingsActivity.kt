@@ -1,16 +1,12 @@
 package com.example.playlistmaker
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Switch
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 
 class SettingsActivity : AppCompatActivity() {
@@ -23,23 +19,23 @@ class SettingsActivity : AppCompatActivity() {
         val writeToSupport = findViewById<TextView>(R.id.writeToSupport)
         val shareApp = findViewById<TextView>(R.id.shareApp)
         val userAgreement = findViewById<TextView>(R.id.userAgreement)
-
+        val switchPreference = getSharedPreferences(APP_SETTINGS, MODE_PRIVATE)
+        nightTheme.isChecked = (applicationContext as App).darkTheme
         back.setOnClickListener {
             finish()
         }
 
-        nightTheme.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
-                true -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-
-                false -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            }
+        nightTheme.setOnCheckedChangeListener { switcher, checked ->
+            (applicationContext as App).switchTheme(checked)
+            switchPreference.edit()
+                .putBoolean(DARK_THEME, checked)
+                .apply()
         }
 
         shareApp.setOnClickListener {
             val shareAppIntent = Intent(Intent.ACTION_SEND)
             shareAppIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_app_text))
-            shareAppIntent.setType("text/plain")
+            shareAppIntent.type = "text/plain"
             startActivity(shareAppIntent)
         }
 
