@@ -1,8 +1,5 @@
 package com.example.playlistmaker
 
-import android.content.Context
-import android.content.res.Configuration
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
@@ -19,7 +16,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -70,9 +66,6 @@ class FindActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_find)
-        // проверяем включена ли темная тема и устанавливаем для заглушек
-        // соответсвующие изображения из ресурсов
-
 //---------------------------------------------------
         val back = findViewById<ImageView>(R.id.backFind)
         val searchEditText = findViewById<EditText>(R.id.menuFind_SearchEditText)
@@ -105,10 +98,7 @@ class FindActivity : AppCompatActivity() {
             searchEditText.setText("")
             trackList.clear()
             adapter.notifyDataSetChanged()
-
-            plaseholderFindViewGroup.visibility = View.GONE
-            updateButton.visibility = View.GONE
-            trackRecyclerView.visibility = View.VISIBLE
+            setVisibilitySearchСompleted()
         }
 //---------------------------------------------------
         back.setOnClickListener {
