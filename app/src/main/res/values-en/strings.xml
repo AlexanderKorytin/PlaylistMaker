@@ -13,4 +13,6 @@
     <string name="placeholder_nothing_found_text">Nothing found</string>
     <string name="placeholder_communication_problems_text">Communication problems\\n\\nThe download failed. Check\\nyour internet connection</string>
     <string name="update">Update</string>
+    <string name="you_find">Search history</string>
+    <string name="clear_history">Очистить историю</string>
 </resources>

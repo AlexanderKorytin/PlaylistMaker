@@ -15,5 +15,8 @@ class FindAdapter(val trackList: ArrayList<Track>) : RecyclerView.Adapter<FindVi
 
     override fun onBindViewHolder(holder: FindViewHolder, position: Int) {
         holder.bind(trackList[position])
+        holder.itemView.setOnClickListener {
+
+        }
     }
 }

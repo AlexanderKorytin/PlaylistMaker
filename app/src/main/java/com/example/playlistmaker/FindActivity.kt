@@ -1,6 +1,6 @@
 package com.example.playlistmaker
 
-import android.graphics.drawable.Drawable
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -29,12 +29,11 @@ class FindActivity : AppCompatActivity() {
     }
 
     private lateinit var plaseholderFindViewGroup: LinearLayout
+    private lateinit var searchHistoryListView: LinearLayout
     private lateinit var placeholderFindTint: ImageView
     private lateinit var placeholderFindText: TextView
     private lateinit var updateButton: Button
     private lateinit var trackRecyclerView: RecyclerView
-    private lateinit var tintPlaceholderNF: Drawable
-    private lateinit var tintPlaceholderCP: Drawable
     private var textSearch = ""
     private var textSearchLast = ""
     private var trackList: ArrayList<Track> = ArrayList()
@@ -62,6 +61,7 @@ class FindActivity : AppCompatActivity() {
     }
 
     //---------------------------------------------------
+    @SuppressLint("MissingInflatedId")
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +74,7 @@ class FindActivity : AppCompatActivity() {
         placeholderFindTint = findViewById<ImageView>(R.id.placeholder_find_tint)
         placeholderFindText = findViewById<TextView>(R.id.placeholder_find_text)
         updateButton = findViewById<Button>(R.id.placeholder_button)
+        searchHistoryListView = findViewById(R.id.search_History_List_View)
 //---------------------------------------------------
         trackRecyclerView = findViewById<RecyclerView>(R.id.tracksList)
         trackRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -84,6 +85,8 @@ class FindActivity : AppCompatActivity() {
 // слушатель кнопки на клавиаруре
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
+                searchHistoryListView.visibility = View.GONE
+                trackRecyclerView.visibility = View.VISIBLE
                 getMusic(textSearch)
                 true
             }
@@ -104,12 +107,39 @@ class FindActivity : AppCompatActivity() {
         back.setOnClickListener {
             finish()
         }
+
+        searchEditText.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus && searchEditText.text.isEmpty()) {
+                searchHistoryListView.visibility = View.VISIBLE
+                trackRecyclerView.visibility = View.GONE
+                plaseholderFindViewGroup.visibility = View.GONE
+                updateButton.visibility = View.GONE
+            } else {
+                searchHistoryListView.visibility = View.GONE
+                trackRecyclerView.visibility = View.VISIBLE
+                plaseholderFindViewGroup.visibility = View.GONE
+                updateButton.visibility = View.GONE
+            }
+        }
 //---------------------------------------------------
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (searchEditText.hasFocus() && s?.isEmpty() == true) {
+                    searchHistoryListView.visibility = View.VISIBLE
+                    trackRecyclerView.visibility = View.GONE
+                    plaseholderFindViewGroup.visibility = View.GONE
+                    updateButton.visibility = View.GONE
+                    trackList.clear()
+                    adapter.notifyDataSetChanged()
+                } else {
+                    searchHistoryListView.visibility = View.GONE
+                    trackRecyclerView.visibility = View.VISIBLE
+                    plaseholderFindViewGroup.visibility = View.GONE
+                    updateButton.visibility = View.GONE
+                }
                 textSearch = searchEditText.text.toString()
                 clearButton.visibility = clearButtonVisibility(s)
             }

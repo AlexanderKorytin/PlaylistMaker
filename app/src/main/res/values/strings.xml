@@ -15,4 +15,6 @@
     <string name="placeholder_nothing_found_text" translatable="false">Ничего не нашлось</string>
     <string name="placeholder_communication_problems_text" translatable="true">Проблемы со связью\n\nЗагрузка не удалась. Проверьте\nподключение к интернету</string>
     <string name="update" translatable="true">Обновить</string>
+    <string name="you_find" translatable="true">Вы искали</string>
+    <string name="clear_history">Очистить историю</string>
 </resources>

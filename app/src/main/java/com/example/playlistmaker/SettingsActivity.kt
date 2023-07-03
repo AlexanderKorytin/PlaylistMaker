@@ -14,6 +14,7 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+
         val back = findViewById<ImageView>(R.id.backSetting)
         val nightTheme = findViewById<SwitchCompat>(R.id.themeSwitch)
         val writeToSupport = findViewById<TextView>(R.id.writeToSupport)
@@ -21,6 +22,7 @@ class SettingsActivity : AppCompatActivity() {
         val userAgreement = findViewById<TextView>(R.id.userAgreement)
         val switchPreference = getSharedPreferences(APP_SETTINGS, MODE_PRIVATE)
         nightTheme.isChecked = (applicationContext as App).darkTheme
+
         back.setOnClickListener {
             finish()
         }
