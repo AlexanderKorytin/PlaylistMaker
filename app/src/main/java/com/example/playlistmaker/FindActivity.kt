@@ -137,8 +137,6 @@ class FindActivity : AppCompatActivity() {
                 } else {
                     searchHistoryListView.visibility = View.GONE
                     trackRecyclerView.visibility = View.VISIBLE
-                    plaseholderFindViewGroup.visibility = View.GONE
-                    updateButton.visibility = View.GONE
                 }
                 textSearch = searchEditText.text.toString()
                 clearButton.visibility = clearButtonVisibility(s)
@@ -200,6 +198,8 @@ class FindActivity : AppCompatActivity() {
         trackRecyclerView.visibility = View.GONE
         placeholderFindText.text = getString(R.string.placeholder_nothing_found_text)
         placeholderFindTint.setImageDrawable(getDrawable(R.drawable.nothing_found))
+        trackList.clear()
+        adapter.notifyDataSetChanged()
     }
 
     private fun setPlaceholderCommunicationProblems() {
@@ -208,6 +208,8 @@ class FindActivity : AppCompatActivity() {
         trackRecyclerView.visibility = View.GONE
         placeholderFindText.text = getString(R.string.placeholder_communication_problems_text)
         placeholderFindTint.setImageDrawable(getDrawable(R.drawable.communication_problem))
+        trackList.clear()
+        adapter.notifyDataSetChanged()
     }
 }
 
