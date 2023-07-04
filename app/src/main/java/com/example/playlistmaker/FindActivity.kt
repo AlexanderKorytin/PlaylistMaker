@@ -107,19 +107,9 @@ class FindActivity : AppCompatActivity() {
         back.setOnClickListener {
             finish()
         }
-
+//---------------------------------------------------
         searchEditText.setOnFocusChangeListener { v, hasFocus ->
-            if (hasFocus && searchEditText.text.isEmpty()) {
-                searchHistoryListView.visibility = View.VISIBLE
-                trackRecyclerView.visibility = View.GONE
-                plaseholderFindViewGroup.visibility = View.GONE
-                updateButton.visibility = View.GONE
-            } else {
-                searchHistoryListView.visibility = View.GONE
-                trackRecyclerView.visibility = View.VISIBLE
-                plaseholderFindViewGroup.visibility = View.GONE
-                updateButton.visibility = View.GONE
-            }
+            setVisibilityViewsForShowSearchHistory(hasFocus && searchEditText.text.isEmpty())
         }
 //---------------------------------------------------
         val simpleTextWatcher = object : TextWatcher {
@@ -127,17 +117,7 @@ class FindActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (searchEditText.hasFocus() && s?.isEmpty() == true) {
-                    searchHistoryListView.visibility = View.VISIBLE
-                    trackRecyclerView.visibility = View.GONE
-                    plaseholderFindViewGroup.visibility = View.GONE
-                    updateButton.visibility = View.GONE
-                    trackList.clear()
-                    adapter.notifyDataSetChanged()
-                } else {
-                    searchHistoryListView.visibility = View.GONE
-                    trackRecyclerView.visibility = View.VISIBLE
-                }
+                setVisibilityViewsForShowSearchHistory(searchEditText.hasFocus() && s?.isEmpty() == true)
                 textSearch = searchEditText.text.toString()
                 clearButton.visibility = clearButtonVisibility(s)
             }
@@ -210,6 +190,20 @@ class FindActivity : AppCompatActivity() {
         placeholderFindTint.setImageDrawable(getDrawable(R.drawable.communication_problem))
         trackList.clear()
         adapter.notifyDataSetChanged()
+    }
+
+    private fun setVisibilityViewsForShowSearchHistory(focus: Boolean) {
+        if (focus) {
+            searchHistoryListView.visibility = View.VISIBLE
+            trackRecyclerView.visibility = View.GONE
+            plaseholderFindViewGroup.visibility = View.GONE
+            updateButton.visibility = View.GONE
+            trackList.clear()
+            adapter.notifyDataSetChanged()
+        } else {
+            searchHistoryListView.visibility = View.GONE
+            trackRecyclerView.visibility = View.VISIBLE
+        }
     }
 }
 
