@@ -11,8 +11,8 @@ class SearchHistory(val sharedPreference: SharedPreferences) {
     var searchHistoryList = ArrayList<Track>()
 
     fun savedTrack(track: Track) {
-        val jsonTrackList = sharedPreference.getString(SEARCH_HISTORY_TRACK_LIST, "")
-        if (jsonTrackList != "") {
+        val jsonTrackList = sharedPreference.getString(SEARCH_HISTORY_TRACK_LIST, null)
+        if (jsonTrackList != null) {
             val historyList = getTrackList(jsonTrackList)
             searchHistoryList = savedTrackList(historyList, track)
         } else {
@@ -29,8 +29,12 @@ class SearchHistory(val sharedPreference: SharedPreferences) {
     }
 
    fun getTrackList(json: String?): ArrayList<Track> {
-        val type: Type = object : TypeToken<ArrayList<Track>>() {}.type
-        return Gson().fromJson(json, type)
+       if (json != null) {
+           val type: Type = object : TypeToken<ArrayList<Track>>() {}.type
+           return Gson().fromJson(json, type)
+       }else{
+           return arrayListOf()
+       }
     }
 
     private fun createJsonFromTrackList(tracks: ArrayList<Track>): String {

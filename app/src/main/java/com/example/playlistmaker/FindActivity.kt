@@ -42,6 +42,8 @@ class FindActivity : AppCompatActivity() {
     private lateinit var updateButton: Button
     private lateinit var trackRecyclerView: RecyclerView
     private lateinit var historyTrackList: RecyclerView
+    private lateinit var clearSearchHistory: Button
+
     private var textSearch = ""
     private var textSearchLast = ""
     private var trackList: ArrayList<Track> = ArrayList()
@@ -83,6 +85,7 @@ class FindActivity : AppCompatActivity() {
         placeholderFindText = findViewById<TextView>(R.id.placeholder_find_text)
         updateButton = findViewById<Button>(R.id.placeholder_button)
         searchHistoryListView = findViewById(R.id.search_History_List_View)
+        clearSearchHistory = findViewById(R.id.clearSearchHistory)
 
         val searchHistorySharedPreferences =
             getSharedPreferences(
@@ -141,7 +144,7 @@ class FindActivity : AppCompatActivity() {
 //---------------------------------------------------
         searchEditText.setOnFocusChangeListener { v, hasFocus ->
             searchHistory.searchHistoryList = searchHistory.getTrackList(
-                searchHistorySharedPreferences.getString(SEARCH_HISTORY_TRACK_LIST, "")
+                searchHistorySharedPreferences.getString(SEARCH_HISTORY_TRACK_LIST, null)
             )
             setVisibilityViewsForShowSearchHistory(
                 hasFocus
@@ -150,6 +153,10 @@ class FindActivity : AppCompatActivity() {
                 adapter, historyAdapter, searchHistory
             )
         }
+//---------------------------------------------------
+clearSearchHistory.setOnClickListener {
+    searchHistory.clearHistory()
+}
 //---------------------------------------------------
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
