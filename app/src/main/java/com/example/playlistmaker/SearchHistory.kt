@@ -1,7 +1,59 @@
 package com.example.playlistmaker
 
 import android.content.SharedPreferences
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import java.lang.reflect.Type
 
-class SearchHistory(sharedPreference: SharedPreferences) {
+class SearchHistory(val sharedPreference: SharedPreferences) {
+
+
+    var searchHistoryList = ArrayList<Track>()
+
+    fun savedTrack(track: Track) {
+        val jsonTrackList = sharedPreference.getString(SEARCH_HISTORY_TRACK_LIST, "")
+        if (jsonTrackList != "") {
+            val historyList = getTrackList(jsonTrackList)
+            searchHistoryList = savedTrackList(historyList, track)
+        } else {
+            searchHistoryList.add(0, track)
+        }
+        sharedPreference.edit()
+            .putString(SEARCH_HISTORY_TRACK_LIST, createJsonFromTrackList(searchHistoryList))
+            .apply()
+    }
+
+    fun clearHistory() {
+        searchHistoryList.clear()
+        sharedPreference.edit().clear().apply()
+    }
+
+   fun getTrackList(json: String?): ArrayList<Track> {
+        val type: Type = object : TypeToken<ArrayList<Track>>() {}.type
+        return Gson().fromJson(json, type)
+    }
+
+    private fun createJsonFromTrackList(tracks: ArrayList<Track>): String {
+        return Gson().toJson(tracks)
+    }
+
+    private fun savedTrackList(tracks: ArrayList<Track>, track: Track): ArrayList<Track> {
+        if (tracks.size < 10) {
+            tracks.add(0, track)
+            return tracks
+        } else {
+            tracks.forEach { t ->
+                if (t.trackId == track.trackId) {
+                    tracks.remove(t)
+                    tracks.add(0, track)
+                    return tracks
+                }
+            }
+            tracks.removeAt(9)
+            tracks.add(0, track)
+            return tracks
+        }
+    }
+
 
 }

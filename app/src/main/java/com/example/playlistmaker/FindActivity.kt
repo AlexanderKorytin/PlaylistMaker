@@ -16,16 +16,20 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+const val SEARCH_HISTORY_TRACK_LIST = "Search history list"
+
 class FindActivity : AppCompatActivity() {
     companion object {
         private const val SEARCH_QUERY = "SEARCH_QUERY"
         private const val baseUrlFilms = " https://itunes.apple.com"
+        const val TRACK_HISTORY_SHAREDPREFERENCES = "Track history"
     }
 
     private lateinit var plaseholderFindViewGroup: LinearLayout
@@ -34,6 +38,7 @@ class FindActivity : AppCompatActivity() {
     private lateinit var placeholderFindText: TextView
     private lateinit var updateButton: Button
     private lateinit var trackRecyclerView: RecyclerView
+    private lateinit var historyTrackList: RecyclerView
     private var textSearch = ""
     private var textSearchLast = ""
     private var trackList: ArrayList<Track> = ArrayList()
@@ -44,7 +49,6 @@ class FindActivity : AppCompatActivity() {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val iTunesService = retrofit.create(ITunesApi::class.java)
-    private val adapter = FindAdapter(trackList)
 
     //---------------------------------------------------
     // запоминаем текст в EditText и восстанавливаем при повороте экрана
@@ -67,6 +71,7 @@ class FindActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_find)
 //---------------------------------------------------
+//---------------------------------------------------
         val back = findViewById<ImageView>(R.id.backFind)
         val searchEditText = findViewById<EditText>(R.id.menuFind_SearchEditText)
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
@@ -75,10 +80,29 @@ class FindActivity : AppCompatActivity() {
         placeholderFindText = findViewById<TextView>(R.id.placeholder_find_text)
         updateButton = findViewById<Button>(R.id.placeholder_button)
         searchHistoryListView = findViewById(R.id.search_History_List_View)
+
+        val searchHistorySharedPreferences =
+            getSharedPreferences(
+                TRACK_HISTORY_SHAREDPREFERENCES,
+                MODE_PRIVATE
+            )
+        val searchHistory = SearchHistory(searchHistorySharedPreferences)
+        val adapter = FindAdapter {
+            searchHistory.savedTrack(it)
+        }
+        val historyAdapter = FindAdapter {
+            searchHistory.savedTrack(it)
+        }
+        adapter.trackList = trackList
+        historyAdapter.trackList = searchHistory.searchHistoryList
 //---------------------------------------------------
         trackRecyclerView = findViewById<RecyclerView>(R.id.tracksList)
         trackRecyclerView.layoutManager = LinearLayoutManager(this)
         trackRecyclerView.adapter = adapter
+
+        historyTrackList = findViewById(R.id.historyTracksList)
+        historyTrackList.layoutManager = LinearLayoutManager(this)
+        historyTrackList.adapter = historyAdapter
 //---------------------------------------------------
         searchEditText.setText(textSearch)
 //---------------------------------------------------
@@ -87,14 +111,14 @@ class FindActivity : AppCompatActivity() {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 searchHistoryListView.visibility = View.GONE
                 trackRecyclerView.visibility = View.VISIBLE
-                getMusic(textSearch)
+                getMusic(textSearch, adapter)
                 true
             }
             false
         }
 // слушатель кнопки "обновить"
         updateButton.setOnClickListener {
-            getMusic(textSearchLast)
+            getMusic(textSearchLast, adapter)
         }
 //---------------------------------------------------
         clearButton.setOnClickListener {
@@ -109,7 +133,15 @@ class FindActivity : AppCompatActivity() {
         }
 //---------------------------------------------------
         searchEditText.setOnFocusChangeListener { v, hasFocus ->
-            setVisibilityViewsForShowSearchHistory(hasFocus && searchEditText.text.isEmpty())
+            searchHistory.searchHistoryList = searchHistory.getTrackList(
+                searchHistorySharedPreferences.getString(SEARCH_HISTORY_TRACK_LIST, "")
+            )
+            setVisibilityViewsForShowSearchHistory(
+                hasFocus
+                        && searchEditText.text.isEmpty()
+                        && searchHistory.searchHistoryList.isNotEmpty(),
+                adapter, historyAdapter, searchHistory
+            )
         }
 //---------------------------------------------------
         val simpleTextWatcher = object : TextWatcher {
@@ -117,7 +149,12 @@ class FindActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                setVisibilityViewsForShowSearchHistory(searchEditText.hasFocus() && s?.isEmpty() == true)
+                setVisibilityViewsForShowSearchHistory(
+                    searchEditText.hasFocus()
+                            && s?.isEmpty() == true
+                            && searchHistory.searchHistoryList.isNotEmpty(),
+                    adapter, historyAdapter, searchHistory
+                )
                 textSearch = searchEditText.text.toString()
                 clearButton.visibility = clearButtonVisibility(s)
             }
@@ -129,7 +166,7 @@ class FindActivity : AppCompatActivity() {
     }
 
     //---------------------------------------------------
-    private fun getMusic(text: String) {
+    private fun getMusic(text: String, adapter: FindAdapter) {
         iTunesService
             .searchTracks(text)
             .enqueue(object : Callback<TracksResponse> {
@@ -146,19 +183,19 @@ class FindActivity : AppCompatActivity() {
                                 trackList.addAll(response.body()?.results!!)
                                 adapter.notifyDataSetChanged()
                             } else {
-                                setPlaceholderNothingFound()
+                                setPlaceholderNothingFound(adapter)
                             }
                         }
 
                         else -> {
-                            setPlaceholderCommunicationProblems()
+                            setPlaceholderCommunicationProblems(adapter)
                             textSearchLast = textSearch
                         }
                     }
                 }
 
                 override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
-                    setPlaceholderCommunicationProblems()
+                    setPlaceholderCommunicationProblems(adapter)
                     textSearchLast = textSearch
                 }
 
@@ -172,7 +209,7 @@ class FindActivity : AppCompatActivity() {
         trackRecyclerView.visibility = View.VISIBLE
     }
 
-    private fun setPlaceholderNothingFound() {
+    private fun setPlaceholderNothingFound(adapter: FindAdapter) {
         plaseholderFindViewGroup.visibility = View.VISIBLE
         updateButton.visibility = View.GONE
         trackRecyclerView.visibility = View.GONE
@@ -182,7 +219,7 @@ class FindActivity : AppCompatActivity() {
         adapter.notifyDataSetChanged()
     }
 
-    private fun setPlaceholderCommunicationProblems() {
+    private fun setPlaceholderCommunicationProblems(adapter: FindAdapter) {
         plaseholderFindViewGroup.visibility = View.VISIBLE
         updateButton.visibility = View.VISIBLE
         trackRecyclerView.visibility = View.GONE
@@ -192,14 +229,21 @@ class FindActivity : AppCompatActivity() {
         adapter.notifyDataSetChanged()
     }
 
-    private fun setVisibilityViewsForShowSearchHistory(focus: Boolean) {
+    private fun setVisibilityViewsForShowSearchHistory(
+        focus: Boolean,
+        adapter: FindAdapter,
+        historyAdapter: FindAdapter,
+        searchHistory: SearchHistory
+    ) {
         if (focus) {
             searchHistoryListView.visibility = View.VISIBLE
             trackRecyclerView.visibility = View.GONE
             plaseholderFindViewGroup.visibility = View.GONE
             updateButton.visibility = View.GONE
-            trackList.clear()
+            adapter.trackList.clear()
             adapter.notifyDataSetChanged()
+            historyAdapter.trackList = searchHistory.searchHistoryList
+            historyAdapter.notifyDataSetChanged()
         } else {
             searchHistoryListView.visibility = View.GONE
             trackRecyclerView.visibility = View.VISIBLE
