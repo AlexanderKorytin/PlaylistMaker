@@ -1,6 +1,9 @@
 package com.example.playlistmaker
 
 import android.app.Application
+import android.content.Context
+import android.os.VibrationEffect
+import android.os.Vibrator
 import androidx.appcompat.app.AppCompatDelegate
 
 const val APP_SETTINGS = "App settings"
@@ -27,5 +30,8 @@ class App : Application() {
             }
         )
     }
-
+    fun setVibe(){
+        val vibe: Vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        vibe.vibrate(VibrationEffect.createOneShot(5, VibrationEffect.DEFAULT_AMPLITUDE))
+    }
 }

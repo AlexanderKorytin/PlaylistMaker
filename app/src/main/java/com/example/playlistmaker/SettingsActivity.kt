@@ -24,10 +24,12 @@ class SettingsActivity : AppCompatActivity() {
         nightTheme.isChecked = (applicationContext as App).darkTheme
 
         back.setOnClickListener {
+            (applicationContext as App).setVibe()
             finish()
         }
 
         nightTheme.setOnCheckedChangeListener { switcher, checked ->
+            (applicationContext as App).setVibe()
             (applicationContext as App).switchTheme(checked)
             switchPreference.edit()
                 .putBoolean(DARK_THEME, checked)
@@ -35,6 +37,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         shareApp.setOnClickListener {
+            (applicationContext as App).setVibe()
             val shareAppIntent = Intent(Intent.ACTION_SEND)
             shareAppIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_app_text))
             shareAppIntent.type = "text/plain"
@@ -42,6 +45,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         writeToSupport.setOnClickListener {
+            (applicationContext as App).setVibe()
             val message = getString(R.string.mail_support_massege)
             val writeSupportIntent = Intent(Intent.ACTION_SENDTO)
             writeSupportIntent.data = Uri.parse("mailto:")
@@ -58,6 +62,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         userAgreement.setOnClickListener {
+            (applicationContext as App).setVibe()
             val userAgreementIntent =
                 Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.user_agreement_uri)))
             startActivity(userAgreementIntent)

@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
         val findIntent = Intent(this, FindActivity::class.java)
         val buttonFindOnClickListener = object : View.OnClickListener {
             override fun onClick(p0: View?) {
+                (applicationContext as App).setVibe()
                 startActivity(findIntent)
             }
         }
@@ -26,11 +27,13 @@ class MainActivity : AppCompatActivity() {
         buttonFind.setOnClickListener(buttonFindOnClickListener)
 
         buttonMedia.setOnClickListener {
+            (applicationContext as App).setVibe()
             val mediaIntent = Intent(this, MediaActivity::class.java)
             startActivity(mediaIntent)
         }
 
         buttonSettings.setOnClickListener {
+            (applicationContext as App).setVibe()
             val settinsIntent = Intent(this, SettingsActivity::class.java)
             startActivity(settinsIntent)
         }

@@ -1,8 +1,11 @@
 package com.example.playlistmaker
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -89,9 +92,11 @@ class FindActivity : AppCompatActivity() {
         val searchHistory = SearchHistory(searchHistorySharedPreferences)
         val adapter = FindAdapter {
             searchHistory.savedTrack(it)
+            (applicationContext as App).setVibe()
         }
         val historyAdapter = FindAdapter {
             searchHistory.savedTrack(it)
+            (applicationContext as App).setVibe()
         }
         adapter.trackList = trackList
         historyAdapter.trackList = searchHistory.searchHistoryList
@@ -122,6 +127,7 @@ class FindActivity : AppCompatActivity() {
         }
 //---------------------------------------------------
         clearButton.setOnClickListener {
+            (applicationContext as App).setVibe()
             searchEditText.setText("")
             trackList.clear()
             adapter.notifyDataSetChanged()
@@ -129,6 +135,7 @@ class FindActivity : AppCompatActivity() {
         }
 //---------------------------------------------------
         back.setOnClickListener {
+            (applicationContext as App).setVibe()
             finish()
         }
 //---------------------------------------------------
