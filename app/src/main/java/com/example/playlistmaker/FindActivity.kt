@@ -122,6 +122,7 @@ class FindActivity : AppCompatActivity() {
         }
 // слушатель кнопки "обновить"
         updateButton.setOnClickListener {
+            (applicationContext as App).setVibe()
             getMusic(textSearchLast, adapter)
         }
 //---------------------------------------------------
