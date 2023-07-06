@@ -11,6 +11,7 @@ data class Track(
     val artworkUrl100: String
 ){
     fun getTrackTime(): String {
-        return SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis.toLong())
+        return if (trackTimeMillis!=null) SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis.toLong())
+        else trackTimeMillis
     }
 }
