@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-   style="@style/LinearLayoutStyle">
+    style="@style/LinearLayoutStyle">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,39 +23,39 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-    <EditText
-        android:id="@+id/menuFind_SearchEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/padding_16"
-        android:layout_marginVertical="@dimen/padding_8"
-        android:paddingHorizontal="13dp"
-        android:paddingVertical="8.5dp"
-        android:background="@drawable/rounded_edittext"
+        <EditText
+            android:id="@+id/menuFind_SearchEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/padding_16"
+            android:layout_marginVertical="@dimen/padding_8"
+            android:background="@drawable/rounded_edittext"
+            android:drawableStart="@drawable/search"
+            android:drawablePadding="9dp"
 
-        android:hint="@string/bot_find"
-        android:textColorHint="?attr/colorSecondary"
-        android:fontFamily="@font/ys_display_regular"
-        android:textSize="@dimen/set_text_size"
-        android:textColor="@color/black"
+            android:drawableTint="?attr/colorSecondary"
+            android:fontFamily="@font/ys_display_regular"
+            android:hint="@string/bot_find"
+            android:imeOptions="actionDone"
+            android:inputType="textAutoComplete"
 
-        android:inputType="textAutoComplete"
-        android:maxLines="1"
+            android:maxLines="1"
+            android:paddingHorizontal="13dp"
 
 
-        android:drawableStart="@drawable/search"
-        android:drawableTint="?attr/colorSecondary"
-        android:drawablePadding="9dp"
+            android:paddingVertical="8.5dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
 
-        android:imeOptions="actionDone"
-        android:singleLine="true"/>
+            android:textColorHint="?attr/colorSecondary"
+            android:textSize="@dimen/set_text_size" />
 
         <ImageView
             android:id="@+id/clearIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:layout_alignRight="@id/menuFind_SearchEditText"
+            android:layout_centerInParent="true"
             android:src="@android:drawable/ic_menu_close_clear_cancel"
             android:visibility="gone" />
 
@@ -76,16 +76,16 @@
             android:id="@+id/placeholder_find_view_group"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:gravity="center"
+            android:orientation="vertical"
             android:visibility="gone">
 
             <ImageView
                 android:id="@+id/placeholder_find_tint"
                 android:layout_width="@dimen/padding_120"
                 android:layout_height="@dimen/padding_120"
-                android:scaleType="centerCrop"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:scaleType="centerCrop" />
 
             <TextView
                 android:id="@+id/placeholder_find_text"
@@ -93,17 +93,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/padding_24"
                 android:layout_marginTop="@dimen/padding_16"
-                android:gravity="center"
-                tools:text="@string/placeholder_communication_problems_text"
                 android:fontFamily="@font/ys_display_medium"
+                android:gravity="center"
                 android:textFontWeight="400"
                 android:textSize="19sp"
-                />
+                tools:text="@string/placeholder_communication_problems_text" />
+
             <com.google.android.material.button.MaterialButton
-                style="@style/findUpdateButtonStyle"
                 android:id="@+id/placeholder_button"
+                style="@style/findUpdateButtonStyle"
                 android:text="@string/update"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
         </LinearLayout>
 
@@ -111,46 +111,51 @@
             android:id="@+id/search_History_List_View"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/padding_24"
             android:orientation="vertical"
-            android:visibility="gone"
-            android:layout_marginTop="@dimen/padding_24">
+            android:visibility="gone">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/zero"
-                android:layout_weight="8"
+                android:layout_weight="7"
                 android:orientation="vertical">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/you_find"
                     android:layout_marginHorizontal="@dimen/padding_16"
                     android:layout_marginTop="18dp"
                     android:layout_marginBottom="@dimen/padding_12"
                     android:fontFamily="@font/ys_display_medium"
-                    android:textSize="19sp"
+                    android:gravity="center"
+                    android:text="@string/you_find"
                     android:textFontWeight="500"
-                    android:gravity="center"/>
+                    android:textSize="19sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/historyTracksList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:clipToPadding="false"
-                    android:layout_marginTop="@dimen/padding_8" />
+                    android:layout_marginTop="@dimen/padding_8"
+                    android:clipToPadding="false" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/zero"
-                android:layout_weight="2"
+                android:layout_weight="2.5"
                 android:orientation="vertical">
 
                 <com.google.android.material.button.MaterialButton
-                    style="@style/findUpdateButtonStyle"
-                    app:layout_constraintEnd_toEndOf="@id/historyTracksList"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     android:id="@+id/clearSearchHistory"
-                    android:text="@string/clear_history" />
+                    style="@style/findUpdateButtonStyle"
+                    android:text="@string/clear_history"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/historyTracksList" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
             </LinearLayout>
 
         </LinearLayout>

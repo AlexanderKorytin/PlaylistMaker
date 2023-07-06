@@ -1,11 +1,8 @@
 package com.example.playlistmaker
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.os.VibrationEffect
-import android.os.Vibrator
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -19,7 +16,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -154,9 +150,14 @@ class FindActivity : AppCompatActivity() {
             )
         }
 //---------------------------------------------------
-clearSearchHistory.setOnClickListener {
-    searchHistory.clearHistory()
-}
+        clearSearchHistory.setOnClickListener {
+            (applicationContext as App).setVibe()
+            searchHistory.clearHistory()
+            setVisibilityViewsForShowSearchHistory(
+                searchHistory.searchHistoryList.isNotEmpty(),
+                adapter, historyAdapter, searchHistory,
+            )
+        }
 //---------------------------------------------------
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -261,6 +262,8 @@ clearSearchHistory.setOnClickListener {
         } else {
             searchHistoryListView.visibility = View.GONE
             trackRecyclerView.visibility = View.VISIBLE
+            historyAdapter.trackList = searchHistory.searchHistoryList
+            historyAdapter.notifyDataSetChanged()
         }
     }
 }
