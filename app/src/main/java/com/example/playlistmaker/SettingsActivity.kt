@@ -1,16 +1,12 @@
 package com.example.playlistmaker
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Switch
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 
 class SettingsActivity : AppCompatActivity() {
@@ -18,32 +14,35 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+
         val back = findViewById<ImageView>(R.id.backSetting)
         val nightTheme = findViewById<SwitchCompat>(R.id.themeSwitch)
         val writeToSupport = findViewById<TextView>(R.id.writeToSupport)
         val shareApp = findViewById<TextView>(R.id.shareApp)
         val userAgreement = findViewById<TextView>(R.id.userAgreement)
+        val switchPreference = getSharedPreferences(APP_SETTINGS_PREF_KEY, MODE_PRIVATE)
+        nightTheme.isChecked = (applicationContext as App).darkTheme
 
-        back.setOnClickListener {
+        back.setOnClickListenerWithViber {
             finish()
         }
 
-        nightTheme.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
-                true -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-
-                false -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            }
+        nightTheme.setOnCheckedChangeListener { switcher, checked ->
+            applicationContext.setVibe()
+            (applicationContext as App).switchTheme(checked)
+            switchPreference.edit()
+                .putBoolean(DARK_THEME, checked)
+                .apply()
         }
 
-        shareApp.setOnClickListener {
+        shareApp.setOnClickListenerWithViber {
             val shareAppIntent = Intent(Intent.ACTION_SEND)
             shareAppIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_app_text))
-            shareAppIntent.setType("text/plain")
+            shareAppIntent.type = "text/plain"
             startActivity(shareAppIntent)
         }
 
-        writeToSupport.setOnClickListener {
+        writeToSupport.setOnClickListenerWithViber {
             val message = getString(R.string.mail_support_massege)
             val writeSupportIntent = Intent(Intent.ACTION_SENDTO)
             writeSupportIntent.data = Uri.parse("mailto:")
@@ -59,7 +58,7 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(writeSupportIntent)
         }
 
-        userAgreement.setOnClickListener {
+        userAgreement.setOnClickListenerWithViber {
             val userAgreementIntent =
                 Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.user_agreement_uri)))
             startActivity(userAgreementIntent)

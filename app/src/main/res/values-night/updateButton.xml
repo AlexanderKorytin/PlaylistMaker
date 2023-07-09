@@ -2,5 +2,18 @@
 <resources>
     <style name="findUpdateButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:backgroundTint">@color/white</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingStart">@dimen/padding_6</item>
+        <item name="android:paddingEnd">@dimen/padding_8</item>
+        <item name="android:paddingVertical">@dimen/padding_4</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_marginTop">@dimen/padding_24</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="cornerRadius">54dp</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
     </style>
 </resources>
