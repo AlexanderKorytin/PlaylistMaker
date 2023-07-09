@@ -11,7 +11,7 @@ class MediaActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_media)
         val back = findViewById<ImageView>(R.id.backMedia)
-        back.setOnClickListener {
+        back.setOnClickListenerWithViber {
             finish()
         }
     }

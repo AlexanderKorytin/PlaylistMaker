@@ -6,7 +6,7 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import androidx.appcompat.app.AppCompatDelegate
 
-const val APP_SETTINGS = "App settings"
+const val APP_SETTINGS_PREF_KEY = "App settings"
 const val DARK_THEME = "dark_theme"
 
 class App : Application() {
@@ -15,7 +15,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        val switchPreference = getSharedPreferences(APP_SETTINGS, MODE_PRIVATE)
+        val switchPreference = getSharedPreferences(APP_SETTINGS_PREF_KEY, MODE_PRIVATE)
         darkTheme = switchPreference.getBoolean(DARK_THEME, darkTheme)
         switchTheme(darkTheme)
     }
@@ -29,9 +29,5 @@ class App : Application() {
                 AppCompatDelegate.MODE_NIGHT_NO
             }
         )
-    }
-    fun setVibe(){
-        val vibe: Vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        vibe.vibrate(VibrationEffect.createOneShot(5, VibrationEffect.DEFAULT_AMPLITUDE))
     }
 }

@@ -16,24 +16,17 @@ class MainActivity : AppCompatActivity() {
         val buttonMedia = findViewById<Button>(R.id.media)
         val buttonSettings = findViewById<Button>(R.id.settings)
 
-        val findIntent = Intent(this, FindActivity::class.java)
-        val buttonFindOnClickListener = object : View.OnClickListener {
-            override fun onClick(p0: View?) {
-                (applicationContext as App).setVibe()
-                startActivity(findIntent)
-            }
+        buttonFind.setOnClickListenerWithViber {
+            val findIntent = Intent(this, FindActivity::class.java)
+            startActivity(findIntent)
         }
 
-        buttonFind.setOnClickListener(buttonFindOnClickListener)
-
-        buttonMedia.setOnClickListener {
-            (applicationContext as App).setVibe()
+        buttonMedia.setOnClickListenerWithViber {
             val mediaIntent = Intent(this, MediaActivity::class.java)
             startActivity(mediaIntent)
         }
 
-        buttonSettings.setOnClickListener {
-            (applicationContext as App).setVibe()
+        buttonSettings.setOnClickListenerWithViber {
             val settinsIntent = Intent(this, SettingsActivity::class.java)
             startActivity(settinsIntent)
         }

@@ -1,6 +1,8 @@
 package com.example.playlistmaker
 
 import android.annotation.SuppressLint
+import android.app.Application
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -14,6 +16,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
@@ -91,11 +94,9 @@ class FindActivity : AppCompatActivity() {
         val searchHistory = SearchHistory(searchHistorySharedPreferences)
         val adapter = FindAdapter {
             searchHistory.savedTrack(it)
-            (applicationContext as App).setVibe()
         }
         val historyAdapter = FindAdapter {
             searchHistory.savedTrack(it)
-            (applicationContext as App).setVibe()
         }
         adapter.trackList = trackList
         historyAdapter.trackList = searchHistory.searchHistoryList
@@ -113,29 +114,26 @@ class FindActivity : AppCompatActivity() {
 // слушатель кнопки на клавиаруре
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                searchHistoryListView.visibility = View.GONE
-                trackRecyclerView.visibility = View.VISIBLE
+                searchHistoryListView.isVisible = false
+                trackRecyclerView.isVisible = true
                 getMusic(textSearch, adapter)
                 true
             }
             false
         }
 // слушатель кнопки "обновить"
-        updateButton.setOnClickListener {
-            (applicationContext as App).setVibe()
+        updateButton.setOnClickListenerWithViber {
             getMusic(textSearchLast, adapter)
         }
 //---------------------------------------------------
         clearButton.setOnClickListener {
-            (applicationContext as App).setVibe()
             searchEditText.setText("")
             trackList.clear()
             adapter.notifyDataSetChanged()
             setVisibilitySearchСompleted()
         }
 //---------------------------------------------------
-        back.setOnClickListener {
-            (applicationContext as App).setVibe()
+        back.setOnClickListenerWithViber {
             finish()
         }
 //---------------------------------------------------
@@ -151,8 +149,7 @@ class FindActivity : AppCompatActivity() {
             )
         }
 //---------------------------------------------------
-        clearSearchHistory.setOnClickListener {
-            (applicationContext as App).setVibe()
+        clearSearchHistory.setOnClickListenerWithViber {
             searchHistory.clearHistory()
             setVisibilityViewsForShowSearchHistory(
                 searchHistory.searchHistoryList.isNotEmpty(),

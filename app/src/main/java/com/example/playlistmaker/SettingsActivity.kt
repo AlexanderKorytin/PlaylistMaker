@@ -20,32 +20,29 @@ class SettingsActivity : AppCompatActivity() {
         val writeToSupport = findViewById<TextView>(R.id.writeToSupport)
         val shareApp = findViewById<TextView>(R.id.shareApp)
         val userAgreement = findViewById<TextView>(R.id.userAgreement)
-        val switchPreference = getSharedPreferences(APP_SETTINGS, MODE_PRIVATE)
+        val switchPreference = getSharedPreferences(APP_SETTINGS_PREF_KEY, MODE_PRIVATE)
         nightTheme.isChecked = (applicationContext as App).darkTheme
 
-        back.setOnClickListener {
-            (applicationContext as App).setVibe()
+        back.setOnClickListenerWithViber {
             finish()
         }
 
         nightTheme.setOnCheckedChangeListener { switcher, checked ->
-            (applicationContext as App).setVibe()
+            applicationContext.setVibe()
             (applicationContext as App).switchTheme(checked)
             switchPreference.edit()
                 .putBoolean(DARK_THEME, checked)
                 .apply()
         }
 
-        shareApp.setOnClickListener {
-            (applicationContext as App).setVibe()
+        shareApp.setOnClickListenerWithViber {
             val shareAppIntent = Intent(Intent.ACTION_SEND)
             shareAppIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_app_text))
             shareAppIntent.type = "text/plain"
             startActivity(shareAppIntent)
         }
 
-        writeToSupport.setOnClickListener {
-            (applicationContext as App).setVibe()
+        writeToSupport.setOnClickListenerWithViber {
             val message = getString(R.string.mail_support_massege)
             val writeSupportIntent = Intent(Intent.ACTION_SENDTO)
             writeSupportIntent.data = Uri.parse("mailto:")
@@ -61,8 +58,7 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(writeSupportIntent)
         }
 
-        userAgreement.setOnClickListener {
-            (applicationContext as App).setVibe()
+        userAgreement.setOnClickListenerWithViber {
             val userAgreementIntent =
                 Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.user_agreement_uri)))
             startActivity(userAgreementIntent)

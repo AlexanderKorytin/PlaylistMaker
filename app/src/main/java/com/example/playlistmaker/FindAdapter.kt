@@ -18,7 +18,7 @@ class FindAdapter(val trackClickListner: TrackClickListner) :
 
     override fun onBindViewHolder(holder: FindViewHolder, position: Int) {
         holder.bind(trackList[position])
-        holder.itemView.setOnClickListener {
+        holder.itemView.setOnClickListenerWithViber {
             trackClickListner.onTrackClick(trackList.get(position))
         }
     }
