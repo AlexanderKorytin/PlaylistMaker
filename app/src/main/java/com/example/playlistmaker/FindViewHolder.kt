@@ -34,10 +34,4 @@ class FindViewHolder(private val parentView: View) : RecyclerView.ViewHolder(par
             .transform(RoundedCorners(radiusIconTrackPx))
             .into(trackIcon)
     }
-    private fun dpToPx(dp: Float, context: Context): Int {
-        return TypedValue.applyDimension(
-            COMPLEX_UNIT_DIP,
-            dp+correction,
-            context.resources.displayMetrics).toInt()
-    }
 }

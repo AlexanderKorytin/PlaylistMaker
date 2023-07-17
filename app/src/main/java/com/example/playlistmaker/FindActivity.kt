@@ -3,6 +3,7 @@ package com.example.playlistmaker
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -26,12 +27,12 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 const val SEARCH_HISTORY_TRACK_LIST = "Search history list"
+const val TRACK_HISTORY_SHAREDPREFERENCES = "Track history"
 
 class FindActivity : AppCompatActivity() {
     companion object {
         private const val SEARCH_QUERY = "SEARCH_QUERY"
         private const val baseUrlFilms = " https://itunes.apple.com"
-        const val TRACK_HISTORY_SHAREDPREFERENCES = "Track history"
     }
 
     private lateinit var plaseholderFindViewGroup: LinearLayout
@@ -94,9 +95,13 @@ class FindActivity : AppCompatActivity() {
         val searchHistory = SearchHistory(searchHistorySharedPreferences)
         val adapter = FindAdapter {
             searchHistory.savedTrack(it)
+            val mediaIntent = Intent(this, MediaActivity::class.java)
+            startActivity(mediaIntent)
         }
         val historyAdapter = FindAdapter {
             searchHistory.savedTrack(it)
+            val mediaIntent = Intent(this, MediaActivity::class.java)
+            startActivity(mediaIntent)
         }
         adapter.trackList = trackList
         historyAdapter.trackList = searchHistory.searchHistoryList
