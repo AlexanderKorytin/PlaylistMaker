@@ -54,7 +54,6 @@
         android:id="@+id/track_image_media"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="26dp"
         tools:src="@drawable/placeholder_media_image"
         app:layout_constraintBottom_toTopOf="@+id/track_name_media"
         app:layout_constraintDimensionRatio="w,1:1"
@@ -74,6 +73,7 @@
         app:layout_constraintEnd_toStartOf="@id/right_guideline"
         app:layout_constraintStart_toEndOf="@id/left_guideline"
         app:layout_constraintTop_toBottomOf="@id/track_image_media"
+        app:layout_constraintBottom_toTopOf="@id/track_artist_media"
         tools:text="Yesterday (Remastered 2009)" />
     <!-- исполнитель-->
     <TextView
@@ -87,6 +87,7 @@
         app:layout_constraintEnd_toStartOf="@id/right_guideline"
         app:layout_constraintStart_toEndOf="@id/left_guideline"
         app:layout_constraintTop_toBottomOf="@id/track_name_media"
+        app:layout_constraintBottom_toTopOf="@id/play_pause"
         tools:text="The Beatles" />
     <!-- кнопка добавить в альбом -->
     <ImageButton
@@ -109,6 +110,7 @@
         app:layout_constraintEnd_toStartOf="@id/add_favorite"
         app:layout_constraintStart_toEndOf="@id/add_collection"
         app:layout_constraintTop_toBottomOf="@id/track_artist_media"
+        app:layout_constraintBottom_toTopOf="@id/timer_media"
         app:srcCompat="@drawable/play_button" />
     <!-- кнопка добавить в избранное -->
     <ImageButton
