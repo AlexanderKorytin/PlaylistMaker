@@ -2,6 +2,7 @@ package com.example.playlistmaker
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -32,7 +33,6 @@ class FindActivity : AppCompatActivity() {
         private const val SEARCH_QUERY = "SEARCH_QUERY"
         private const val baseUrlFilms = " https://itunes.apple.com"
     }
-
     private lateinit var plaseholderFindViewGroup: LinearLayout
     private lateinit var searchHistoryListView: LinearLayout
     private lateinit var placeholderFindTint: ImageView
@@ -101,6 +101,17 @@ class FindActivity : AppCompatActivity() {
             val mediaIntent = Intent(this, MediaActivity::class.java)
             startActivity(mediaIntent)
         }
+        val listener = SharedPreferences.OnSharedPreferenceChangeListener {sharedPreferences, key ->
+            if (key == SEARCH_HISTORY_TRACK_LIST) {
+                searchHistory.searchHistoryList = getTrackList(
+                    searchHistorySharedPreferences.getString(SEARCH_HISTORY_TRACK_LIST, null)
+                )
+                setVisibilityViewsForShowSearchHistory(
+                    searchEditText.text.isEmpty() && searchHistory.searchHistoryList.isNotEmpty(),
+                    findAdapter, historyAdapter, searchHistory
+                )
+            }}
+        searchHistorySharedPreferences.registerOnSharedPreferenceChangeListener(listener)
         findAdapter.trackList = trackList
         historyAdapter.trackList = searchHistory.searchHistoryList
 //---------------------------------------------------
