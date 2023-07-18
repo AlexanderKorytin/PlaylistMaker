@@ -266,7 +266,9 @@ class FindActivity : AppCompatActivity() {
             historyAdapter.notifyDataSetChanged()
         }
     }
+
 }
+
 
 //---------------------------------------------------
 
