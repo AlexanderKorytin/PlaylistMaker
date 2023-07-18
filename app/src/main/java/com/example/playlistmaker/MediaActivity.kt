@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.TypedValue
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
@@ -24,6 +25,9 @@ class MediaActivity : AppCompatActivity() {
     lateinit var countryTrack: TextView
     lateinit var genreTrack: TextView
     lateinit var albumName: TextView
+    lateinit var playPauseButton: ImageButton
+    lateinit var addCollectionButton: ImageButton
+    lateinit var addFavouriteButton: ImageButton
     val trackNullMean = "-"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +42,9 @@ class MediaActivity : AppCompatActivity() {
         countryTrack = findViewById(R.id.country_media_mean)
         genreTrack = findViewById(R.id.genre_media_mean)
         albumName = findViewById(R.id.album_media)
-
+        playPauseButton = findViewById(R.id.play_pause)
+        addCollectionButton = findViewById(R.id.add_collection)
+        addFavouriteButton = findViewById(R.id.add_favorite)
 
         val mediaHistorySharedPreferences =
             getSharedPreferences(
@@ -48,45 +54,46 @@ class MediaActivity : AppCompatActivity() {
 
         val jsonTrackList = mediaHistorySharedPreferences.getString(SEARCH_HISTORY_TRACK_LIST, null)
         val mediaArray = getTrackList(jsonTrackList)
-        if(mediaArray.size!=0) filledTrackMeans(mediaArray[0]) else filledNullTrackMeans()
+        if (mediaArray.size != 0) filledTrackMeans(mediaArray[0]) else filledNullTrackMeans()
         back.setOnClickListenerWithViber {
             finish()
         }
     }
 
-    private fun getTrackList(json: String?): ArrayList<Track> {
-        if (json != null) {
-            val type: Type = object : TypeToken<ArrayList<Track>>() {}.type
-            return Gson().fromJson(json, type)
+
+    private fun filledTrackMeans(track: Track) {
+        playPauseButton.isClickable = true
+        addFavouriteButton.isClickable = true
+        addCollectionButton.isClickable = true
+        Glide
+            .with(this)
+            .load(track.getCoverArtwork())
+            .placeholder(R.drawable.placeholder_media_image)
+            .centerCrop()
+            .transform(RoundedCorners(dpToPx(8.0f, this)))
+            .into(imageTrack)
+        nameTrack.text = track.trackName
+        artistName.text = track.artistName
+        yearTrack.text = track.getYear()
+        countryTrack.text = track.country
+        genreTrack.text = track.primaryGenreName
+        timeTrack.text = track.getTrackTime()
+        if (track.collectionName != null) {
+            albumTrack.isVisible = true
+            albumName.isVisible = true
+            albumTrack.text = track.collectionName
         } else {
-            return arrayListOf()
+            albumTrack.isVisible = false
+            albumName.isVisible = false
         }
     }
 
-    private fun filledTrackMeans(track: Track) {
-            Glide
-                .with(this)
-                .load(track.getCoverArtwork())
-                .placeholder(R.drawable.placeholder_media_image)
-                .centerCrop()
-                .transform(RoundedCorners(dpToPx(8.0f, this)))
-                .into(imageTrack)
-            nameTrack.text = track.trackName
-            artistName.text = track.artistName
-            yearTrack.text = track.getYear()
-            countryTrack.text = track.country
-            genreTrack.text = track.primaryGenreName
-            timeTrack.text = track.getTrackTime()
-            if (track.collectionName != "") {
-                albumTrack.isVisible = true
-                albumName.isVisible = true
-                albumTrack.text = track.collectionName
-            } else {
-                albumTrack.isVisible = false
-                albumName.isVisible = false
-            }
-    }
-    private fun filledNullTrackMeans(){
+    private fun filledNullTrackMeans() {
+        albumTrack.isVisible = true
+        albumName.isVisible = true
+        playPauseButton.isClickable = false
+        addFavouriteButton.isClickable = false
+        addCollectionButton.isClickable = false
         Glide
             .with(this)
             .load(R.drawable.placeholder_media_image)
@@ -99,8 +106,6 @@ class MediaActivity : AppCompatActivity() {
         countryTrack.text = trackNullMean
         genreTrack.text = trackNullMean
         timeTrack.text = trackNullMean
-        albumTrack.isVisible = true
-        albumName.isVisible = true
         albumTrack.text = trackNullMean
     }
 }

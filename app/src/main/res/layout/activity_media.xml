@@ -198,7 +198,7 @@
         style="@style/Media_text_mean"
         tools:text="@string/duration"
         app:layout_constraintBottom_toTopOf="@id/album_media_mean"
-        app:layout_constraintBaseline_toBaselineOf="@id/time_media"
+        app:layout_constraintTop_toBottomOf="@id/timer_media"
         app:layout_constraintVertical_chainStyle="packed" />
     <!-- название альбома -->
     <TextView
@@ -212,22 +212,22 @@
         android:id="@+id/year_media_mean"
         style="@style/Media_text_mean"
         tools:text="@string/year"
-        app:layout_constraintBottom_toTopOf="@id/genre_media"
-        app:layout_constraintTop_toBottomOf="@id/album_media" />
+        app:layout_constraintBottom_toTopOf="@id/genre_media_mean"
+        app:layout_constraintTop_toBottomOf="@id/album_media_mean" />
     <!-- жанр -->
     <TextView
         android:id="@+id/genre_media_mean"
         style="@style/Media_text_mean"
         tools:text="@string/genre"
-        app:layout_constraintBottom_toTopOf="@id/country_media"
-        app:layout_constraintTop_toBottomOf="@id/year_media" />
+        app:layout_constraintBottom_toTopOf="@id/country_media_mean"
+        app:layout_constraintTop_toBottomOf="@id/year_media_mean" />
     <!-- страна -->
     <TextView
         android:id="@+id/country_media_mean"
         style="@style/Media_text_mean"
         tools:text="@string/country"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/genre_media" />
+        app:layout_constraintTop_toBottomOf="@id/genre_media_mean" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

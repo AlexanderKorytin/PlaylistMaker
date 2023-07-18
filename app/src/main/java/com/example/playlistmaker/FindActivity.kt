@@ -1,8 +1,6 @@
 package com.example.playlistmaker
 
 import android.annotation.SuppressLint
-import android.app.Application
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -93,7 +91,7 @@ class FindActivity : AppCompatActivity() {
                 MODE_PRIVATE
             )
         val searchHistory = SearchHistory(searchHistorySharedPreferences)
-        val adapter = FindAdapter {
+        val findAdapter = FindAdapter {
             searchHistory.savedTrack(it)
             val mediaIntent = Intent(this, MediaActivity::class.java)
             startActivity(mediaIntent)
@@ -103,13 +101,12 @@ class FindActivity : AppCompatActivity() {
             val mediaIntent = Intent(this, MediaActivity::class.java)
             startActivity(mediaIntent)
         }
-        adapter.trackList = trackList
+        findAdapter.trackList = trackList
         historyAdapter.trackList = searchHistory.searchHistoryList
 //---------------------------------------------------
         trackRecyclerView = findViewById<RecyclerView>(R.id.tracksList)
         trackRecyclerView.layoutManager = LinearLayoutManager(this)
-        trackRecyclerView.adapter = adapter
-
+        trackRecyclerView.adapter = findAdapter
         historyTrackList = findViewById(R.id.historyTracksList)
         historyTrackList.layoutManager = LinearLayoutManager(this)
         historyTrackList.adapter = historyAdapter
@@ -121,20 +118,20 @@ class FindActivity : AppCompatActivity() {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 searchHistoryListView.isVisible = false
                 trackRecyclerView.isVisible = true
-                getMusic(textSearch, adapter)
+                getMusic(textSearch, findAdapter)
                 true
             }
             false
         }
 // слушатель кнопки "обновить"
         updateButton.setOnClickListenerWithViber {
-            getMusic(textSearchLast, adapter)
+            getMusic(textSearchLast, findAdapter)
         }
 //---------------------------------------------------
         clearButton.setOnClickListener {
             searchEditText.setText("")
             trackList.clear()
-            adapter.notifyDataSetChanged()
+            findAdapter.notifyDataSetChanged()
             setVisibilitySearchСompleted()
         }
 //---------------------------------------------------
@@ -143,14 +140,14 @@ class FindActivity : AppCompatActivity() {
         }
 //---------------------------------------------------
         searchEditText.setOnFocusChangeListener { v, hasFocus ->
-            searchHistory.searchHistoryList = searchHistory.getTrackList(
+            searchHistory.searchHistoryList = getTrackList(
                 searchHistorySharedPreferences.getString(SEARCH_HISTORY_TRACK_LIST, null)
             )
             setVisibilityViewsForShowSearchHistory(
                 hasFocus
                         && searchEditText.text.isEmpty()
                         && searchHistory.searchHistoryList.isNotEmpty(),
-                adapter, historyAdapter, searchHistory
+                findAdapter, historyAdapter, searchHistory
             )
         }
 //---------------------------------------------------
@@ -158,7 +155,7 @@ class FindActivity : AppCompatActivity() {
             searchHistory.clearHistory()
             setVisibilityViewsForShowSearchHistory(
                 searchHistory.searchHistoryList.isNotEmpty(),
-                adapter, historyAdapter, searchHistory,
+                findAdapter, historyAdapter, searchHistory,
             )
         }
 //---------------------------------------------------
@@ -171,7 +168,7 @@ class FindActivity : AppCompatActivity() {
                     searchEditText.hasFocus()
                             && s?.isEmpty() == true
                             && searchHistory.searchHistoryList.isNotEmpty(),
-                    adapter, historyAdapter, searchHistory
+                    findAdapter, historyAdapter, searchHistory
                 )
                 textSearch = searchEditText.text.toString()
                 clearButton.visibility = clearButtonVisibility(s)
