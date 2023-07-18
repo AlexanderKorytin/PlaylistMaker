@@ -1,21 +1,18 @@
 package com.example.playlistmaker
 
-import android.annotation.SuppressLint
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.TypedValue
+import android.util.DisplayMetrics
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import java.lang.reflect.Type
 
 class MediaActivity : AppCompatActivity() {
+    var widthDisplay = 0
+    var roundedCorners = 0
     lateinit var imageTrack: ImageView
     lateinit var nameTrack: TextView
     lateinit var artistName: TextView
@@ -46,8 +43,17 @@ class MediaActivity : AppCompatActivity() {
         addCollectionButton = findViewById(R.id.add_collection)
         addFavouriteButton = findViewById(R.id.add_favorite)
 
+        // вычисляем радиус углов от реального размера картинки исходя из параметров верстки радиус 8
+        // при высоте дисплея 832 из которых обложка - 312
+        // коэффициент примерно - 1/120
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        widthDisplay = displayMetrics.widthPixels
+        roundedCorners = (dpToPx(widthDisplay.toFloat(), this))/120
+
         val mediaHistorySharedPreferences =
             getSharedPreferences(
+
                 TRACK_HISTORY_SHAREDPREFERENCES,
                 MODE_PRIVATE
             )
@@ -70,7 +76,7 @@ class MediaActivity : AppCompatActivity() {
             .load(track.getCoverArtwork())
             .placeholder(R.drawable.placeholder_media_image)
             .centerCrop()
-            .transform(RoundedCorners(dpToPx(8.0f, this)))
+            .transform(RoundedCorners(roundedCorners))
             .into(imageTrack)
         nameTrack.text = track.trackName
         artistName.text = track.artistName
@@ -98,7 +104,7 @@ class MediaActivity : AppCompatActivity() {
             .with(this)
             .load(R.drawable.placeholder_media_image)
             .centerCrop()
-            .transform(RoundedCorners(dpToPx(8.0f, this)))
+            .transform(RoundedCorners(roundedCorners))
             .into(imageTrack)
         nameTrack.text = trackNullMean
         artistName.text = trackNullMean

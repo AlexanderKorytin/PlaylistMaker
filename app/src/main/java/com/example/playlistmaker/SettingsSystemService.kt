@@ -29,6 +29,13 @@ internal fun dpToPx(dp: Float, context: Context): Int {
         context.resources.displayMetrics
     ).toInt()
 }
+internal fun pxToDp(px: Float, context: Context): Int{
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_PX,
+        px,
+        context.resources.displayMetrics
+    ).toInt()
+}
 
 internal fun getTrackList(json: String?): ArrayList<Track> {
     if (json != null) {
