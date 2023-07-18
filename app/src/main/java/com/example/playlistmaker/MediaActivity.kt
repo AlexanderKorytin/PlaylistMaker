@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-
+private const val cornersRatio = 120
 class MediaActivity : AppCompatActivity() {
     var widthDisplay = 0
     var roundedCorners = 0
@@ -42,14 +42,13 @@ class MediaActivity : AppCompatActivity() {
         playPauseButton = findViewById(R.id.play_pause)
         addCollectionButton = findViewById(R.id.add_collection)
         addFavouriteButton = findViewById(R.id.add_favorite)
-
         // вычисляем радиус углов от реального размера картинки исходя из параметров верстки радиус 8
         // при высоте дисплея 832 из которых обложка - 312
         // коэффициент примерно - 1/120
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
         widthDisplay = displayMetrics.widthPixels
-        roundedCorners = (dpToPx(widthDisplay.toFloat(), this))/120
+        roundedCorners = (dpToPx(widthDisplay.toFloat(), this))/cornersRatio
 
         val mediaHistorySharedPreferences =
             getSharedPreferences(
