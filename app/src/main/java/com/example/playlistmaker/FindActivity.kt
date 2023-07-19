@@ -92,17 +92,12 @@ class FindActivity : AppCompatActivity() {
                 MODE_PRIVATE
             )
         val searchHistory = SearchHistory(searchHistorySharedPreferences)
+        // Задаем адаптеры
         val findAdapter = FindAdapter {
-            searchHistory.savedTrack(it)
-            val mediaIntent = Intent(this, MediaActivity::class.java)
-            mediaIntent.putExtra("clickedTrack", Gson().toJson(it))
-            startActivity(mediaIntent)
+            clickedTrack(it, searchHistory)
         }
         val historyAdapter = FindAdapter {
-            searchHistory.savedTrack(it)
-            val mediaIntent = Intent(this, MediaActivity::class.java)
-            mediaIntent.putExtra("clickedTrack", Gson().toJson(it))
-            startActivity(mediaIntent)
+            clickedTrack(it, searchHistory)
         }
         val listener = SharedPreferences.OnSharedPreferenceChangeListener {sharedPreferences, key ->
             if (key == SEARCH_HISTORY_TRACK_LIST) {
@@ -280,7 +275,12 @@ class FindActivity : AppCompatActivity() {
             historyAdapter.notifyDataSetChanged()
         }
     }
-
+    private fun clickedTrack(track: Track, searchHistory: SearchHistory){
+        searchHistory.savedTrack(track)
+        val mediaIntent = Intent(this, MediaActivity::class.java)
+        mediaIntent.putExtra("clickedTrack", Gson().toJson(track))
+        startActivity(mediaIntent)
+    }
 }
 
 

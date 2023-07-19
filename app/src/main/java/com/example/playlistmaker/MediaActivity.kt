@@ -42,6 +42,7 @@ class MediaActivity : AppCompatActivity() {
         windowManager.defaultDisplay.getMetrics(displayMetrics)
         widthDisplay = displayMetrics.widthPixels
         roundedCorners = (dpToPx(widthDisplay.toFloat(), this)) / cornersRatio
+
         receivedTrack = savedInstanceState?.getString(CLICKED_TRACK, "")
         receivedTrack = intent.getStringExtra("clickedTrack")
         val clickedTrack = Gson().fromJson(receivedTrack, Track::class.java)
