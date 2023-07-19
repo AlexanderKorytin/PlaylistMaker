@@ -44,7 +44,7 @@ class MediaActivity : AppCompatActivity() {
         roundedCorners = (dpToPx(widthDisplay.toFloat(), this)) / cornersRatio
 
         receivedTrack = savedInstanceState?.getString(CLICKED_TRACK, "")
-        receivedTrack = intent.getStringExtra("clickedTrack")
+            ?:intent.getStringExtra("clickedTrack")
         val clickedTrack = Gson().fromJson(receivedTrack, Track::class.java)
         if (clickedTrack != null) filledTrackMeans(clickedTrack) else filledNullTrackMeans()
 
