@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -94,11 +95,13 @@ class FindActivity : AppCompatActivity() {
         val findAdapter = FindAdapter {
             searchHistory.savedTrack(it)
             val mediaIntent = Intent(this, MediaActivity::class.java)
+            mediaIntent.putExtra("clickedTrack", Gson().toJson(it))
             startActivity(mediaIntent)
         }
         val historyAdapter = FindAdapter {
             searchHistory.savedTrack(it)
             val mediaIntent = Intent(this, MediaActivity::class.java)
+            mediaIntent.putExtra("clickedTrack", Gson().toJson(it))
             startActivity(mediaIntent)
         }
         val listener = SharedPreferences.OnSharedPreferenceChangeListener {sharedPreferences, key ->
