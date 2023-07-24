@@ -15,4 +15,9 @@
     <string name="update">Update</string>
     <string name="you_find">Search history</string>
     <string name="clear_history">Очистить историю</string>
+    <string name="duration">Duration</string>
+    <string name="Album">Album</string>
+    <string name="year">Year</string>
+    <string name="genre">Genre</string>
+    <string name="country">Country</string>
 </resources>

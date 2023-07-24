@@ -1,8 +1,8 @@
 package com.example.playlistmaker
 
 import android.annotation.SuppressLint
-import android.app.Application
-import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,14 +27,13 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 const val SEARCH_HISTORY_TRACK_LIST = "Search history list"
+const val TRACK_HISTORY_SHAREDPREFERENCES = "Track history"
 
 class FindActivity : AppCompatActivity() {
     companion object {
         private const val SEARCH_QUERY = "SEARCH_QUERY"
         private const val baseUrlFilms = " https://itunes.apple.com"
-        const val TRACK_HISTORY_SHAREDPREFERENCES = "Track history"
     }
-
     private lateinit var plaseholderFindViewGroup: LinearLayout
     private lateinit var searchHistoryListView: LinearLayout
     private lateinit var placeholderFindTint: ImageView
@@ -92,19 +92,30 @@ class FindActivity : AppCompatActivity() {
                 MODE_PRIVATE
             )
         val searchHistory = SearchHistory(searchHistorySharedPreferences)
-        val adapter = FindAdapter {
-            searchHistory.savedTrack(it)
+        // Задаем адаптеры
+        val findAdapter = FindAdapter {
+            clickedTrack(it, searchHistory)
         }
         val historyAdapter = FindAdapter {
-            searchHistory.savedTrack(it)
+            clickedTrack(it, searchHistory)
         }
-        adapter.trackList = trackList
+        val listener = SharedPreferences.OnSharedPreferenceChangeListener {sharedPreferences, key ->
+            if (key == SEARCH_HISTORY_TRACK_LIST) {
+                searchHistory.searchHistoryList = getTrackList(
+                    searchHistorySharedPreferences.getString(SEARCH_HISTORY_TRACK_LIST, null)
+                )
+                setVisibilityViewsForShowSearchHistory(
+                    searchEditText.text.isEmpty() && searchHistory.searchHistoryList.isNotEmpty(),
+                    findAdapter, historyAdapter, searchHistory
+                )
+            }}
+        searchHistorySharedPreferences.registerOnSharedPreferenceChangeListener(listener)
+        findAdapter.trackList = trackList
         historyAdapter.trackList = searchHistory.searchHistoryList
 //---------------------------------------------------
         trackRecyclerView = findViewById<RecyclerView>(R.id.tracksList)
         trackRecyclerView.layoutManager = LinearLayoutManager(this)
-        trackRecyclerView.adapter = adapter
-
+        trackRecyclerView.adapter = findAdapter
         historyTrackList = findViewById(R.id.historyTracksList)
         historyTrackList.layoutManager = LinearLayoutManager(this)
         historyTrackList.adapter = historyAdapter
@@ -116,20 +127,20 @@ class FindActivity : AppCompatActivity() {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 searchHistoryListView.isVisible = false
                 trackRecyclerView.isVisible = true
-                getMusic(textSearch, adapter)
+                getMusic(textSearch, findAdapter)
                 true
             }
             false
         }
 // слушатель кнопки "обновить"
         updateButton.setOnClickListenerWithViber {
-            getMusic(textSearchLast, adapter)
+            getMusic(textSearchLast, findAdapter)
         }
 //---------------------------------------------------
         clearButton.setOnClickListener {
             searchEditText.setText("")
             trackList.clear()
-            adapter.notifyDataSetChanged()
+            findAdapter.notifyDataSetChanged()
             setVisibilitySearchСompleted()
         }
 //---------------------------------------------------
@@ -138,14 +149,14 @@ class FindActivity : AppCompatActivity() {
         }
 //---------------------------------------------------
         searchEditText.setOnFocusChangeListener { v, hasFocus ->
-            searchHistory.searchHistoryList = searchHistory.getTrackList(
+            searchHistory.searchHistoryList = getTrackList(
                 searchHistorySharedPreferences.getString(SEARCH_HISTORY_TRACK_LIST, null)
             )
             setVisibilityViewsForShowSearchHistory(
                 hasFocus
                         && searchEditText.text.isEmpty()
                         && searchHistory.searchHistoryList.isNotEmpty(),
-                adapter, historyAdapter, searchHistory
+                findAdapter, historyAdapter, searchHistory
             )
         }
 //---------------------------------------------------
@@ -153,7 +164,7 @@ class FindActivity : AppCompatActivity() {
             searchHistory.clearHistory()
             setVisibilityViewsForShowSearchHistory(
                 searchHistory.searchHistoryList.isNotEmpty(),
-                adapter, historyAdapter, searchHistory,
+                findAdapter, historyAdapter, searchHistory,
             )
         }
 //---------------------------------------------------
@@ -166,7 +177,7 @@ class FindActivity : AppCompatActivity() {
                     searchEditText.hasFocus()
                             && s?.isEmpty() == true
                             && searchHistory.searchHistoryList.isNotEmpty(),
-                    adapter, historyAdapter, searchHistory
+                    findAdapter, historyAdapter, searchHistory
                 )
                 textSearch = searchEditText.text.toString()
                 clearButton.visibility = clearButtonVisibility(s)
@@ -264,7 +275,14 @@ class FindActivity : AppCompatActivity() {
             historyAdapter.notifyDataSetChanged()
         }
     }
+    private fun clickedTrack(track: Track, searchHistory: SearchHistory){
+        searchHistory.savedTrack(track)
+        val mediaIntent = Intent(this, MediaActivity::class.java)
+        mediaIntent.putExtra("clickedTrack", Gson().toJson(track))
+        startActivity(mediaIntent)
+    }
 }
+
 
 //---------------------------------------------------
 

@@ -28,15 +28,6 @@ class SearchHistory(val sharedPreference: SharedPreferences) {
         sharedPreference.edit().clear().apply()
     }
 
-    fun getTrackList(json: String?): ArrayList<Track> {
-        if (json != null) {
-            val type: Type = object : TypeToken<ArrayList<Track>>() {}.type
-            return Gson().fromJson(json, type)
-        } else {
-            return arrayListOf()
-        }
-    }
-
     private fun createJsonFromTrackList(tracks: ArrayList<Track>): String {
         return Gson().toJson(tracks)
     }
