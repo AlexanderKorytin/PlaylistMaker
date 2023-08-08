@@ -189,12 +189,9 @@ class FindActivity : AppCompatActivity() {
 
                 textSearch = searchEditText.text.toString()
                 clearButton.visibility = clearButtonVisibility(s)
-                Thread {
-                    Thread.sleep(500L)
-                    if (s?.isNotEmpty() == true) searchDebounce(findAdapter)
-                    else handlerMain.removeCallbacks(
-                        { getMusic(textSearch, findAdapter) })
-                }.start()
+                if (s?.isNotEmpty() == true) searchDebounce(findAdapter)
+                else handlerMain.removeCallbacks(
+                    { getMusic(textSearch, findAdapter) })
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -205,39 +202,41 @@ class FindActivity : AppCompatActivity() {
 
     //---------------------------------------------------
     private fun getMusic(text: String, adapter: FindAdapter) {
-        iTunesService
-            .searchTracks(text)
-            .enqueue(object : Callback<TracksResponse> {
-                override fun onResponse(
-                    call: Call<TracksResponse>,
-                    response: Response<TracksResponse>
-                ) {
-                    when (response.code()) {
+        if (textSearch.isNotEmpty()) {
+            iTunesService
+                .searchTracks(text)
+                .enqueue(object : Callback<TracksResponse> {
+                    override fun onResponse(
+                        call: Call<TracksResponse>,
+                        response: Response<TracksResponse>
+                    ) {
+                        when (response.code()) {
 
-                        200 -> {
-                            if (response.body()?.results?.isNotEmpty() == true) {
-                                setVisibilitySearchСompleted()
-                                trackList.clear()
-                                trackList.addAll(response.body()?.results!!)
-                                adapter.notifyDataSetChanged()
-                            } else {
-                                setPlaceholderNothingFound(adapter)
+                            200 -> {
+                                if (response.body()?.results?.isNotEmpty() == true) {
+                                    setVisibilitySearchСompleted()
+                                    trackList.clear()
+                                    trackList.addAll(response.body()?.results!!)
+                                    adapter.notifyDataSetChanged()
+                                } else {
+                                    setPlaceholderNothingFound(adapter)
+                                }
+                            }
+
+                            else -> {
+                                setPlaceholderCommunicationProblems(adapter)
+                                textSearchLast = textSearch
                             }
                         }
-
-                        else -> {
-                            setPlaceholderCommunicationProblems(adapter)
-                            textSearchLast = textSearch
-                        }
                     }
-                }
 
-                override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
-                    setPlaceholderCommunicationProblems(adapter)
-                    textSearchLast = textSearch
-                }
+                    override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
+                        setPlaceholderCommunicationProblems(adapter)
+                        textSearchLast = textSearch
+                    }
 
-            })
+                })
+        }
     }
 
     //---------------------------------------------------
