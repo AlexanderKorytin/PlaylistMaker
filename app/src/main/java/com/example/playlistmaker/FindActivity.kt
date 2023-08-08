@@ -326,10 +326,10 @@ class FindActivity : AppCompatActivity() {
     // время SEARCH_DEBOUNCE_DELAY после окончания ввода текста
     //debounce пользовательского ввода
     private fun searchDebounce(adapter: FindAdapter) {
-        handlerMain.postDelayed({
+        handlerMain.post {
             progressBar.visibility = View.VISIBLE
             trackRecyclerView.visibility = View.GONE
-        }, PROGRESSBAR_VISIBILITY_DELAY)
+        }
         handlerMain.removeCallbacks({ getMusic(textSearch, adapter) })
         handlerMain.postDelayed({ getMusic(textSearch, adapter) }, SEARCH_DEBOUNCE_DELAY)
     }
