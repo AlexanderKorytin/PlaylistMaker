@@ -37,12 +37,12 @@ class FindActivity : AppCompatActivity() {
     companion object {
         private const val SEARCH_QUERY = "SEARCH_QUERY"
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val CLICED_TRACK_DELAY = 1000L
         private const val baseUrlFilms = " https://itunes.apple.com"
     }
 
     private lateinit var bindingFindActivity: ActivityFindBinding
-    private var isTextChangedAllowed = true
-
+    private var isClicedTrackAllowed = true
     private var textSearch = ""
     private var textSearchLast = ""
     private var trackList: ArrayList<Track> = ArrayList()
@@ -288,10 +288,12 @@ class FindActivity : AppCompatActivity() {
     }
 
     private fun clickedTrack(track: Track, searchHistory: SearchHistory) {
-        searchHistory.savedTrack(track)
-        val mediaIntent = Intent(this, MediaActivity::class.java)
-        mediaIntent.putExtra("clickedTrack", Gson().toJson(track))
-        startActivity(mediaIntent)
+        if (isClicedTrackAllowed){
+            searchHistory.savedTrack(track)
+            val mediaIntent = Intent(this, MediaActivity::class.java)
+            mediaIntent.putExtra("clickedTrack", Gson().toJson(track))
+            startActivity(mediaIntent)
+        }
     }
 
     // функция для планирования поиска музыки по введенному в поисковую чстроку тексту спустя
@@ -307,10 +309,10 @@ class FindActivity : AppCompatActivity() {
     }
 
     private fun textChangedDebounce(): Boolean {
-        val current = isTextChangedAllowed
-        if (isTextChangedAllowed) {
-            isTextChangedAllowed = false
-            handlerMain.postDelayed({ isTextChangedAllowed = true }, SEARCH_DEBOUNCE_DELAY)
+        val current = isClicedTrackAllowed
+        if (isClicedTrackAllowed) {
+            isClicedTrackAllowed = false
+            handlerMain.postDelayed({ isClicedTrackAllowed = true }, CLICED_TRACK_DELAY)
         }
         return current
     }
