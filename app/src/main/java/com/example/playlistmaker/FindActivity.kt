@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.databinding.ActivityFindBinding
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
@@ -35,21 +36,11 @@ const val TRACK_HISTORY_SHAREDPREFERENCES = "Track history"
 class FindActivity : AppCompatActivity() {
     companion object {
         private const val SEARCH_QUERY = "SEARCH_QUERY"
-        private const val SEARCH_DEBOUNCE_DELAY = 1000L
-        private const val PROGRESSBAR_VISIBILITY_DELAY = 500L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private const val baseUrlFilms = " https://itunes.apple.com"
     }
 
-    private lateinit var plaseholderFindViewGroup: LinearLayout
-    private lateinit var searchHistoryListView: LinearLayout
-    private lateinit var placeholderFindTint: ImageView
-    private lateinit var placeholderFindText: TextView
-    private lateinit var updateButton: Button
-    private lateinit var trackRecyclerView: RecyclerView
-    private lateinit var historyTrackList: RecyclerView
-    private lateinit var clearSearchHistory: Button
-    private lateinit var progressBar: ProgressBar
-    private lateinit var clearButton: ImageView
+    private lateinit var bindingFindActivity: ActivityFindBinding
     private var isTextChangedAllowed = true
 
     private var textSearch = ""
@@ -83,19 +74,10 @@ class FindActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_find)
+        bindingFindActivity = ActivityFindBinding.inflate(layoutInflater)
+        val viewFind = bindingFindActivity.root
+        setContentView(viewFind)
 //---------------------------------------------------
-//---------------------------------------------------
-        val back = findViewById<ImageView>(R.id.backFind)
-        val searchEditText = findViewById<EditText>(R.id.menuFind_SearchEditText)
-        clearButton = findViewById<ImageView>(R.id.clearIcon)
-        plaseholderFindViewGroup = findViewById<LinearLayout>(R.id.placeholder_find_view_group)
-        placeholderFindTint = findViewById<ImageView>(R.id.placeholder_find_tint)
-        placeholderFindText = findViewById<TextView>(R.id.placeholder_find_text)
-        updateButton = findViewById<Button>(R.id.placeholder_button)
-        searchHistoryListView = findViewById(R.id.search_History_List_View)
-        clearSearchHistory = findViewById(R.id.clearSearchHistory)
-        progressBar = findViewById(R.id.progressBar)
 
         val searchHistorySharedPreferences =
             getSharedPreferences(
@@ -117,7 +99,7 @@ class FindActivity : AppCompatActivity() {
                         searchHistorySharedPreferences.getString(SEARCH_HISTORY_TRACK_LIST, null)
                     )
                     setVisibilityViewsForShowSearchHistory(
-                        searchEditText.text.isEmpty() && searchHistory.searchHistoryList.isNotEmpty(),
+                        bindingFindActivity.menuFindSearchEditText.text.isEmpty() && searchHistory.searchHistoryList.isNotEmpty(),
                         findAdapter, historyAdapter, searchHistory
                     )
                 }
@@ -126,32 +108,20 @@ class FindActivity : AppCompatActivity() {
         findAdapter.trackList = trackList
         historyAdapter.trackList = searchHistory.searchHistoryList
 //---------------------------------------------------
-        trackRecyclerView = findViewById<RecyclerView>(R.id.tracksList)
-        trackRecyclerView.layoutManager = LinearLayoutManager(this)
-        trackRecyclerView.adapter = findAdapter
-        historyTrackList = findViewById(R.id.historyTracksList)
-        historyTrackList.layoutManager = LinearLayoutManager(this)
-        historyTrackList.adapter = historyAdapter
+        bindingFindActivity.tracksList.layoutManager = LinearLayoutManager(this)
+        bindingFindActivity.tracksList.adapter = findAdapter
+
+        bindingFindActivity.historyTracksList.layoutManager = LinearLayoutManager(this)
+        bindingFindActivity.historyTracksList.adapter = historyAdapter
 //---------------------------------------------------
-        searchEditText.setText(textSearch)
-//---------------------------------------------------
-// слушатель кнопки на клавиаруре
-//        searchEditText.setOnEditorActionListener { _, actionId, _ ->
-//            if (actionId == EditorInfo.IME_ACTION_DONE) {
-//                searchHistoryListView.isVisible = false
-//                trackRecyclerView.isVisible = true
-//                getMusic(textSearch, findAdapter)
-//                true
-//            }
-//            false
-//        }
+        bindingFindActivity.menuFindSearchEditText.setText(textSearch)
 // слушатель кнопки "обновить"
-        updateButton.setOnClickListenerWithViber {
+        bindingFindActivity.placeholderButton.setOnClickListenerWithViber {
             getMusic(textSearchLast, findAdapter)
         }
 //---------------------------------------------------
-        clearButton.setOnClickListener {
-            searchEditText.setText("")
+        bindingFindActivity.clearIcon.setOnClickListener {
+            bindingFindActivity.menuFindSearchEditText.setText("")
             trackList.clear()
             findAdapter.notifyDataSetChanged()
             setVisibilityViewsForShowSearchHistory(
@@ -160,23 +130,23 @@ class FindActivity : AppCompatActivity() {
             )
         }
 //---------------------------------------------------
-        back.setOnClickListenerWithViber {
+        bindingFindActivity.backFind.setOnClickListenerWithViber {
             finish()
         }
 //---------------------------------------------------
-        searchEditText.setOnFocusChangeListener { v, hasFocus ->
+        bindingFindActivity.menuFindSearchEditText.setOnFocusChangeListener { v, hasFocus ->
             searchHistory.searchHistoryList = getTrackList(
                 searchHistorySharedPreferences.getString(SEARCH_HISTORY_TRACK_LIST, null)
             )
             setVisibilityViewsForShowSearchHistory(
                 hasFocus
-                        && searchEditText.text.isEmpty()
+                        && bindingFindActivity.menuFindSearchEditText.text.isEmpty()
                         && searchHistory.searchHistoryList.isNotEmpty(),
                 findAdapter, historyAdapter, searchHistory
             )
         }
 //---------------------------------------------------
-        clearSearchHistory.setOnClickListenerWithViber {
+        bindingFindActivity.clearSearchHistory.setOnClickListenerWithViber {
             searchHistory.clearHistory()
             setVisibilityViewsForShowSearchHistory(
                 searchHistory.searchHistoryList.isNotEmpty(),
@@ -190,25 +160,25 @@ class FindActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 setVisibilityViewsForShowSearchHistory(
-                    searchEditText.hasFocus()
+                    bindingFindActivity.menuFindSearchEditText.hasFocus()
                             && s?.isEmpty() == true
                             && searchHistory.searchHistoryList.isNotEmpty(),
                     findAdapter, historyAdapter, searchHistory
                 )
 
-                textSearch = searchEditText.text.toString()
-                clearButton.visibility = clearButtonVisibility(s)
+                textSearch = bindingFindActivity.menuFindSearchEditText.text.toString()
+                bindingFindActivity.clearIcon.visibility = clearButtonVisibility(s)
                 if (s?.isNotEmpty() == true) searchDebounce(findAdapter)
                 else handlerMain.removeCallbacks(
                     { getMusic(textSearch, findAdapter) })
 
-                clearButton.isClickable = false
+                bindingFindActivity.clearIcon.isClickable = false
             }
 
             override fun afterTextChanged(s: Editable?) {
             }
         }
-        searchEditText.addTextChangedListener(simpleTextWatcher)
+        bindingFindActivity.menuFindSearchEditText.addTextChangedListener(simpleTextWatcher)
     }
 
     //---------------------------------------------------
@@ -253,23 +223,24 @@ class FindActivity : AppCompatActivity() {
     //---------------------------------------------------
     private fun setVisibilitySearchСompleted() {
         if (textSearch.isNotEmpty()) {
-            clearButton.isClickable = true
-            progressBar.visibility = View.GONE
-            plaseholderFindViewGroup.visibility = View.GONE
-            updateButton.visibility = View.GONE
-            trackRecyclerView.visibility = View.VISIBLE
+            bindingFindActivity.clearIcon.isClickable = true
+            bindingFindActivity.progressBar.visibility = View.GONE
+            bindingFindActivity.placeholderFindViewGroup.visibility = View.GONE
+            bindingFindActivity.placeholderButton.visibility = View.GONE
+            bindingFindActivity.tracksList.visibility = View.VISIBLE
         }
     }
 
     private fun setPlaceholderNothingFound(adapter: FindAdapter) {
         if (textSearch.isNotEmpty()) {
-            clearButton.isClickable = true
-            progressBar.visibility = View.GONE
-            plaseholderFindViewGroup.visibility = View.VISIBLE
-            updateButton.visibility = View.GONE
-            trackRecyclerView.visibility = View.GONE
-            placeholderFindText.text = getString(R.string.placeholder_nothing_found_text)
-            placeholderFindTint.setImageDrawable(getDrawable(R.drawable.nothing_found))
+            bindingFindActivity.clearIcon.isClickable = true
+            bindingFindActivity.progressBar.visibility = View.GONE
+            bindingFindActivity.placeholderFindViewGroup.visibility = View.VISIBLE
+            bindingFindActivity.placeholderButton.visibility = View.GONE
+            bindingFindActivity.tracksList.visibility = View.GONE
+            bindingFindActivity.placeholderFindText.text =
+                getString(R.string.placeholder_nothing_found_text)
+            bindingFindActivity.placeholderFindTint.setImageDrawable(getDrawable(R.drawable.nothing_found))
             trackList.clear()
             adapter.notifyDataSetChanged()
         }
@@ -277,13 +248,14 @@ class FindActivity : AppCompatActivity() {
 
     private fun setPlaceholderCommunicationProblems(adapter: FindAdapter) {
         if (textSearch.isNotEmpty()) {
-            clearButton.isClickable = true
-            progressBar.visibility = View.GONE
-            plaseholderFindViewGroup.visibility = View.VISIBLE
-            updateButton.visibility = View.VISIBLE
-            trackRecyclerView.visibility = View.GONE
-            placeholderFindText.text = getString(R.string.placeholder_communication_problems_text)
-            placeholderFindTint.setImageDrawable(getDrawable(R.drawable.communication_problem))
+            bindingFindActivity.clearIcon.isClickable = true
+            bindingFindActivity.progressBar.visibility = View.GONE
+            bindingFindActivity.placeholderFindViewGroup.visibility = View.VISIBLE
+            bindingFindActivity.placeholderButton.visibility = View.VISIBLE
+            bindingFindActivity.tracksList.visibility = View.GONE
+            bindingFindActivity.placeholderFindText.text =
+                getString(R.string.placeholder_communication_problems_text)
+            bindingFindActivity.placeholderFindTint.setImageDrawable(getDrawable(R.drawable.communication_problem))
             trackList.clear()
             adapter.notifyDataSetChanged()
         }
@@ -296,20 +268,20 @@ class FindActivity : AppCompatActivity() {
         searchHistory: SearchHistory
     ) {
         if (focus) {
-            progressBar.visibility = View.GONE
-            searchHistoryListView.visibility = View.VISIBLE
-            trackRecyclerView.visibility = View.GONE
-            plaseholderFindViewGroup.visibility = View.GONE
-            updateButton.visibility = View.GONE
+            bindingFindActivity.progressBar.visibility = View.GONE
+            bindingFindActivity.searchHistoryListView.visibility = View.VISIBLE
+            bindingFindActivity.tracksList.visibility = View.GONE
+            bindingFindActivity.placeholderFindViewGroup.visibility = View.GONE
+            bindingFindActivity.placeholderButton.visibility = View.GONE
             adapter.trackList.clear()
             adapter.notifyDataSetChanged()
             historyAdapter.trackList = searchHistory.searchHistoryList
             historyAdapter.notifyDataSetChanged()
         } else {
-            progressBar.visibility = View.GONE
-            searchHistoryListView.visibility = View.GONE
-            trackRecyclerView.visibility = View.VISIBLE
-            plaseholderFindViewGroup.visibility = View.GONE
+            bindingFindActivity.progressBar.visibility = View.GONE
+            bindingFindActivity.searchHistoryListView.visibility = View.GONE
+            bindingFindActivity.tracksList.visibility = View.VISIBLE
+            bindingFindActivity.placeholderFindViewGroup.visibility = View.GONE
             historyAdapter.trackList = searchHistory.searchHistoryList
             historyAdapter.notifyDataSetChanged()
         }
@@ -327,8 +299,8 @@ class FindActivity : AppCompatActivity() {
     //debounce пользовательского ввода
     private fun searchDebounce(adapter: FindAdapter) {
         handlerMain.post {
-            progressBar.visibility = View.VISIBLE
-            trackRecyclerView.visibility = View.GONE
+            bindingFindActivity.progressBar.visibility = View.VISIBLE
+            bindingFindActivity.tracksList.visibility = View.GONE
         }
         handlerMain.removeCallbacks({ getMusic(textSearch, adapter) })
         handlerMain.postDelayed({ getMusic(textSearch, adapter) }, SEARCH_DEBOUNCE_DELAY)
