@@ -130,7 +130,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/padding_4"
         android:lines="1"
-        android:text="@string/_0_30"
         android:textSize="14sp"
         android:fontFamily="@font/ys_display_medium"
         android:textFontWeight="500"
