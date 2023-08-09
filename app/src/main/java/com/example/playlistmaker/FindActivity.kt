@@ -184,6 +184,7 @@ class FindActivity : AppCompatActivity() {
     //---------------------------------------------------
     private fun getMusic(text: String, adapter: FindAdapter) {
         if (textSearch.isNotEmpty()) {
+            handlerMain.post { bindingFindActivity.progressBar.visibility = View.VISIBLE }
             iTunesService
                 .searchTracks(text)
                 .enqueue(object : Callback<TracksResponse> {
@@ -301,7 +302,6 @@ class FindActivity : AppCompatActivity() {
     //debounce пользовательского ввода
     private fun searchDebounce(adapter: FindAdapter) {
         handlerMain.post {
-            bindingFindActivity.progressBar.visibility = View.VISIBLE
             bindingFindActivity.tracksList.visibility = View.GONE
         }
         handlerMain.removeCallbacks({ getMusic(textSearch, adapter) })
