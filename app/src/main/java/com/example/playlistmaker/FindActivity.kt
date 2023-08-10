@@ -289,7 +289,7 @@ class FindActivity : AppCompatActivity() {
     }
 
     private fun clickedTrack(track: Track, searchHistory: SearchHistory) {
-        if (isClicedTrackAllowed){
+        if (trackClickedDebounce()){
             searchHistory.savedTrack(track)
             val mediaIntent = Intent(this, MediaActivity::class.java)
             mediaIntent.putExtra("clickedTrack", Gson().toJson(track))
@@ -308,7 +308,7 @@ class FindActivity : AppCompatActivity() {
         handlerMain.postDelayed({ getMusic(textSearch, adapter) }, SEARCH_DEBOUNCE_DELAY)
     }
 
-    private fun textChangedDebounce(): Boolean {
+    private fun trackClickedDebounce(): Boolean {
         val current = isClicedTrackAllowed
         if (isClicedTrackAllowed) {
             isClicedTrackAllowed = false

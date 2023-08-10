@@ -20,20 +20,21 @@ class MediaActivity : AppCompatActivity() {
     companion object {
         private const val CLICKED_TRACK = "CLICKED_TRACK"
         private const val cornersRatio = 120
-        private const val UPDATE_TIMER_TRACK = 300L
+        private const val UPDATE_TIMER_TRACK = 500L
     }
 
     private var receivedTrack: String? = null
     private var widthDisplay = 0
     private var roundedCorners = 0
     private lateinit var binding: ActivityMediaBinding
-    val trackNullMean = "-"
+    private lateinit var trackNullMean: String
+    private var timerStart = 30_000L
 
     // инициализируем медиа плеер
     // и задаем его состояние по умолчанию
     private var mediaPlayer = MediaPlayer()
     var playerState = PlayerState.STATE_DEFAULT
-    private lateinit var trackUrl: String
+    private var trackUrl: String? = null
 
     private var handlerMain: Handler? = null
 
@@ -47,6 +48,7 @@ class MediaActivity : AppCompatActivity() {
         binding = ActivityMediaBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+        trackNullMean = getString(R.string.noData)
         handlerMain = Handler(Looper.getMainLooper())
         // вычисляем радиус углов от реального размера картинки исходя из параметров верстки радиус 8
         // при высоте дисплея 832 из которых обложка - 312
@@ -62,16 +64,14 @@ class MediaActivity : AppCompatActivity() {
         if (clickedTrack != null) {
             filledTrackMeans(clickedTrack)
             trackUrl = clickedTrack.previewUrl
+            preparePlayer()
         } else filledNullTrackMeans()
-
-        // Подготовка плеера и установка слушателей
-        preparePlayer()
-
+// Подготовка плеера и установка слушателей
         binding.backMedia.setOnClickListenerWithViber {
             finish()
         }
 
-        binding.playPause.setOnClickListener {
+        binding.playPause.setOnClickListenerWithViber {
             playbackControl()
         }
     }
@@ -82,21 +82,20 @@ class MediaActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         mediaPlayer.release()
+        super.onDestroy()
     }
 
 
     private fun filledTrackMeans(track: Track) {
         binding.addFavorite.isClickable = true
         binding.addCollection.isClickable = true
-        Glide
-            .with(this)
-            .load(track.getCoverArtwork())
-            .placeholder(R.drawable.placeholder_media_image)
-            .centerCrop()
-            .transform(RoundedCorners(roundedCorners))
-            .into(binding.trackImageMedia)
+        binding.timerMedia.text = SimpleDateFormat(
+            "mm:ss", Locale.getDefault()
+        ).format(timerStart)
+        Glide.with(this).load(track.getCoverArtwork())
+            .placeholder(R.drawable.placeholder_media_image).centerCrop()
+            .transform(RoundedCorners(roundedCorners)).into(binding.trackImageMedia)
         binding.trackNameMedia.text = track.trackName
         binding.trackArtistMedia.text = track.artistName
         binding.yearMediaMean.text = track.getYear()
@@ -116,15 +115,15 @@ class MediaActivity : AppCompatActivity() {
     private fun filledNullTrackMeans() {
         binding.albumMediaMean.isVisible = true
         binding.albumMedia.isVisible = true
-        binding.playPause.isClickable = false
+        binding.playPause.isEnabled = false
         binding.addFavorite.isClickable = false
         binding.addCollection.isClickable = false
-        Glide
-            .with(this)
-            .load(R.drawable.placeholder_media_image)
-            .centerCrop()
-            .transform(RoundedCorners(roundedCorners))
-            .into(binding.trackImageMedia)
+        trackUrl = ""
+        binding.timerMedia.text = SimpleDateFormat(
+            "mm:ss", Locale.getDefault()
+        ).format(timerStart)
+        Glide.with(this).load(R.drawable.placeholder_media_image).centerCrop()
+            .transform(RoundedCorners(roundedCorners)).into(binding.trackImageMedia)
         binding.trackNameMedia.text = trackNullMean
         binding.trackArtistMedia.text = trackNullMean
         binding.yearMediaMean.text = trackNullMean
@@ -153,10 +152,11 @@ class MediaActivity : AppCompatActivity() {
         mediaPlayer.start()
         binding.playPause.setImageDrawable(getDrawable(R.drawable.pause_button))
         playerState = PlayerState.STATE_PLAYING
-        handlerMain?.post ( updateTimerMedia() )
+        handlerMain?.post(updateTimerMedia())
     }
 
     private fun pausePlayer() {
+        handlerMain?.removeCallbacks(updateTimerMedia())
         mediaPlayer.pause()
         binding.playPause.setImageDrawable(getDrawable(R.drawable.play_button))
         playerState = PlayerState.STATE_PAUSED
@@ -177,14 +177,15 @@ class MediaActivity : AppCompatActivity() {
     }
 
     private fun updateTimerMedia(): Runnable {
-        return object :Runnable {
+        return object : Runnable {
             override fun run() {
-                binding.timerMedia.text = SimpleDateFormat(
-                    "mm:ss", Locale
-                        .getDefault()
-                )
-                    .format(mediaPlayer.currentPosition)
-                handlerMain?.postDelayed(this, UPDATE_TIMER_TRACK)
+                if (playerState == PlayerState.STATE_PLAYING) {
+                    val currentTimer = timerStart - mediaPlayer.currentPosition
+                    binding.timerMedia.text = SimpleDateFormat(
+                        "mm:ss", Locale.getDefault()
+                    ).format(currentTimer)
+                    handlerMain?.postDelayed(this, UPDATE_TIMER_TRACK)
+                }
             }
 
         }

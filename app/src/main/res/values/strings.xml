@@ -23,4 +23,5 @@
     <string name="year">Год</string>
     <string name="genre">Жанр</string>
     <string name="country">Страна</string>
+    <string name="noData" translatable="true">"нет данных"</string>
 </resources>
