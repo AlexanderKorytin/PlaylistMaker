@@ -113,7 +113,6 @@ class MediaActivity : AppCompatActivity() {
         mediaPlayer.setDataSource(trackUrl)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
-            binding.playPause.isEnabled = true
             playerState = PlayerState.STATE_PREPARED
         }
         mediaPlayer.setOnCompletionListener {
@@ -122,6 +121,7 @@ class MediaActivity : AppCompatActivity() {
                 "mm:ss", Locale.getDefault()
             ).format(timerStart)
             playerState = PlayerState.STATE_PREPARED
+            binding.playPause.isEnabled = true
         }
     }
 
