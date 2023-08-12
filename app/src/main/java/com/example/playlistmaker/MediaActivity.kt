@@ -20,15 +20,14 @@ class MediaActivity : AppCompatActivity() {
     companion object {
         private const val CLICKED_TRACK = "CLICKED_TRACK"
         private const val cornersRatio = 120
-        private const val UPDATE_TIMER_TRACK = 500L
+        private const val UPDATE_TIMER_TRACK = 300L
     }
 
     private var receivedTrack: String? = null
     private var widthDisplay = 0
     private var roundedCorners = 0
     private lateinit var binding: ActivityMediaBinding
-    private lateinit var trackNullMean: String
-    private var timerStart = 30_000L
+    private var timerStart = 0L
 
     // инициализируем медиа плеер
     // и задаем его состояние по умолчанию
@@ -48,7 +47,6 @@ class MediaActivity : AppCompatActivity() {
         binding = ActivityMediaBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-        trackNullMean = getString(R.string.noData)
         handlerMain = Handler(Looper.getMainLooper())
         // вычисляем радиус углов от реального размера картинки исходя из параметров верстки радиус 8
         // при высоте дисплея 832 из которых обложка - 312
@@ -61,11 +59,9 @@ class MediaActivity : AppCompatActivity() {
         receivedTrack = savedInstanceState?.getString(CLICKED_TRACK, "")
             ?: intent.getStringExtra("clickedTrack")
         val clickedTrack = Gson().fromJson(receivedTrack, Track::class.java)
-        if (clickedTrack != null) {
             filledTrackMeans(clickedTrack)
             trackUrl = clickedTrack.previewUrl
             preparePlayer()
-        } else filledNullTrackMeans()
 // Подготовка плеера и установка слушателей
         binding.backMedia.setOnClickListenerWithViber {
             finish()
@@ -112,28 +108,6 @@ class MediaActivity : AppCompatActivity() {
         }
     }
 
-    private fun filledNullTrackMeans() {
-        binding.albumMediaMean.isVisible = true
-        binding.albumMedia.isVisible = true
-        binding.playPause.isEnabled = false
-        binding.addFavorite.isClickable = false
-        binding.addCollection.isClickable = false
-        trackUrl = ""
-        binding.timerMedia.text = SimpleDateFormat(
-            "mm:ss", Locale.getDefault()
-        ).format(timerStart)
-        Glide.with(this).load(R.drawable.placeholder_media_image).centerCrop()
-            .transform(RoundedCorners(roundedCorners)).into(binding.trackImageMedia)
-        binding.trackNameMedia.text = trackNullMean
-        binding.trackArtistMedia.text = trackNullMean
-        binding.yearMediaMean.text = trackNullMean
-        binding.countryMediaMean.text = trackNullMean
-        binding.genreMediaMean.text = trackNullMean
-        binding.timeMediaMean.text = trackNullMean
-        binding.albumMediaMean.text = trackNullMean
-
-    }
-
     private fun preparePlayer() {
         // передаем ссылку на 30 сек отрывок медиа плееру
         mediaPlayer.setDataSource(trackUrl)
@@ -144,6 +118,9 @@ class MediaActivity : AppCompatActivity() {
         }
         mediaPlayer.setOnCompletionListener {
             binding.playPause.setImageDrawable(getDrawable(R.drawable.play_button))
+            binding.timerMedia.text = SimpleDateFormat(
+                "mm:ss", Locale.getDefault()
+            ).format(timerStart)
             playerState = PlayerState.STATE_PREPARED
         }
     }
@@ -180,10 +157,9 @@ class MediaActivity : AppCompatActivity() {
         return object : Runnable {
             override fun run() {
                 if (playerState == PlayerState.STATE_PLAYING) {
-                    val currentTimer = timerStart - mediaPlayer.currentPosition
                     binding.timerMedia.text = SimpleDateFormat(
                         "mm:ss", Locale.getDefault()
-                    ).format(currentTimer)
+                    ).format(mediaPlayer.currentPosition)
                     handlerMain?.postDelayed(this, UPDATE_TIMER_TRACK)
                 }
             }
