@@ -3,25 +3,14 @@ package com.example.playlistmaker
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.inputmethod.EditorInfo
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.databinding.ActivityFindBinding
 import com.google.gson.Gson
 import retrofit2.Call
@@ -42,7 +31,7 @@ class FindActivity : AppCompatActivity() {
     }
 
     private lateinit var bindingFindActivity: ActivityFindBinding
-    private var isClicedTrackAllowed = true
+    private var isClickTrackAllowed = true
     private var textSearch = ""
     private var textSearchLast = ""
     private var trackList: ArrayList<Track> = ArrayList()
@@ -71,7 +60,6 @@ class FindActivity : AppCompatActivity() {
 
     //---------------------------------------------------
     @SuppressLint("MissingInflatedId")
-    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bindingFindActivity = ActivityFindBinding.inflate(layoutInflater)
@@ -289,7 +277,7 @@ class FindActivity : AppCompatActivity() {
     }
 
     private fun clickedTrack(track: Track, searchHistory: SearchHistory) {
-        if (trackClickedDebounce()){
+        if (trackClickedDebounce()) {
             searchHistory.savedTrack(track)
             val mediaIntent = Intent(this, MediaActivity::class.java)
             mediaIntent.putExtra("clickedTrack", Gson().toJson(track))
@@ -309,10 +297,10 @@ class FindActivity : AppCompatActivity() {
     }
 
     private fun trackClickedDebounce(): Boolean {
-        val current = isClicedTrackAllowed
-        if (isClicedTrackAllowed) {
-            isClicedTrackAllowed = false
-            handlerMain.postDelayed({ isClicedTrackAllowed = true }, CLICED_TRACK_DELAY)
+        val current = isClickTrackAllowed
+        if (isClickTrackAllowed) {
+            isClickTrackAllowed = false
+            handlerMain.postDelayed({ isClickTrackAllowed = true }, CLICED_TRACK_DELAY)
         }
         return current
     }

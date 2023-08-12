@@ -2,11 +2,11 @@ package com.example.playlistmaker
 
 import android.icu.text.SimpleDateFormat
 import android.media.MediaPlayer
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.DisplayMetrics
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -59,9 +59,9 @@ class MediaActivity : AppCompatActivity() {
         receivedTrack = savedInstanceState?.getString(CLICKED_TRACK, "")
             ?: intent.getStringExtra("clickedTrack")
         val clickedTrack = Gson().fromJson(receivedTrack, Track::class.java)
-            filledTrackMeans(clickedTrack)
-            trackUrl = clickedTrack.previewUrl
-            preparePlayer()
+        filledTrackMeans(clickedTrack)
+        trackUrl = clickedTrack.previewUrl
+        preparePlayer()
 // Подготовка плеера и установка слушателей
         binding.backMedia.setOnClickListenerWithViber {
             finish()
