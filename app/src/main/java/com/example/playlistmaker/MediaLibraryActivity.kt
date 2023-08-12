@@ -15,7 +15,7 @@ class MediaLibraryActivity : AppCompatActivity() {
         val view = bindingMediaLibraryActivity.root
         setContentView(view)
 
-        bindingMediaLibraryActivity.backMediaLibray.setOnClickListener {
+        bindingMediaLibraryActivity.backMediaLibray.setOnClickListenerWithViber {
             finish()
         }
     }
