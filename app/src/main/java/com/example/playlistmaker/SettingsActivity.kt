@@ -1,11 +1,13 @@
 package com.example.playlistmaker
 
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 
@@ -39,7 +41,11 @@ class SettingsActivity : AppCompatActivity() {
             val shareAppIntent = Intent(Intent.ACTION_SEND)
             shareAppIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_app_text))
             shareAppIntent.type = "text/plain"
-            startActivity(shareAppIntent)
+            try {
+                startActivity(shareAppIntent)
+            } catch (activityNotFound: ActivityNotFoundException) {
+                Toast.makeText(this, getString(R.string.App_not_found), Toast.LENGTH_SHORT).show()
+            }
         }
 
         writeToSupport.setOnClickListenerWithViber {
@@ -55,14 +61,23 @@ class SettingsActivity : AppCompatActivity() {
                 getString(R.string.mail_support_subject)
             )
             writeSupportIntent.putExtra(Intent.EXTRA_TEXT, message)
-            startActivity(writeSupportIntent)
+            try {
+                startActivity(writeSupportIntent)
+            } catch (activityNotFound: ActivityNotFoundException) {
+                Toast.makeText(this, getString(R.string.App_not_found), Toast.LENGTH_SHORT).show()
+            }
         }
 
         userAgreement.setOnClickListenerWithViber {
             val userAgreementIntent =
                 Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.user_agreement_uri)))
-            startActivity(userAgreementIntent)
-        }
+            try {
+                startActivity(userAgreementIntent)
+            } catch (activityNotFound: ActivityNotFoundException) {
+                Toast.makeText(this, getString(R.string.App_not_found), Toast.LENGTH_SHORT)
+                    .show()
+            }
 
+        }
     }
 }

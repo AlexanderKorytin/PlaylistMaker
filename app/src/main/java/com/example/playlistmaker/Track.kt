@@ -12,7 +12,8 @@ data class Track(
     val country: String,
     val collectionName: String,
     val releaseDate: String,
-    val primaryGenreName: String
+    val primaryGenreName: String,
+    val previewUrl: String
 ){
     fun getTrackTime(): String {
         return if (trackTimeMillis!=null) SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis.toLong())
