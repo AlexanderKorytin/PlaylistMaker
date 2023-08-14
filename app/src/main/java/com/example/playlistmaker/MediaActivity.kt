@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.DisplayMetrics
+import android.view.animation.Animation
+import android.view.animation.Animation.AnimationListener
+import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
@@ -28,6 +31,9 @@ class MediaActivity : AppCompatActivity() {
     private var roundedCorners = 0
     private lateinit var binding: ActivityMediaBinding
     private var timerStart = 0L
+    private var timerStop = 0L
+    private lateinit var outAnim: Animation
+    private lateinit var inAnim: Animation
 
     // инициализируем медиа плеер
     // и задаем его состояние по умолчанию
@@ -61,6 +67,42 @@ class MediaActivity : AppCompatActivity() {
         val clickedTrack = Gson().fromJson(receivedTrack, Track::class.java)
         filledTrackMeans(clickedTrack)
         trackUrl = clickedTrack.previewUrl
+
+
+        //загружаем анимации
+        inAnim = AnimationUtils.loadAnimation(this, R.anim.fadein)
+        outAnim = AnimationUtils.loadAnimation(this, R.anim.fadeout)
+        //добавляем слушателя на анимацию
+        outAnim.setAnimationListener(object : AnimationListener{
+            override fun onAnimationStart(animation: Animation?) {
+
+            }
+
+            override fun onAnimationEnd(animation: Animation?) {
+                playbackControl()
+                binding.playPause.startAnimation(inAnim)
+            }
+
+            override fun onAnimationRepeat(animation: Animation?) {
+
+            }
+
+        })
+        inAnim.setAnimationListener(object: AnimationListener{
+            override fun onAnimationStart(animation: Animation?) {
+
+            }
+
+            override fun onAnimationEnd(animation: Animation?) {
+                setVibe()
+            }
+
+            override fun onAnimationRepeat(animation: Animation?) {
+
+            }
+
+        })
+
         preparePlayer()
 // Подготовка плеера и установка слушателей
         binding.backMedia.setOnClickListenerWithViber {
@@ -68,7 +110,7 @@ class MediaActivity : AppCompatActivity() {
         }
 
         binding.playPause.setOnClickListenerWithViber {
-            playbackControl()
+            binding.playPause.startAnimation(outAnim)
         }
     }
 
@@ -160,6 +202,7 @@ class MediaActivity : AppCompatActivity() {
                     binding.timerMedia.text = SimpleDateFormat(
                         "mm:ss", Locale.getDefault()
                     ).format(mediaPlayer.currentPosition)
+                    timerStop = mediaPlayer.currentPosition.toLong()
                     handlerMain?.postDelayed(this, UPDATE_TIMER_TRACK)
                 }
             }
