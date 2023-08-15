@@ -1,11 +1,13 @@
 package com.example.playlistmaker
 
+import android.annotation.SuppressLint
 import android.icu.text.SimpleDateFormat
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.DisplayMetrics
+import android.view.MotionEvent
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
@@ -31,7 +33,6 @@ class MediaActivity : AppCompatActivity() {
     private var roundedCorners = 0
     private lateinit var binding: ActivityMediaBinding
     private var timerStart = 0L
-    private var timerStop = 0L
     private lateinit var outAnim: Animation
     private lateinit var inAnim: Animation
 
@@ -48,6 +49,7 @@ class MediaActivity : AppCompatActivity() {
         outState.putString(CLICKED_TRACK, receivedTrack)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMediaBinding.inflate(layoutInflater)
@@ -73,14 +75,13 @@ class MediaActivity : AppCompatActivity() {
         inAnim = AnimationUtils.loadAnimation(this, R.anim.fadein)
         outAnim = AnimationUtils.loadAnimation(this, R.anim.fadeout)
         //добавляем слушателя на анимацию
-        outAnim.setAnimationListener(object : AnimationListener{
+        outAnim.setAnimationListener(object : AnimationListener {
             override fun onAnimationStart(animation: Animation?) {
 
             }
 
             override fun onAnimationEnd(animation: Animation?) {
-                playbackControl()
-                binding.playPause.startAnimation(inAnim)
+                setVibe()
             }
 
             override fun onAnimationRepeat(animation: Animation?) {
@@ -88,9 +89,9 @@ class MediaActivity : AppCompatActivity() {
             }
 
         })
-        inAnim.setAnimationListener(object: AnimationListener{
+        inAnim.setAnimationListener(object : AnimationListener {
             override fun onAnimationStart(animation: Animation?) {
-
+                playbackControl()
             }
 
             override fun onAnimationEnd(animation: Animation?) {
@@ -109,8 +110,21 @@ class MediaActivity : AppCompatActivity() {
             finish()
         }
 
-        binding.playPause.setOnClickListenerWithViber {
-            binding.playPause.startAnimation(outAnim)
+        binding.playPause.setOnTouchListener { v, event ->
+            when(event.action){
+
+                MotionEvent.ACTION_DOWN -> {
+                    binding.playPause.startAnimation(outAnim)
+                    return@setOnTouchListener false
+                }
+
+                MotionEvent.ACTION_UP -> {
+                    binding.playPause.startAnimation(inAnim)
+                    return@setOnTouchListener false
+                }
+
+                else -> {return@setOnTouchListener true}
+            }
         }
     }
 
@@ -202,7 +216,6 @@ class MediaActivity : AppCompatActivity() {
                     binding.timerMedia.text = SimpleDateFormat(
                         "mm:ss", Locale.getDefault()
                     ).format(mediaPlayer.currentPosition)
-                    timerStop = mediaPlayer.currentPosition.toLong()
                     handlerMain?.postDelayed(this, UPDATE_TIMER_TRACK)
                 }
             }
