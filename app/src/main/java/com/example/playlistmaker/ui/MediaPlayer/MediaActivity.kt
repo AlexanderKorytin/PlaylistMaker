@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.MediaPlayer
 
 import android.annotation.SuppressLint
 import android.icu.text.SimpleDateFormat
@@ -13,9 +13,14 @@ import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.PlayerState
+import com.example.playlistmaker.R
+import com.example.playlistmaker.data.network.ImageLoaderGlide
 import com.example.playlistmaker.databinding.ActivityMediaBinding
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.dpToPx
+import com.example.playlistmaker.setOnClickListenerWithViber
+import com.example.playlistmaker.setVibe
 import com.google.gson.Gson
 import java.util.Locale
 
@@ -43,6 +48,7 @@ class MediaActivity : AppCompatActivity() {
     private var trackUrl: String? = null
 
     private var handlerMain: Handler? = null
+    private val imageLoaderGlide = ImageLoaderGlide()
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -111,7 +117,7 @@ class MediaActivity : AppCompatActivity() {
         }
 
         binding.playPause.setOnTouchListener { v, event ->
-            when(event.action){
+            when (event.action) {
 
                 MotionEvent.ACTION_DOWN -> {
                     binding.playPause.startAnimation(outAnim)
@@ -123,7 +129,9 @@ class MediaActivity : AppCompatActivity() {
                     return@setOnTouchListener false
                 }
 
-                else -> {return@setOnTouchListener true}
+                else -> {
+                    return@setOnTouchListener true
+                }
             }
         }
     }
@@ -145,9 +153,12 @@ class MediaActivity : AppCompatActivity() {
         binding.timerMedia.text = SimpleDateFormat(
             "mm:ss", Locale.getDefault()
         ).format(timerStart)
-        Glide.with(this).load(track.getCoverArtwork())
-            .placeholder(R.drawable.placeholder_media_image).centerCrop()
-            .transform(RoundedCorners(roundedCorners)).into(binding.trackImageMedia)
+        imageLoaderGlide
+            .loadImage(
+                track.getCoverArtwork(),
+                R.drawable.placeholder_media_image,
+                binding.trackImageMedia
+            )
         binding.trackNameMedia.text = track.trackName
         binding.trackArtistMedia.text = track.artistName
         binding.yearMediaMean.text = track.getYear()

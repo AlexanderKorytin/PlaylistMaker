@@ -18,11 +18,11 @@
 
         <activity
             android:screenOrientation="portrait"
-            android:name=".FindActivity"
+            android:name=".ui.Find.FindActivity"
             android:exported="false"
             android:theme="@style/Theme.SettingsActivity" />
         <activity
-            android:name=".MediaActivity"
+            android:name=".ui.MediaPlayer.MediaActivity"
             android:exported="false"
             android:theme="@style/Theme.SettingsActivity" />
         <activity

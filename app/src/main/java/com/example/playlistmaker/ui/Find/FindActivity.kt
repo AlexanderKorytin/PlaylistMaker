@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.Find
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -11,7 +11,15 @@ import android.text.TextWatcher
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.playlistmaker.data.network.ITunesApi
+import com.example.playlistmaker.ui.MediaPlayer.MediaActivity
+import com.example.playlistmaker.R
+import com.example.playlistmaker.SearchHistory
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.data.dto.TracksResponse
 import com.example.playlistmaker.databinding.ActivityFindBinding
+import com.example.playlistmaker.getTrackList
+import com.example.playlistmaker.setOnClickListenerWithViber
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
@@ -27,7 +35,7 @@ class FindActivity : AppCompatActivity() {
         private const val SEARCH_QUERY = "SEARCH_QUERY"
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private const val CLICED_TRACK_DELAY = 1000L
-        private const val baseUrlFilms = " https://itunes.apple.com"
+        private const val baseUrlAppleMusic = " https://itunes.apple.com"
     }
 
     private lateinit var bindingFindActivity: ActivityFindBinding
@@ -39,7 +47,7 @@ class FindActivity : AppCompatActivity() {
 
     private val retrofit = Retrofit
         .Builder()
-        .baseUrl(baseUrlFilms)
+        .baseUrl(baseUrlAppleMusic)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val iTunesService = retrofit.create(ITunesApi::class.java)
