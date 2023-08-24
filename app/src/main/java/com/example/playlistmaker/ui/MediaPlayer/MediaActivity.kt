@@ -13,14 +13,16 @@ import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import com.example.playlistmaker.PlayerState
+import com.example.playlistmaker.presentetion.PlayerState
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.network.ImageLoaderGlide
+import com.example.playlistmaker.domain.impl.ImageLoaderGlide
 import com.example.playlistmaker.databinding.ActivityMediaBinding
+import com.example.playlistmaker.domain.impl.GetClickedTrackFromGson
+import com.example.playlistmaker.domain.models.ClickedTrack
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.dpToPx
-import com.example.playlistmaker.setOnClickListenerWithViber
-import com.example.playlistmaker.setVibe
+import com.example.playlistmaker.presentetion.dpToPx
+import com.example.playlistmaker.presentetion.setOnClickListenerWithViber
+import com.example.playlistmaker.presentetion.setVibe
 import com.google.gson.Gson
 import java.util.Locale
 
@@ -49,6 +51,7 @@ class MediaActivity : AppCompatActivity() {
 
     private var handlerMain: Handler? = null
     private val imageLoaderGlide = ImageLoaderGlide()
+    private val getClickedTrack = GetClickedTrackFromGson()
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -72,7 +75,7 @@ class MediaActivity : AppCompatActivity() {
 
         receivedTrack = savedInstanceState?.getString(CLICKED_TRACK, "")
             ?: intent.getStringExtra("clickedTrack")
-        val clickedTrack = Gson().fromJson(receivedTrack, Track::class.java)
+        val clickedTrack = getClickedTrack.execute(receivedTrack)
         filledTrackMeans(clickedTrack)
         trackUrl = clickedTrack.previewUrl
 
@@ -147,7 +150,7 @@ class MediaActivity : AppCompatActivity() {
     }
 
 
-    private fun filledTrackMeans(track: Track) {
+    private fun filledTrackMeans(track: ClickedTrack) {
         binding.addFavorite.isClickable = true
         binding.addCollection.isClickable = true
         binding.timerMedia.text = SimpleDateFormat(
@@ -155,17 +158,18 @@ class MediaActivity : AppCompatActivity() {
         ).format(timerStart)
         imageLoaderGlide
             .loadImage(
-                track.getCoverArtwork(),
+                track.coverArtWork,
                 R.drawable.placeholder_media_image,
-                binding.trackImageMedia
+                binding.trackImageMedia,
+                roundedCorners
             )
         binding.trackNameMedia.text = track.trackName
         binding.trackArtistMedia.text = track.artistName
-        binding.yearMediaMean.text = track.getYear()
+        binding.yearMediaMean.text = track.year
         binding.countryMediaMean.text = track.country
         binding.genreMediaMean.text = track.primaryGenreName
-        binding.timeMediaMean.text = track.getTrackTime()
-        if (track.collectionName != null) {
+        binding.timeMediaMean.text = track.trackTime
+        if (track.collectionName != "") {
             binding.albumMediaMean.isVisible = true
             binding.albumMedia.isVisible = true
             binding.albumMediaMean.text = track.collectionName

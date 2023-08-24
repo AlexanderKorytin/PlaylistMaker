@@ -1,14 +1,9 @@
 package com.example.playlistmaker.domain.models
 
-import java.text.SimpleDateFormat
-import java.util.Locale
-
-data class Track(
-    val trackId: Long,
+data class ClickedTrack(
     val trackName: String,
     val artistName: String,
     val trackTime: String,
-    val artworkUrl100: String,
     val country: String,
     val collectionName: String,
     val year: String,

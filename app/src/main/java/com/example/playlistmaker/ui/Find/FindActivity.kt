@@ -10,16 +10,24 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.playlistmaker.data.network.ITunesApi
-import com.example.playlistmaker.ui.MediaPlayer.MediaActivity
 import com.example.playlistmaker.R
 import com.example.playlistmaker.SearchHistory
-import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.data.dto.TracksResponse
+import com.example.playlistmaker.data.network.ITunesApi
+import com.example.playlistmaker.data.network.RetrofitNetworkClient
+import com.example.playlistmaker.data.network.TracksRepositoryImpl
 import com.example.playlistmaker.databinding.ActivityFindBinding
-import com.example.playlistmaker.getTrackList
-import com.example.playlistmaker.setOnClickListenerWithViber
+import com.example.playlistmaker.domain.api.SetViewVisibilityUseCase
+import com.example.playlistmaker.domain.api.TracksInteractor
+import com.example.playlistmaker.domain.api.TracksRepository
+import com.example.playlistmaker.domain.impl.SetViewVisibilityClearButton
+import com.example.playlistmaker.domain.impl.TracksInteractorImpl
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.presentetion.getTrackList
+import com.example.playlistmaker.presentetion.setOnClickListenerWithViber
+import com.example.playlistmaker.ui.MediaPlayer.MediaActivity
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
@@ -51,6 +59,10 @@ class FindActivity : AppCompatActivity() {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val iTunesService = retrofit.create(ITunesApi::class.java)
+    private val networkClient = RetrofitNetworkClient()
+    private val tracksRepository = TracksRepositoryImpl(networkClient)
+    private val trackInteractor = TracksInteractorImpl(tracksRepository)
+    private val setVisibilityClearButton = SetViewVisibilityClearButton()
 
     //---------------------------------------------------
     // запоминаем текст в EditText и восстанавливаем при повороте экрана
@@ -163,7 +175,7 @@ class FindActivity : AppCompatActivity() {
                 )
 
                 textSearch = bindingFindActivity.menuFindSearchEditText.text.toString()
-                bindingFindActivity.clearIcon.visibility = clearButtonVisibility(s)
+                bindingFindActivity.clearIcon.isVisible = setVisibilityClearButton.execute(s)
                 if (s?.isNotEmpty() == true) searchDebounce(findAdapter)
                 else handlerMain.removeCallbacks(
                     { getMusic(textSearch, findAdapter) })
@@ -194,7 +206,21 @@ class FindActivity : AppCompatActivity() {
                                 if (response.body()?.results?.isNotEmpty() == true) {
                                     setVisibilitySearchСompleted()
                                     trackList.clear()
-                                    trackList.addAll(response.body()?.results!!)
+                                    trackList.addAll(response.body()?.results!!.map {
+                                        Track(
+                                            it.trackId,
+                                            it.getParam(it.trackName),
+                                            it.getParam(it.artistName),
+                                            it.getTrackTime(),
+                                            it.getParam(it.artworkUrl100),
+                                            it.getParam(it.country),
+                                            it.getParam(it.collectionName),
+                                            it.getYear(),
+                                            it.getParam(it.primaryGenreName),
+                                            it.getParam(it.previewUrl),
+                                            it.getCoverArtwork()
+                                        )
+                                    })
                                     adapter.notifyDataSetChanged()
                                 } else {
                                     setPlaceholderNothingFound(adapter)
@@ -315,12 +341,3 @@ class FindActivity : AppCompatActivity() {
 
 }
 //---------------------------------------------------
-
-private fun clearButtonVisibility(s: CharSequence?): Int {
-    return if (s.isNullOrEmpty()) {
-        View.GONE
-    } else {
-        View.VISIBLE
-    }
-
-}
