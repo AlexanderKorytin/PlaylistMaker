@@ -15,15 +15,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.playlistmaker.presentetion.PlayerState
 import com.example.playlistmaker.R
-import com.example.playlistmaker.domain.impl.ImageLoaderGlide
+import com.example.playlistmaker.data.dto.ImageLoaderGlide
 import com.example.playlistmaker.databinding.ActivityMediaBinding
-import com.example.playlistmaker.domain.impl.GetClickedTrackFromGson
+import com.example.playlistmaker.data.dto.GetClickedTrackFromGson
 import com.example.playlistmaker.domain.models.ClickedTrack
-import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.presentetion.dpToPx
 import com.example.playlistmaker.presentetion.setOnClickListenerWithViber
 import com.example.playlistmaker.presentetion.setVibe
-import com.google.gson.Gson
 import java.util.Locale
 
 

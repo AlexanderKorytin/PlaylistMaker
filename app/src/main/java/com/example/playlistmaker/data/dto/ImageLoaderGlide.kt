@@ -1,10 +1,9 @@
-package com.example.playlistmaker.domain.impl
+package com.example.playlistmaker.data.dto
 
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.playlistmaker.data.ImageLoader
-import kotlin.math.round
+import com.example.playlistmaker.domain.api.ImageLoader
 
 class ImageLoaderGlide: ImageLoader {
 

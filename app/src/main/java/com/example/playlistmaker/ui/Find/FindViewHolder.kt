@@ -5,7 +5,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.domain.impl.ImageLoaderGlide
+import com.example.playlistmaker.data.dto.ImageLoaderGlide
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.presentetion.dpToPx
 

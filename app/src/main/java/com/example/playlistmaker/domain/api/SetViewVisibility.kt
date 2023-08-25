@@ -1,5 +1,5 @@
 package com.example.playlistmaker.domain.api
 
-interface SetViewVisibilityUseCase {
+interface SetViewVisibility {
     fun execute(s: Any?): Boolean
 }
