@@ -1,9 +1,11 @@
-package com.example.playlistmaker.ui.find
+package com.example.playlistmaker.presentetion.ui.find
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
+import com.example.playlistmaker.data.dto.ImageLoaderGlide
+import com.example.playlistmaker.domain.impl.ImageLoaderUseCase
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.presentetion.setOnClickListenerWithViber
 
@@ -11,10 +13,12 @@ import com.example.playlistmaker.presentetion.setOnClickListenerWithViber
 class FindAdapter(val trackClickListner: TrackClickListner) :
     RecyclerView.Adapter<FindViewHolder>() {
     var trackList = ArrayList<Track>()
+    val imageLoader = ImageLoaderGlide()
+    val imageLoaderUseCase = ImageLoaderUseCase()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FindViewHolder {
 
         val view = LayoutInflater.from(parent.context).inflate(R.layout.track_view, parent, false)
-        return FindViewHolder(view)
+        return FindViewHolder(view, imageLoaderUseCase)
     }
 
     override fun getItemCount() = trackList.size
@@ -25,6 +29,7 @@ class FindAdapter(val trackClickListner: TrackClickListner) :
             trackClickListner.onTrackClick(trackList.get(position))
         }
     }
+
     fun interface TrackClickListner {
         fun onTrackClick(track: Track)
     }

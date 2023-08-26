@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import com.example.playlistmaker.presentetion.setOnClickListenerWithViber
-import com.example.playlistmaker.ui.find.FindActivity
+import com.example.playlistmaker.presentetion.ui.find.FindActivity
 
 class MainActivity : AppCompatActivity() {
 

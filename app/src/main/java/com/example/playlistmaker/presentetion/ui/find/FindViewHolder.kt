@@ -1,16 +1,16 @@
-package com.example.playlistmaker.ui.find
+package com.example.playlistmaker.presentetion.ui.find
 
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.dto.ImageLoaderGlide
-import com.example.playlistmaker.domain.api.ImageLoader
+import com.example.playlistmaker.domain.impl.ImageLoaderUseCase
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.presentetion.dpToPx
 
-class FindViewHolder(private val parentView: View, val imageLoaderGlide: ImageLoader) : RecyclerView.ViewHolder(parentView) {
+class FindViewHolder(private val parentView: View, val imageLoaderGlide: ImageLoaderUseCase) :
+    RecyclerView.ViewHolder(parentView) {
 
     private val trackIcon: ImageView = parentView.findViewById(R.id.trackIcon)
     private val trackName: TextView = parentView.findViewById(R.id.trackName)
@@ -25,7 +25,7 @@ class FindViewHolder(private val parentView: View, val imageLoaderGlide: ImageLo
         artistName.text = track.artistName
         trackTime.text = track.trackTime
 
-        imageLoaderGlide.loadImage(
+        imageLoaderGlide.load(
             track.artworkUrl100,
             R.drawable.placeholdersnake,
             trackIcon,

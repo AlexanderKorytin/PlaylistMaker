@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.mediaPlayer
+package com.example.playlistmaker.presentetion.ui.mediaPlayer
 
 import android.annotation.SuppressLint
 import android.icu.text.SimpleDateFormat
@@ -13,12 +13,13 @@ import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import com.example.playlistmaker.presentetion.PlayerState
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.dto.ImageLoaderGlide
 import com.example.playlistmaker.databinding.ActivityMediaBinding
-import com.example.playlistmaker.data.dto.GetClickedTrackFromGsonUseCase
+import com.example.playlistmaker.domain.impl.GetClickedTrackFromGsonUseCase
+import com.example.playlistmaker.domain.impl.ImageLoaderUseCase
 import com.example.playlistmaker.domain.models.ClickedTrack
+import com.example.playlistmaker.domain.models.ClickedTrackGson
+import com.example.playlistmaker.presentetion.PlayerState
 import com.example.playlistmaker.presentetion.dpToPx
 import com.example.playlistmaker.presentetion.setOnClickListenerWithViber
 import com.example.playlistmaker.presentetion.setVibe
@@ -48,7 +49,7 @@ class MediaActivity : AppCompatActivity() {
     private var trackUrl: String? = null
 
     private var handlerMain: Handler? = null
-    private val imageLoaderGlide = ImageLoaderGlide()
+    private val imageLoaderUseCase = ImageLoaderUseCase()
     private val getClickedTrack = GetClickedTrackFromGsonUseCase()
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -73,7 +74,7 @@ class MediaActivity : AppCompatActivity() {
 
         receivedTrack = savedInstanceState?.getString(CLICKED_TRACK, "")
             ?: intent.getStringExtra("clickedTrack")
-        val clickedTrack = getClickedTrack.execute(receivedTrack)
+        val clickedTrack = getClickedTrack.execute(ClickedTrackGson(receivedTrack))
         filledTrackMeans(clickedTrack)
         trackUrl = clickedTrack.previewUrl
 
@@ -154,8 +155,8 @@ class MediaActivity : AppCompatActivity() {
         binding.timerMedia.text = SimpleDateFormat(
             "mm:ss", Locale.getDefault()
         ).format(timerStart)
-        imageLoaderGlide
-            .loadImage(
+        imageLoaderUseCase
+            .load(
                 track.coverArtWork,
                 R.drawable.placeholder_media_image,
                 binding.trackImageMedia,

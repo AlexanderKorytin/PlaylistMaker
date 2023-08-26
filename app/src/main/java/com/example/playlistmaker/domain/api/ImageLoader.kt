@@ -1,8 +1,7 @@
 package com.example.playlistmaker.domain.api
 
 import android.widget.ImageView
-import androidx.constraintlayout.widget.Placeholder
 
 interface ImageLoader {
-    fun loadImage(url: String, placeholder: Int,imageView: ImageView, round: Int)
+    fun loadImage(url: String, placeholder: Int, imageView: ImageView, round: Int)
 }

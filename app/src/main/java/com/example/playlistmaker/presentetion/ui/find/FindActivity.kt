@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.find
+package com.example.playlistmaker.presentetion.ui.find
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -13,18 +13,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
-import com.example.playlistmaker.SearchHistory
 import com.example.playlistmaker.data.dto.TracksResponse
 import com.example.playlistmaker.data.network.ITunesApi
 import com.example.playlistmaker.data.network.RetrofitNetworkClient
+import com.example.playlistmaker.data.network.SearchHistoryImpl
 import com.example.playlistmaker.data.network.TracksRepositoryImpl
 import com.example.playlistmaker.databinding.ActivityFindBinding
-import com.example.playlistmaker.domain.impl.SetViewVisibilityClearButton
+import com.example.playlistmaker.domain.impl.ClearButtonSetViewVisibilityUseCase
 import com.example.playlistmaker.domain.impl.TracksInteractorImpl
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.presentetion.getTrackList
 import com.example.playlistmaker.presentetion.setOnClickListenerWithViber
-import com.example.playlistmaker.ui.mediaPlayer.MediaActivity
+import com.example.playlistmaker.presentetion.ui.mediaPlayer.MediaActivity
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
@@ -59,7 +59,7 @@ class FindActivity : AppCompatActivity() {
     private val networkClient = RetrofitNetworkClient()
     private val tracksRepository = TracksRepositoryImpl(networkClient)
     private val trackInteractor = TracksInteractorImpl(tracksRepository)
-    private val setVisibilityClearButton = SetViewVisibilityClearButton()
+    private val setVisibilityClearButton = ClearButtonSetViewVisibilityUseCase()
 
     //---------------------------------------------------
     // запоминаем текст в EditText и восстанавливаем при повороте экрана
@@ -89,29 +89,29 @@ class FindActivity : AppCompatActivity() {
                 TRACK_HISTORY_SHAREDPREFERENCES,
                 MODE_PRIVATE
             )
-        val searchHistory = SearchHistory(searchHistorySharedPreferences)
+        val searchHistoryImpl = SearchHistoryImpl(searchHistorySharedPreferences)
         // Задаем адаптеры
         val findAdapter = FindAdapter {
-            clickedTrack(it, searchHistory)
+            clickedTrack(it, searchHistoryImpl)
         }
         val historyAdapter = FindAdapter {
-            clickedTrack(it, searchHistory)
+            clickedTrack(it, searchHistoryImpl)
         }
         val listener =
             SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
                 if (key == SEARCH_HISTORY_TRACK_LIST) {
-                    searchHistory.searchHistoryList = getTrackList(
+                    searchHistoryImpl.searchHistoryList = getTrackList(
                         searchHistorySharedPreferences.getString(SEARCH_HISTORY_TRACK_LIST, null)
                     )
                     setVisibilityViewsForShowSearchHistory(
-                        bindingFindActivity.menuFindSearchEditText.text.isEmpty() && searchHistory.searchHistoryList.isNotEmpty(),
-                        findAdapter, historyAdapter, searchHistory
+                        bindingFindActivity.menuFindSearchEditText.text.isEmpty() && searchHistoryImpl.searchHistoryList.isNotEmpty(),
+                        findAdapter, historyAdapter, searchHistoryImpl
                     )
                 }
             }
         searchHistorySharedPreferences.registerOnSharedPreferenceChangeListener(listener)
         findAdapter.trackList = trackList
-        historyAdapter.trackList = searchHistory.searchHistoryList
+        historyAdapter.trackList = searchHistoryImpl.searchHistoryList
 //---------------------------------------------------
         bindingFindActivity.tracksList.layoutManager = LinearLayoutManager(this)
         bindingFindActivity.tracksList.adapter = findAdapter
@@ -130,8 +130,8 @@ class FindActivity : AppCompatActivity() {
             trackList.clear()
             findAdapter.notifyDataSetChanged()
             setVisibilityViewsForShowSearchHistory(
-                searchHistory.searchHistoryList.isNotEmpty(),
-                findAdapter, historyAdapter, searchHistory,
+                searchHistoryImpl.searchHistoryList.isNotEmpty(),
+                findAdapter, historyAdapter, searchHistoryImpl,
             )
         }
 //---------------------------------------------------
@@ -140,22 +140,22 @@ class FindActivity : AppCompatActivity() {
         }
 //---------------------------------------------------
         bindingFindActivity.menuFindSearchEditText.setOnFocusChangeListener { v, hasFocus ->
-            searchHistory.searchHistoryList = getTrackList(
+            searchHistoryImpl.searchHistoryList = getTrackList(
                 searchHistorySharedPreferences.getString(SEARCH_HISTORY_TRACK_LIST, null)
             )
             setVisibilityViewsForShowSearchHistory(
                 hasFocus
                         && bindingFindActivity.menuFindSearchEditText.text.isEmpty()
-                        && searchHistory.searchHistoryList.isNotEmpty(),
-                findAdapter, historyAdapter, searchHistory
+                        && searchHistoryImpl.searchHistoryList.isNotEmpty(),
+                findAdapter, historyAdapter, searchHistoryImpl
             )
         }
 //---------------------------------------------------
         bindingFindActivity.clearSearchHistory.setOnClickListenerWithViber {
-            searchHistory.clearHistory()
+            searchHistoryImpl.clearHistory()
             setVisibilityViewsForShowSearchHistory(
-                searchHistory.searchHistoryList.isNotEmpty(),
-                findAdapter, historyAdapter, searchHistory,
+                searchHistoryImpl.searchHistoryList.isNotEmpty(),
+                findAdapter, historyAdapter, searchHistoryImpl,
             )
         }
 //---------------------------------------------------
@@ -167,15 +167,14 @@ class FindActivity : AppCompatActivity() {
                 setVisibilityViewsForShowSearchHistory(
                     bindingFindActivity.menuFindSearchEditText.hasFocus()
                             && s?.isEmpty() == true
-                            && searchHistory.searchHistoryList.isNotEmpty(),
-                    findAdapter, historyAdapter, searchHistory
+                            && searchHistoryImpl.searchHistoryList.isNotEmpty(),
+                    findAdapter, historyAdapter, searchHistoryImpl
                 )
 
                 textSearch = bindingFindActivity.menuFindSearchEditText.text.toString()
                 bindingFindActivity.clearIcon.isVisible = setVisibilityClearButton.execute(s)
                 if (s?.isNotEmpty() == true) searchDebounce(findAdapter)
-                else handlerMain.removeCallbacks(
-                    { getMusic(textSearch, findAdapter) })
+                else handlerMain.removeCallbacks({ getMusic(textSearch, findAdapter) })
 
                 bindingFindActivity.clearIcon.isClickable = false
             }
@@ -200,7 +199,7 @@ class FindActivity : AppCompatActivity() {
                         when (response.code()) {
 
                             200 -> {
-                                if (response.body()?.results.isNullOrEmpty() == true) {
+                                if (response.body()?.results.isNullOrEmpty() == false) {
                                     setVisibilitySearchСompleted()
                                     trackList.clear()
                                     response.body()?.results?.let {
@@ -287,7 +286,7 @@ class FindActivity : AppCompatActivity() {
         focus: Boolean,
         adapter: FindAdapter,
         historyAdapter: FindAdapter,
-        searchHistory: SearchHistory
+        searchHistoryImpl: SearchHistoryImpl
     ) {
         if (focus) {
             bindingFindActivity.progressBar.visibility = View.GONE
@@ -297,21 +296,21 @@ class FindActivity : AppCompatActivity() {
             bindingFindActivity.placeholderButton.visibility = View.GONE
             adapter.trackList.clear()
             adapter.notifyDataSetChanged()
-            historyAdapter.trackList = searchHistory.searchHistoryList
+            historyAdapter.trackList = searchHistoryImpl.searchHistoryList
             historyAdapter.notifyDataSetChanged()
         } else {
             bindingFindActivity.progressBar.visibility = View.GONE
             bindingFindActivity.searchHistoryListView.visibility = View.GONE
             bindingFindActivity.tracksList.visibility = View.VISIBLE
             bindingFindActivity.placeholderFindViewGroup.visibility = View.GONE
-            historyAdapter.trackList = searchHistory.searchHistoryList
+            historyAdapter.trackList = searchHistoryImpl.searchHistoryList
             historyAdapter.notifyDataSetChanged()
         }
     }
 
-    private fun clickedTrack(track: Track, searchHistory: SearchHistory) {
+    private fun clickedTrack(track: Track, searchHistoryImpl: SearchHistoryImpl) {
         if (trackClickedDebounce()) {
-            searchHistory.savedTrack(track)
+            searchHistoryImpl.savedTrack(track)
             val mediaIntent = Intent(this, MediaActivity::class.java)
             mediaIntent.putExtra("clickedTrack", Gson().toJson(track))
             startActivity(mediaIntent)
