@@ -1,16 +1,15 @@
 package com.example.playlistmaker.data.network
 
 import android.content.SharedPreferences
-import com.example.playlistmaker.data.SearchHistory
+import com.example.playlistmaker.domain.api.SearchHistory
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.presentetion.getTrackList
 import com.example.playlistmaker.presentetion.ui.find.SEARCH_HISTORY_TRACK_LIST
 import com.google.gson.Gson
 
-class SearchHistoryImpl(val sharedPreference: SharedPreferences): SearchHistory {
+class SearchHistoryImpl(val sharedPreference: SharedPreferences) : SearchHistory {
 
-
-    var searchHistoryList = ArrayList<Track>()
+    internal var searchHistoryList = ArrayList<Track>()
 
     override fun savedTrack(track: Track) {
         val jsonTrackList = sharedPreference.getString(SEARCH_HISTORY_TRACK_LIST, null)
