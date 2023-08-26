@@ -1,7 +1,8 @@
 package com.example.playlistmaker.data
 
-import com.example.playlistmaker.data.dto.Responce
+import com.example.playlistmaker.data.dto.Response
+import com.example.playlistmaker.data.dto.TrackRequest
 
 interface NetworkClient {
-    fun doRequest(dto: Any): Responce
+    fun searchTracks(request: TrackRequest): Response
 }

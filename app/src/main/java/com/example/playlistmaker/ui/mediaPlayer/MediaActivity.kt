@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.MediaPlayer
+package com.example.playlistmaker.ui.mediaPlayer
 
 import android.annotation.SuppressLint
 import android.icu.text.SimpleDateFormat
@@ -17,7 +17,7 @@ import com.example.playlistmaker.presentetion.PlayerState
 import com.example.playlistmaker.R
 import com.example.playlistmaker.data.dto.ImageLoaderGlide
 import com.example.playlistmaker.databinding.ActivityMediaBinding
-import com.example.playlistmaker.data.dto.GetClickedTrackFromGson
+import com.example.playlistmaker.data.dto.GetClickedTrackFromGsonUseCase
 import com.example.playlistmaker.domain.models.ClickedTrack
 import com.example.playlistmaker.presentetion.dpToPx
 import com.example.playlistmaker.presentetion.setOnClickListenerWithViber
@@ -49,7 +49,7 @@ class MediaActivity : AppCompatActivity() {
 
     private var handlerMain: Handler? = null
     private val imageLoaderGlide = ImageLoaderGlide()
-    private val getClickedTrack = GetClickedTrackFromGson()
+    private val getClickedTrack = GetClickedTrackFromGsonUseCase()
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

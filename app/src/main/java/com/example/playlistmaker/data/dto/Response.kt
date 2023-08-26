@@ -1,5 +1,5 @@
 package com.example.playlistmaker.data.dto
 
-open class Responce() {
+open class Response() {
     var resultCode = 0
 }
