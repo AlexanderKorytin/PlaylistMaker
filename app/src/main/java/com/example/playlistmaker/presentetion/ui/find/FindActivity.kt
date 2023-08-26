@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.dto.TracksResponse
 import com.example.playlistmaker.data.network.ITunesApi
 import com.example.playlistmaker.data.network.RetrofitNetworkClient
 import com.example.playlistmaker.data.network.SearchHistoryImpl
@@ -26,11 +25,9 @@ import com.example.playlistmaker.presentetion.getTrackList
 import com.example.playlistmaker.presentetion.setOnClickListenerWithViber
 import com.example.playlistmaker.presentetion.ui.mediaPlayer.MediaActivity
 import com.google.gson.Gson
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
 
 const val SEARCH_HISTORY_TRACK_LIST = "Search history list"
 const val TRACK_HISTORY_SHAREDPREFERENCES = "Track history"
@@ -47,7 +44,8 @@ class FindActivity : AppCompatActivity() {
     private var isClickTrackAllowed = true
     private var textSearch = ""
     private var textSearchLast = ""
-    private var trackList: ArrayList<Track> = ArrayList()
+    private var trackList: ArrayList<Track>? = ArrayList()
+    private var tracklistInterator: List<Track>? = emptyList()
     private val handlerMain: Handler = Handler(Looper.getMainLooper())
 
     private val retrofit = Retrofit
@@ -60,6 +58,7 @@ class FindActivity : AppCompatActivity() {
     private val tracksRepository = TracksRepositoryImpl(networkClient)
     private val trackInteractor = TracksInteractorImpl(tracksRepository)
     private val setVisibilityClearButton = ClearButtonSetViewVisibilityUseCase()
+    private var flag = true
 
     //---------------------------------------------------
     // запоминаем текст в EditText и восстанавливаем при повороте экрана
@@ -110,7 +109,7 @@ class FindActivity : AppCompatActivity() {
                 }
             }
         searchHistorySharedPreferences.registerOnSharedPreferenceChangeListener(listener)
-        findAdapter.trackList = trackList
+        findAdapter.trackList = (trackList as ArrayList<Track>)
         historyAdapter.trackList = searchHistoryImpl.searchHistoryList
 //---------------------------------------------------
         bindingFindActivity.tracksList.layoutManager = LinearLayoutManager(this)
@@ -127,7 +126,7 @@ class FindActivity : AppCompatActivity() {
 //---------------------------------------------------
         bindingFindActivity.clearIcon.setOnClickListener {
             bindingFindActivity.menuFindSearchEditText.setText("")
-            trackList.clear()
+            trackList?.clear()
             findAdapter.notifyDataSetChanged()
             setVisibilityViewsForShowSearchHistory(
                 searchHistoryImpl.searchHistoryList.isNotEmpty(),
@@ -188,56 +187,75 @@ class FindActivity : AppCompatActivity() {
     //---------------------------------------------------
     private fun getMusic(text: String, adapter: FindAdapter) {
         if (textSearch.isNotEmpty()) {
-            handlerMain.post { bindingFindActivity.progressBar.visibility = View.VISIBLE }
-            iTunesService
-                .searchTracks(text)
-                .enqueue(object : Callback<TracksResponse> {
-                    override fun onResponse(
-                        call: Call<TracksResponse>,
-                        response: Response<TracksResponse>
-                    ) {
-                        when (response.code()) {
-
-                            200 -> {
-                                if (response.body()?.results.isNullOrEmpty() == false) {
-                                    setVisibilitySearchСompleted()
-                                    trackList.clear()
-                                    response.body()?.results?.let {
-                                        trackList.addAll(it.map {
-                                            Track(
-                                                it.trackId,
-                                                it.getParam(it.trackName),
-                                                it.getParam(it.artistName),
-                                                it.getTrackTime(),
-                                                it.getParam(it.artworkUrl100),
-                                                it.getParam(it.country),
-                                                it.getParam(it.collectionName),
-                                                it.getYear(),
-                                                it.getParam(it.primaryGenreName),
-                                                it.getParam(it.previewUrl),
-                                                it.getCoverArtwork()
-                                            )
-                                        })
-                                    }
-                                    adapter.notifyDataSetChanged()
-                                } else {
-                                    setPlaceholderNothingFound(adapter)
-                                }
-                            }
-
-                            else -> {
-                                setPlaceholderCommunicationProblems(adapter)
-                                textSearchLast = textSearch
-                            }
-                        }
-                    }
-
-                    override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
-                        setPlaceholderCommunicationProblems(adapter)
-                        textSearchLast = textSearch
-                    }
-
-                })
+            val t = Thread {
+                var flagIOException = false
+                handlerMain.post { bindingFindActivity.progressBar.visibility = View.VISIBLE }
+               try {
+                   tracklistInterator = trackInteractor.getMusic(text)
+                } catch (e: IOException){
+                   handlerMain.post { setPlaceholderCommunicationProblems(adapter) }
+                   textSearchLast = textSearch
+                   flagIOException = true
+                }
+                if (tracklistInterator?.isEmpty() == true && !flagIOException) {
+                    handlerMain.post { setPlaceholderNothingFound(adapter) }
+                }
+                if (tracklistInterator?.isNotEmpty() == true) {
+                    handlerMain.post { setVisibilitySearchСompleted() }
+                    trackList?.addAll(tracklistInterator as ArrayList<Track>)
+                }
+            }
+            t.start()
+//            handlerMain.post { bindingFindActivity.progressBar.visibility = View.VISIBLE }
+//            iTunesService
+//                .searchTracks(text)
+//                .enqueue(object : Callback<TracksResponse> {
+//                    override fun onResponse(
+//                        call: Call<TracksResponse>,
+//                        response: Response<TracksResponse>
+//                    ) {
+//                        when (response.code()) {
+//
+//                            200 -> {
+//                                if (response.body()?.results.isNullOrEmpty() == false) {
+//                                    setVisibilitySearchСompleted()
+//                                    trackList.clear()
+//                                    response.body()?.results?.let {
+//                                        trackList.addAll(it.map {
+//                                            Track(
+//                                                it.trackId,
+//                                                it.getParam(it.trackName),
+//                                                it.getParam(it.artistName),
+//                                                it.getTrackTime(),
+//                                                it.getParam(it.artworkUrl100),
+//                                                it.getParam(it.country),
+//                                                it.getParam(it.collectionName),
+//                                                it.getYear(),
+//                                                it.getParam(it.primaryGenreName),
+//                                                it.getParam(it.previewUrl),
+//                                                it.getCoverArtwork()
+//                                            )
+//                                        })
+//                                    }
+//                                    adapter.notifyDataSetChanged()
+//                                } else {
+//                                    setPlaceholderNothingFound(adapter)
+//                                }
+//                            }
+//
+//                            else -> {
+//                                setPlaceholderCommunicationProblems(adapter)
+//                                textSearchLast = textSearch
+//                            }
+//                        }
+//                    }
+//
+//                    override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
+//                        setPlaceholderCommunicationProblems(adapter)
+//                        textSearchLast = textSearch
+//                    }
+//
+//                })
         }
     }
 
@@ -262,7 +280,7 @@ class FindActivity : AppCompatActivity() {
             bindingFindActivity.placeholderFindText.text =
                 getString(R.string.placeholder_nothing_found_text)
             bindingFindActivity.placeholderFindTint.setImageDrawable(getDrawable(R.drawable.nothing_found))
-            trackList.clear()
+            trackList?.clear()
             adapter.notifyDataSetChanged()
         }
     }
@@ -277,7 +295,7 @@ class FindActivity : AppCompatActivity() {
             bindingFindActivity.placeholderFindText.text =
                 getString(R.string.placeholder_communication_problems_text)
             bindingFindActivity.placeholderFindTint.setImageDrawable(getDrawable(R.drawable.communication_problem))
-            trackList.clear()
+            trackList?.clear()
             adapter.notifyDataSetChanged()
         }
     }

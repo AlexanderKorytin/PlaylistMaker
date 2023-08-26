@@ -7,6 +7,6 @@ import retrofit2.Callback
 
 interface NetworkClient {
 
-    fun searchTracks(request: TrackRequest): Response
+    fun searchTracks(request: TrackRequest): Response?
 
 }

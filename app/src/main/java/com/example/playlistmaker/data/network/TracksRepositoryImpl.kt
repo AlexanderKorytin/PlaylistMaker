@@ -9,7 +9,7 @@ import com.example.playlistmaker.domain.models.Track
 class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
     override fun getMusic(term: String): List<Track> {
         val response = networkClient.searchTracks(TrackRequest(term))
-        if (response.resultCode == 200) {
+        if (response?.resultCode == 200) {
             return (response as TracksResponse).results.map {
                 Track(
                     it.trackId,
@@ -26,7 +26,7 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
                 )
             }
         } else {
-            return emptyList()
+            return emptyList<Track>()
         }
     }
 }
