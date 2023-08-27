@@ -183,7 +183,7 @@ class FindActivity : AppCompatActivity() {
     //---------------------------------------------------
     // несколько криво но обрабатывать ошибки запроса в сеть по реализованной схеме (синхронно) обещают в след спринтах
     private fun getMusic(text: String, adapter: FindAdapter) {
-        if (textSearch.isNotEmpty()) {
+        if (text.isNotEmpty()) {
             adapter.notifyDataSetChanged()
             val t = Thread {
                 var flagIOException = false
