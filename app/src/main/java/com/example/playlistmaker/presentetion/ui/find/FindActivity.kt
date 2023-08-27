@@ -116,7 +116,10 @@ class FindActivity : AppCompatActivity() {
         bindingFindActivity.menuFindSearchEditText.setText(textSearch)
 // слушатель кнопки "обновить"
         bindingFindActivity.placeholderButton.setOnClickListenerWithViber {
-            getMusic(textSearchLast, findAdapter)
+            bindingFindActivity.placeholderButton.visibility = View.GONE
+            bindingFindActivity.placeholderFindViewGroup.visibility = View.GONE
+            bindingFindActivity.progressBar.visibility = View.VISIBLE
+            getMusic(textSearch, findAdapter)
         }
 //---------------------------------------------------
         bindingFindActivity.clearIcon.setOnClickListener {
@@ -197,7 +200,7 @@ class FindActivity : AppCompatActivity() {
                 if (tracklistInterator?.isEmpty() == true && !flagIOException) {
                     handlerMain.post { setPlaceholderNothingFound(adapter) }
                 }
-                if (tracklistInterator?.isNotEmpty() == true) {
+                if (tracklistInterator?.isNotEmpty() == true && !flagIOException) {
                     trackList?.addAll(0, tracklistInterator as ArrayList<Track>)
                     handlerMain.post { visibilitySearchingСomplet() }
                     adapter.trackList = trackList!!
