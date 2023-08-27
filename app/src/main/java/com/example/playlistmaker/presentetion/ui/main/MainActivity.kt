@@ -1,9 +1,12 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentetion.ui.main
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import com.example.playlistmaker.presentetion.ui.library.MediaLibraryActivity
+import com.example.playlistmaker.R
+import com.example.playlistmaker.presentetion.ui.settings.SettingsActivity
 import com.example.playlistmaker.presentetion.setOnClickListenerWithViber
 import com.example.playlistmaker.presentetion.ui.find.FindActivity
 

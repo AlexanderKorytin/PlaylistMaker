@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentetion.ui.settings
 
 import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import com.example.playlistmaker.R
 import com.example.playlistmaker.presentetion.APP_SETTINGS_PREF_KEY
 import com.example.playlistmaker.presentetion.App
 import com.example.playlistmaker.presentetion.DARK_THEME

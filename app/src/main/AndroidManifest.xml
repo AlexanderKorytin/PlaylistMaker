@@ -26,17 +26,17 @@
             android:exported="false"
             android:theme="@style/Theme.SettingsActivity" />
         <activity
-            android:name=".SettingsActivity"
+            android:name=".presentetion.ui.settings.SettingsActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.SettingsActivity" />
         <activity
-            android:name=".MediaLibraryActivity"
+            android:name=".presentetion.ui.library.MediaLibraryActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.SettingsActivity" />
         <activity
-            android:name=".MainActivity"
+            android:name=".presentetion.ui.main.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MainActivity">
