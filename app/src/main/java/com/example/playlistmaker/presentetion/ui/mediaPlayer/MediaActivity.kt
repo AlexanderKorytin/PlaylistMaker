@@ -19,7 +19,7 @@ import com.example.playlistmaker.domain.impl.GetClickedTrackFromGsonUseCase
 import com.example.playlistmaker.domain.impl.ImageLoaderUseCase
 import com.example.playlistmaker.domain.models.ClickedTrack
 import com.example.playlistmaker.domain.models.ClickedTrackGson
-import com.example.playlistmaker.presentetion.PlayerState
+import com.example.playlistmaker.domain.models.PlayerState
 import com.example.playlistmaker.presentetion.dpToPx
 import com.example.playlistmaker.presentetion.setOnClickListenerWithViber
 import com.example.playlistmaker.presentetion.setVibe
@@ -156,7 +156,7 @@ class MediaActivity : AppCompatActivity() {
             "mm:ss", Locale.getDefault()
         ).format(timerStart)
         imageLoaderUseCase
-            .load(
+            .execute(
                 track.coverArtWork,
                 R.drawable.placeholder_media_image,
                 binding.trackImageMedia,

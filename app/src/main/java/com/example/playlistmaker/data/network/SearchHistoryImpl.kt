@@ -3,7 +3,7 @@ package com.example.playlistmaker.data.network
 import android.content.SharedPreferences
 import com.example.playlistmaker.domain.api.SearchHistory
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.presentetion.getTrackList
+import com.example.playlistmaker.presentetion.getTrackListFromJson
 import com.example.playlistmaker.presentetion.ui.find.SEARCH_HISTORY_TRACK_LIST
 import com.google.gson.Gson
 
@@ -14,7 +14,7 @@ class SearchHistoryImpl(val sharedPreference: SharedPreferences) : SearchHistory
     override fun savedTrack(track: Track) {
         val jsonTrackList = sharedPreference.getString(SEARCH_HISTORY_TRACK_LIST, null)
         if (jsonTrackList != null) {
-            val historyList = getTrackList(jsonTrackList)
+            val historyList = getTrackListFromJson(jsonTrackList)
             searchHistoryList = savedTrackList(historyList, track)
         } else {
             searchHistoryList.add(0, track)

@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import com.example.playlistmaker.data.network.SearchHistoryImpl
 import com.example.playlistmaker.domain.models.Track
 
-class SearchHistoryUseCase(sharedPreferences: SharedPreferences) {
+class SearchHistoryInteractor(sharedPreferences: SharedPreferences) {
 
     private val searchHistory = SearchHistoryImpl(sharedPreferences)
 

@@ -25,7 +25,7 @@ class FindViewHolder(private val parentView: View, val imageLoaderGlide: ImageLo
         artistName.text = track.artistName
         trackTime.text = track.trackTime
 
-        imageLoaderGlide.load(
+        imageLoaderGlide.execute(
             track.artworkUrl100,
             R.drawable.placeholdersnake,
             trackIcon,

@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentetion
+package com.example.playlistmaker.domain.models
 
 enum class PlayerState() {
 

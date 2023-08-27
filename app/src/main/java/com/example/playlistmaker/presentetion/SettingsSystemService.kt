@@ -38,7 +38,7 @@ internal fun pxToDp(px: Float, context: Context): Int{
     ).toInt()
 }
 
-internal fun getTrackList(json: String?): ArrayList<Track> {
+internal fun getTrackListFromJson(json: String?): ArrayList<Track> {
     if (json != null) {
         val type: Type = object : TypeToken<ArrayList<Track>>() {}.type
         return Gson().fromJson(json, type)
