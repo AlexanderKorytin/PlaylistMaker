@@ -1,20 +1,28 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentetion.ui.mediaPlayer
 
+import android.annotation.SuppressLint
 import android.icu.text.SimpleDateFormat
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.DisplayMetrics
+import android.view.MotionEvent
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityMediaBinding
-import com.google.gson.Gson
+import com.example.playlistmaker.domain.impl.GetClickedTrackFromGsonUseCase
+import com.example.playlistmaker.domain.impl.ImageLoaderUseCase
+import com.example.playlistmaker.domain.models.ClickedTrack
+import com.example.playlistmaker.domain.models.ClickedTrackGson
+import com.example.playlistmaker.domain.models.PlayerState
+import com.example.playlistmaker.presentetion.dpToPx
+import com.example.playlistmaker.presentetion.setOnClickListenerWithViber
+import com.example.playlistmaker.presentetion.setVibe
 import java.util.Locale
 
 
@@ -31,7 +39,6 @@ class MediaActivity : AppCompatActivity() {
     private var roundedCorners = 0
     private lateinit var binding: ActivityMediaBinding
     private var timerStart = 0L
-    private var timerStop = 0L
     private lateinit var outAnim: Animation
     private lateinit var inAnim: Animation
 
@@ -42,12 +49,15 @@ class MediaActivity : AppCompatActivity() {
     private var trackUrl: String? = null
 
     private var handlerMain: Handler? = null
+    private val imageLoaderUseCase = ImageLoaderUseCase()
+    private val getClickedTrack = GetClickedTrackFromGsonUseCase()
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(CLICKED_TRACK, receivedTrack)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMediaBinding.inflate(layoutInflater)
@@ -64,7 +74,7 @@ class MediaActivity : AppCompatActivity() {
 
         receivedTrack = savedInstanceState?.getString(CLICKED_TRACK, "")
             ?: intent.getStringExtra("clickedTrack")
-        val clickedTrack = Gson().fromJson(receivedTrack, Track::class.java)
+        val clickedTrack = getClickedTrack.execute(ClickedTrackGson(receivedTrack))
         filledTrackMeans(clickedTrack)
         trackUrl = clickedTrack.previewUrl
 
@@ -73,14 +83,13 @@ class MediaActivity : AppCompatActivity() {
         inAnim = AnimationUtils.loadAnimation(this, R.anim.fadein)
         outAnim = AnimationUtils.loadAnimation(this, R.anim.fadeout)
         //добавляем слушателя на анимацию
-        outAnim.setAnimationListener(object : AnimationListener{
+        outAnim.setAnimationListener(object : AnimationListener {
             override fun onAnimationStart(animation: Animation?) {
 
             }
 
             override fun onAnimationEnd(animation: Animation?) {
-                playbackControl()
-                binding.playPause.startAnimation(inAnim)
+                setVibe()
             }
 
             override fun onAnimationRepeat(animation: Animation?) {
@@ -88,9 +97,9 @@ class MediaActivity : AppCompatActivity() {
             }
 
         })
-        inAnim.setAnimationListener(object: AnimationListener{
+        inAnim.setAnimationListener(object : AnimationListener {
             override fun onAnimationStart(animation: Animation?) {
-
+                playbackControl()
             }
 
             override fun onAnimationEnd(animation: Animation?) {
@@ -109,8 +118,23 @@ class MediaActivity : AppCompatActivity() {
             finish()
         }
 
-        binding.playPause.setOnClickListenerWithViber {
-            binding.playPause.startAnimation(outAnim)
+        binding.playPause.setOnTouchListener { v, event ->
+            when (event.action) {
+
+                MotionEvent.ACTION_DOWN -> {
+                    binding.playPause.startAnimation(outAnim)
+                    return@setOnTouchListener false
+                }
+
+                MotionEvent.ACTION_UP -> {
+                    binding.playPause.startAnimation(inAnim)
+                    return@setOnTouchListener false
+                }
+
+                else -> {
+                    return@setOnTouchListener true
+                }
+            }
         }
     }
 
@@ -125,22 +149,26 @@ class MediaActivity : AppCompatActivity() {
     }
 
 
-    private fun filledTrackMeans(track: Track) {
+    private fun filledTrackMeans(track: ClickedTrack) {
         binding.addFavorite.isClickable = true
         binding.addCollection.isClickable = true
         binding.timerMedia.text = SimpleDateFormat(
             "mm:ss", Locale.getDefault()
         ).format(timerStart)
-        Glide.with(this).load(track.getCoverArtwork())
-            .placeholder(R.drawable.placeholder_media_image).centerCrop()
-            .transform(RoundedCorners(roundedCorners)).into(binding.trackImageMedia)
+        imageLoaderUseCase
+            .execute(
+                track.coverArtWork,
+                R.drawable.placeholder_media_image,
+                binding.trackImageMedia,
+                roundedCorners
+            )
         binding.trackNameMedia.text = track.trackName
         binding.trackArtistMedia.text = track.artistName
-        binding.yearMediaMean.text = track.getYear()
+        binding.yearMediaMean.text = track.year
         binding.countryMediaMean.text = track.country
         binding.genreMediaMean.text = track.primaryGenreName
-        binding.timeMediaMean.text = track.getTrackTime()
-        if (track.collectionName != null) {
+        binding.timeMediaMean.text = track.trackTime
+        if (track.collectionName != "") {
             binding.albumMediaMean.isVisible = true
             binding.albumMedia.isVisible = true
             binding.albumMediaMean.text = track.collectionName
@@ -202,7 +230,6 @@ class MediaActivity : AppCompatActivity() {
                     binding.timerMedia.text = SimpleDateFormat(
                         "mm:ss", Locale.getDefault()
                     ).format(mediaPlayer.currentPosition)
-                    timerStop = mediaPlayer.currentPosition.toLong()
                     handlerMain?.postDelayed(this, UPDATE_TIMER_TRACK)
                 }
             }

@@ -1,9 +1,6 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentetion
 
 import android.app.Application
-import android.content.Context
-import android.os.VibrationEffect
-import android.os.Vibrator
 import androidx.appcompat.app.AppCompatDelegate
 
 const val APP_SETTINGS_PREF_KEY = "App settings"

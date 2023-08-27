@@ -1,12 +1,14 @@
 <!-- Filename: fadeout.xml -->
-<set xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Note that you might want to change the duration here-->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fillAfter="true"
+    android:interpolator="@android:anim/linear_interpolator">
     <scale
-        android:duration="700"
+        android:duration="200"
         android:fromXScale="1.0"
         android:fromYScale="1.0"
         android:pivotX="50%"
         android:pivotY="50%"
-        android:toXScale="0.9"
-        android:toYScale="0.9" />
+        android:repeatMode="restart"
+        android:toXScale="1.2"
+        android:toYScale="1.2" />
 </set>

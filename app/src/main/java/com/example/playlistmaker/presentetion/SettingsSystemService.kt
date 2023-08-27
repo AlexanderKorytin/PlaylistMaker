@@ -1,10 +1,11 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentetion
 
 import android.content.Context
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.util.TypedValue
 import android.view.View
+import com.example.playlistmaker.domain.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
@@ -37,7 +38,7 @@ internal fun pxToDp(px: Float, context: Context): Int{
     ).toInt()
 }
 
-internal fun getTrackList(json: String?): ArrayList<Track> {
+internal fun getTrackListFromJson(json: String?): ArrayList<Track> {
     if (json != null) {
         val type: Type = object : TypeToken<ArrayList<Track>>() {}.type
         return Gson().fromJson(json, type)

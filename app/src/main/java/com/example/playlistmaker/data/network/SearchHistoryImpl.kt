@@ -1,19 +1,20 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.data.network
 
 import android.content.SharedPreferences
+import com.example.playlistmaker.domain.api.SearchHistory
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.presentetion.getTrackListFromJson
+import com.example.playlistmaker.presentetion.ui.find.SEARCH_HISTORY_TRACK_LIST
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import java.lang.reflect.Type
 
-class SearchHistory(val sharedPreference: SharedPreferences) {
+class SearchHistoryImpl(val sharedPreference: SharedPreferences) : SearchHistory {
 
+    internal var searchHistoryList = ArrayList<Track>()
 
-    var searchHistoryList = ArrayList<Track>()
-
-    fun savedTrack(track: Track) {
+    override fun savedTrack(track: Track) {
         val jsonTrackList = sharedPreference.getString(SEARCH_HISTORY_TRACK_LIST, null)
         if (jsonTrackList != null) {
-            val historyList = getTrackList(jsonTrackList)
+            val historyList = getTrackListFromJson(jsonTrackList)
             searchHistoryList = savedTrackList(historyList, track)
         } else {
             searchHistoryList.add(0, track)
@@ -23,16 +24,16 @@ class SearchHistory(val sharedPreference: SharedPreferences) {
             .apply()
     }
 
-    fun clearHistory() {
+    override fun clearHistory() {
         searchHistoryList.clear()
         sharedPreference.edit().clear().apply()
     }
 
-    private fun createJsonFromTrackList(tracks: ArrayList<Track>): String {
+    override fun createJsonFromTrackList(tracks: ArrayList<Track>): String {
         return Gson().toJson(tracks)
     }
 
-    private fun savedTrackList(tracks: ArrayList<Track>, track: Track): ArrayList<Track> {
+    override fun savedTrackList(tracks: ArrayList<Track>, track: Track): ArrayList<Track> {
         tracks.forEach { t ->
             if (t.trackId == track.trackId) {
                 tracks.remove(t)
