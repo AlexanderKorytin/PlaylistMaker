@@ -3,8 +3,6 @@ package com.example.playlistmaker.presentetion.ui.mediaPlayer
 import android.annotation.SuppressLint
 import android.icu.text.SimpleDateFormat
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.DisplayMetrics
 import android.view.MotionEvent
 import android.view.animation.Animation
@@ -13,13 +11,12 @@ import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.playlistmaker.R
+import com.example.playlistmaker.data.mediaplayer.impl.MediaPlayerInteractorImpl
 import com.example.playlistmaker.databinding.ActivityMediaBinding
 import com.example.playlistmaker.domain.impl.GetClickedTrackFromGsonUseCase
 import com.example.playlistmaker.domain.impl.ImageLoaderUseCase
 import com.example.playlistmaker.domain.models.ClickedTrack
 import com.example.playlistmaker.domain.models.ClickedTrackGson
-import com.example.playlistmaker.data.dto.PlayerState
-import com.example.playlistmaker.data.mediaplayer.impl.MediaPlayerInteractorImpl
 import com.example.playlistmaker.presentetion.dpToPx
 import com.example.playlistmaker.presentetion.setOnClickListenerWithViber
 import com.example.playlistmaker.presentetion.setVibe
@@ -71,7 +68,7 @@ class MediaActivity : AppCompatActivity() {
             ?: intent.getStringExtra("clickedTrack")
         val clickedTrack = getClickedTrack.execute(ClickedTrackGson(receivedTrack))
         trackUrl = clickedTrack.previewUrl
-        mediaPlayer = MediaPlayerInteractorImpl(clickedTrack, binding, this)
+        mediaPlayer = MediaPlayerInteractorImpl(clickedTrack.toMediaPlayer(), binding, this)
         filledTrackMeans(clickedTrack)
 
 
@@ -135,7 +132,7 @@ class MediaActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        pausePlayer()
+        mediaPlayer.pause()
     }
 
     override fun onDestroy() {
@@ -172,14 +169,4 @@ class MediaActivity : AppCompatActivity() {
             binding.albumMedia.isVisible = false
         }
     }
-
-
-    private fun startPlayer() {
-        mediaPlayer.play()
-    }
-
-    private fun pausePlayer() {
-        mediaPlayer.pause()
-    }
-
 }

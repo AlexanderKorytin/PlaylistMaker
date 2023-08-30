@@ -1,5 +1,7 @@
 package com.example.playlistmaker.domain.models
 
+import com.example.playlistmaker.data.dto.TrackUrl
+
 data class ClickedTrack(
     val trackName: String,
     val artistName: String,
@@ -10,4 +12,8 @@ data class ClickedTrack(
     val primaryGenreName: String,
     val previewUrl: String,
     val coverArtWork: String
-)
+) {
+    fun toMediaPlayer(): TrackUrl {
+        return TrackUrl(previewUrl)
+    }
+}

@@ -9,32 +9,28 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.data.dto.PlayerState
 import com.example.playlistmaker.data.dto.TrackUrl
 import com.example.playlistmaker.data.mediaplayer.api.MediaPlayerInteractor
-import com.example.playlistmaker.data.mediaplayer.mapper.MediaPlayerMapper
 import com.example.playlistmaker.databinding.ActivityMediaBinding
-import com.example.playlistmaker.domain.models.ClickedTrack
 import java.util.Locale
 
 
 private const val UPDATE_TIMER_TRACK = 300L
 
 class MediaPlayerInteractorImpl(
-    clickedTrack: ClickedTrack,
+    private val urlTrack: TrackUrl,
     private val binding: ActivityMediaBinding,
     private val context: Context
 ) : MediaPlayerInteractor {
-    private val mediaPlayerMapper = MediaPlayerMapper()
     private var mediaPlayer = MediaPlayer()
     private val handlerMain = Handler(Looper.getMainLooper())
     var playerState = PlayerState.STATE_DEFAULT
     private var timerStart = 0L
-    private val trackUrl = mediaPlayerMapper.toMediaPlayer(clickedTrack)
 
     init {
         preparePlayer()
     }
 
     private fun preparePlayer() {
-        mediaPlayer.setDataSource(trackUrl.url)
+        mediaPlayer.setDataSource(urlTrack.url)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
             binding.playPause.isEnabled = true
@@ -59,7 +55,6 @@ class MediaPlayerInteractorImpl(
     override fun pause() {
         handlerMain.removeCallbacks(updateTimerMedia())
         mediaPlayer.pause()
-        playerState = PlayerState.STATE_PLAYING
         playerState = PlayerState.STATE_PAUSED
         binding.playPause.setImageDrawable(context.getDrawable(R.drawable.play_button))
     }
