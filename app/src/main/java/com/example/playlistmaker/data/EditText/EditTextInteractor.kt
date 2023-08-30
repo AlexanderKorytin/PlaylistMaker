@@ -1,12 +1,8 @@
-package com.example.playlistmaker.domain.impl
+package com.example.playlistmaker.data.EditText
 
-import android.os.Handler
-import android.os.Looper
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
-import androidx.core.view.isVisible
 import com.example.playlistmaker.databinding.ActivityFindBinding
+import com.example.playlistmaker.domain.impl.SearchHistoryInteractor
 import com.example.playlistmaker.presentetion.ui.find.FindAdapter
 
 class EditTextInteractor(val bindingFindActivity: ActivityFindBinding) {

@@ -17,7 +17,7 @@ import com.example.playlistmaker.data.network.RetrofitNetworkClient
 import com.example.playlistmaker.data.network.TracksRepositoryImpl
 import com.example.playlistmaker.databinding.ActivityFindBinding
 import com.example.playlistmaker.domain.impl.ClearButtonSetViewVisibilityUseCase
-import com.example.playlistmaker.domain.impl.EditTextInteractor
+import com.example.playlistmaker.data.EditText.EditTextInteractor
 import com.example.playlistmaker.domain.impl.SearchHistoryInteractor
 import com.example.playlistmaker.domain.impl.TracksInteractorImpl
 import com.example.playlistmaker.domain.models.Track
