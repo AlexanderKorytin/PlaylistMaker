@@ -71,7 +71,7 @@ class MediaActivity : AppCompatActivity() {
             ?: intent.getStringExtra("clickedTrack")
         val clickedTrack = getClickedTrack.execute(ClickedTrackGson(receivedTrack))
         trackUrl = clickedTrack.previewUrl
-        mediaPlayer = MediaPlayerInteractorImpl(trackUrl, binding, this)
+        mediaPlayer = MediaPlayerInteractorImpl(clickedTrack, binding, this)
         filledTrackMeans(clickedTrack)
 
 
