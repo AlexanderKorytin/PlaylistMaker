@@ -8,5 +8,4 @@ interface MediaPlayerInteractor {
 
     fun release()
 
-   fun playbackControl()
 }
