@@ -2,7 +2,6 @@ package com.example.playlistmaker.presentetion.ui.mediaPlayer
 
 import android.annotation.SuppressLint
 import android.icu.text.SimpleDateFormat
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -19,7 +18,8 @@ import com.example.playlistmaker.domain.impl.GetClickedTrackFromGsonUseCase
 import com.example.playlistmaker.domain.impl.ImageLoaderUseCase
 import com.example.playlistmaker.domain.models.ClickedTrack
 import com.example.playlistmaker.domain.models.ClickedTrackGson
-import com.example.playlistmaker.domain.models.PlayerState
+import com.example.playlistmaker.data.dto.PlayerState
+import com.example.playlistmaker.data.mediaplayer.impl.MediaPlayerInteractorImpl
 import com.example.playlistmaker.presentetion.dpToPx
 import com.example.playlistmaker.presentetion.setOnClickListenerWithViber
 import com.example.playlistmaker.presentetion.setVibe
@@ -31,26 +31,22 @@ class MediaActivity : AppCompatActivity() {
     companion object {
         private const val CLICKED_TRACK = "CLICKED_TRACK"
         private const val cornersRatio = 120
-        private const val UPDATE_TIMER_TRACK = 300L
     }
 
     private var receivedTrack: String? = null
     private var widthDisplay = 0
     private var roundedCorners = 0
     private lateinit var binding: ActivityMediaBinding
-    private var timerStart = 0L
     private lateinit var outAnim: Animation
     private lateinit var inAnim: Animation
 
     // инициализируем медиа плеер
     // и задаем его состояние по умолчанию
-    private var mediaPlayer = MediaPlayer()
-    var playerState = PlayerState.STATE_DEFAULT
     private var trackUrl: String? = null
 
-    private var handlerMain: Handler? = null
     private val imageLoaderUseCase = ImageLoaderUseCase()
     private val getClickedTrack = GetClickedTrackFromGsonUseCase()
+    private lateinit var mediaPlayer: MediaPlayerInteractorImpl
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -63,7 +59,6 @@ class MediaActivity : AppCompatActivity() {
         binding = ActivityMediaBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-        handlerMain = Handler(Looper.getMainLooper())
         // вычисляем радиус углов от реального размера картинки исходя из параметров верстки радиус 8
         // при высоте дисплея 832 из которых обложка - 312
         // коэффициент примерно - 1/120
@@ -75,8 +70,9 @@ class MediaActivity : AppCompatActivity() {
         receivedTrack = savedInstanceState?.getString(CLICKED_TRACK, "")
             ?: intent.getStringExtra("clickedTrack")
         val clickedTrack = getClickedTrack.execute(ClickedTrackGson(receivedTrack))
-        filledTrackMeans(clickedTrack)
         trackUrl = clickedTrack.previewUrl
+        mediaPlayer = MediaPlayerInteractorImpl(trackUrl, binding, this)
+        filledTrackMeans(clickedTrack)
 
 
         //загружаем анимации
@@ -99,7 +95,7 @@ class MediaActivity : AppCompatActivity() {
         })
         inAnim.setAnimationListener(object : AnimationListener {
             override fun onAnimationStart(animation: Animation?) {
-                playbackControl()
+                mediaPlayer.playbackControl()
             }
 
             override fun onAnimationEnd(animation: Animation?) {
@@ -112,7 +108,6 @@ class MediaActivity : AppCompatActivity() {
 
         })
 
-        preparePlayer()
 // Подготовка плеера и установка слушателей
         binding.backMedia.setOnClickListenerWithViber {
             finish()
@@ -154,7 +149,7 @@ class MediaActivity : AppCompatActivity() {
         binding.addCollection.isClickable = true
         binding.timerMedia.text = SimpleDateFormat(
             "mm:ss", Locale.getDefault()
-        ).format(timerStart)
+        ).format(mediaPlayer.getTimerStart())
         imageLoaderUseCase
             .execute(
                 track.coverArtWork,
@@ -178,62 +173,13 @@ class MediaActivity : AppCompatActivity() {
         }
     }
 
-    private fun preparePlayer() {
-        // передаем ссылку на 30 сек отрывок медиа плееру
-        mediaPlayer.setDataSource(trackUrl)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            binding.playPause.isEnabled = true
-            playerState = PlayerState.STATE_PREPARED
-        }
-        mediaPlayer.setOnCompletionListener {
-            binding.playPause.setImageDrawable(getDrawable(R.drawable.play_button))
-            binding.timerMedia.text = SimpleDateFormat(
-                "mm:ss", Locale.getDefault()
-            ).format(timerStart)
-            playerState = PlayerState.STATE_PREPARED
-        }
-    }
 
     private fun startPlayer() {
-        mediaPlayer.start()
-        binding.playPause.setImageDrawable(getDrawable(R.drawable.pause_button))
-        playerState = PlayerState.STATE_PLAYING
-        handlerMain?.post(updateTimerMedia())
+        mediaPlayer.play()
     }
 
     private fun pausePlayer() {
-        handlerMain?.removeCallbacks(updateTimerMedia())
         mediaPlayer.pause()
-        binding.playPause.setImageDrawable(getDrawable(R.drawable.play_button))
-        playerState = PlayerState.STATE_PAUSED
     }
 
-    private fun playbackControl() {
-        when (playerState) {
-            PlayerState.STATE_PLAYING -> {
-                pausePlayer()
-            }
-
-            PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED -> {
-                startPlayer()
-            }
-
-            else -> {}
-        }
-    }
-
-    private fun updateTimerMedia(): Runnable {
-        return object : Runnable {
-            override fun run() {
-                if (playerState == PlayerState.STATE_PLAYING) {
-                    binding.timerMedia.text = SimpleDateFormat(
-                        "mm:ss", Locale.getDefault()
-                    ).format(mediaPlayer.currentPosition)
-                    handlerMain?.postDelayed(this, UPDATE_TIMER_TRACK)
-                }
-            }
-
-        }
-    }
 }
