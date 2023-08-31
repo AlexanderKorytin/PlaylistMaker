@@ -14,6 +14,9 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityFindBinding
+import com.example.playlistmaker.domain.consumer.Consumer
+import com.example.playlistmaker.domain.consumer.ConsumerData
+import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.presentation.App
 import com.example.playlistmaker.presentation.getTrackListFromJson
 import com.example.playlistmaker.presentation.mappers.MapToTrackUI
@@ -22,6 +25,7 @@ import com.example.playlistmaker.presentation.setOnClickListenerWithViber
 import com.example.playlistmaker.presentation.ui.mediaPlayer.MediaActivity
 import com.google.gson.Gson
 import java.io.IOException
+import java.lang.Error
 
 const val SEARCH_HISTORY_TRACK_LIST = "Search history list"
 const val TRACK_HISTORY_SHAREDPREFERENCES = "Track history"
@@ -186,25 +190,28 @@ class FindActivity : AppCompatActivity() {
     private fun getMusic(text: String, adapter: FindAdapter) {
         if (text.isNotEmpty()) {
             adapter.notifyDataSetChanged()
-            val t = Thread {
-                var flagIOException = false
-                try {
-                    tracklistInterator = MapToTrackUI().mapList(trackInteractor.getMusic(text))
-                } catch (e: IOException) {
-                    handlerMain.post { setPlaceholderCommunicationProblems(adapter) }
-                    textSearchLast = textSearch
-                    flagIOException = true
+            val result = trackInteractor.getMusic(text, object : Consumer<List<Track>> {
+                override fun consume(data: ConsumerData<List<Track>>) {
+                    when (data) {
+                        is ConsumerData.Data -> {
+
+                            if (data.value.isNotEmpty()) {
+                                tracklistInterator = MapToTrackUI().mapList(data.value)
+                                trackList?.addAll(0, tracklistInterator as ArrayList<TrackUI>)
+                                handlerMain.post { visibilitySearchingСomplet() }
+                                adapter.trackList = trackList!!
+                            } else {
+                                handlerMain.post { setPlaceholderNothingFound(adapter) }
+                            }
+                        }
+
+                        is ConsumerData.Error -> {
+                            handlerMain.post { setPlaceholderCommunicationProblems(adapter) }
+                        }
+                    }
                 }
-                if (tracklistInterator?.isEmpty() == true && !flagIOException) {
-                    handlerMain.post { setPlaceholderNothingFound(adapter) }
-                }
-                if (tracklistInterator?.isNotEmpty() == true && !flagIOException) {
-                    trackList?.addAll(0, tracklistInterator as ArrayList<TrackUI>)
-                    handlerMain.post { visibilitySearchingСomplet() }
-                    adapter.trackList = trackList!!
-                }
-            }
-            t.start()
+
+            })
         }
     }
 

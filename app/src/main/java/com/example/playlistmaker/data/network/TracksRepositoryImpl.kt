@@ -4,29 +4,37 @@ import com.example.playlistmaker.data.NetworkClient
 import com.example.playlistmaker.data.dto.TrackRequest
 import com.example.playlistmaker.data.dto.TracksResponse
 import com.example.playlistmaker.domain.api.TracksRepository
+import com.example.playlistmaker.domain.consumer.Consumer
+import com.example.playlistmaker.domain.consumer.ConsumerData
 import com.example.playlistmaker.domain.models.Track
 
 class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
-    override fun getMusic(term: String): List<Track> {
-        val response = networkClient.searchTracks(TrackRequest(term))
-        if (response?.resultCode == 200) {
-            return (response as TracksResponse).results.map {
-                Track(
-                    it.trackId,
-                    it.getParam(it.trackName),
-                    it.getParam(it.artistName),
-                    it.getTrackTime(),
-                    it.getParam(it.artworkUrl100),
-                    it.getParam(it.country),
-                    it.getParam(it.collectionName),
-                    it.getYear(),
-                    it.getParam(it.primaryGenreName),
-                    it.getParam(it.previewUrl),
-                    it.getCoverArtwork()
-                )
+    override fun getMusic(term: String, consumer: Consumer<List<Track>>) {
+        val t = Thread {
+            val response = networkClient.searchTracks(TrackRequest(term))
+            if (response?.resultCode == 200) {
+                val resultSearch = (response as TracksResponse).results.map {
+                    Track(
+                        it.trackId,
+                        it.getParam(it.trackName),
+                        it.getParam(it.artistName),
+                        it.getTrackTime(),
+                        it.getParam(it.artworkUrl100),
+                        it.getParam(it.country),
+                        it.getParam(it.collectionName),
+                        it.getYear(),
+                        it.getParam(it.primaryGenreName),
+                        it.getParam(it.previewUrl),
+                        it.getCoverArtwork()
+                    )
+                }
+                consumer.consume(ConsumerData.Data(resultSearch))
+            } else if (response?.resultCode != 0) {
+                val resultSearch = emptyList<Track>()
+                consumer.consume(ConsumerData.Data(resultSearch))
+            } else {
+                consumer.consume(ConsumerData.Error(""))
             }
-        } else {
-            return emptyList<Track>()
-        }
+        }.start()
     }
 }
