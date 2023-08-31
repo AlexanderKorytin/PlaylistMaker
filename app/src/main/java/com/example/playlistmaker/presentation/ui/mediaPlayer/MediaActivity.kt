@@ -16,7 +16,6 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.models.PlayerState
 import com.example.playlistmaker.databinding.ActivityMediaBinding
 import com.example.playlistmaker.presentation.mappers.GetClickedTrackFromGsonUseCase
-import com.example.playlistmaker.domain.impl.ImageLoaderUseCase
 import com.example.playlistmaker.presentation.models.ClickedTrack
 import com.example.playlistmaker.presentation.models.ClickedTrackGson
 import com.example.playlistmaker.presentation.App
@@ -40,7 +39,7 @@ class MediaActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMediaBinding
     private lateinit var outAnim: Animation
     private lateinit var inAnim: Animation
-    private val imageLoaderUseCase = ImageLoaderUseCase()
+    private val imageLoaderUseCase by lazy { App().creator.provideGetImageLoaderUseCase() }
     private val getClickedTrack = GetClickedTrackFromGsonUseCase()
     private val mediaPlayer by lazy { App().creator.provideGetMediplayerInteractor() }
     private val handlerMain = Handler(Looper.getMainLooper())

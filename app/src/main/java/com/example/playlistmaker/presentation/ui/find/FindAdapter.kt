@@ -7,6 +7,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.data.dto.ImageLoaderGlide
 import com.example.playlistmaker.domain.impl.ImageLoaderUseCase
 import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.presentation.App
 import com.example.playlistmaker.presentation.setOnClickListenerWithViber
 
 
@@ -14,7 +15,7 @@ class FindAdapter(val trackClickListner: TrackClickListner) :
     RecyclerView.Adapter<FindViewHolder>() {
     var trackList = ArrayList<Track>()
     val imageLoader = ImageLoaderGlide()
-    val imageLoaderUseCase = ImageLoaderUseCase()
+    val imageLoaderUseCase = App().creator.provideGetImageLoaderUseCase()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FindViewHolder {
 
         val view = LayoutInflater.from(parent.context).inflate(R.layout.track_view, parent, false)
