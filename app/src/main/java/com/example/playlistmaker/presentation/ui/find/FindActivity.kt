@@ -24,8 +24,6 @@ import com.example.playlistmaker.presentation.models.TrackUI
 import com.example.playlistmaker.presentation.setOnClickListenerWithViber
 import com.example.playlistmaker.presentation.ui.mediaPlayer.MediaActivity
 import com.google.gson.Gson
-import java.io.IOException
-import java.lang.Error
 
 const val SEARCH_HISTORY_TRACK_LIST = "Search history list"
 const val TRACK_HISTORY_SHAREDPREFERENCES = "Track history"
@@ -193,8 +191,8 @@ class FindActivity : AppCompatActivity() {
             val result = trackInteractor.getMusic(text, object : Consumer<List<Track>> {
                 override fun consume(data: ConsumerData<List<Track>>) {
                     when (data) {
-                        is ConsumerData.Data -> {
 
+                        is ConsumerData.Data -> {
                             if (data.value.isNotEmpty()) {
                                 tracklistInterator = MapToTrackUI().mapList(data.value)
                                 trackList?.addAll(0, tracklistInterator as ArrayList<TrackUI>)
@@ -208,6 +206,7 @@ class FindActivity : AppCompatActivity() {
                         is ConsumerData.Error -> {
                             handlerMain.post { setPlaceholderCommunicationProblems(adapter) }
                         }
+
                     }
                 }
 
