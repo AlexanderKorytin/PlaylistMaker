@@ -1,6 +1,6 @@
 package com.example.playlistmaker.data.mediaplayer.api
 
-interface MediaPlayerInteractor {
+interface MediaPlayerData {
 
     fun play()
 
@@ -8,4 +8,7 @@ interface MediaPlayerInteractor {
 
     fun release()
 
+    fun getTimerStart(): Long
+
+    fun getCurrentPosition(): Int
 }

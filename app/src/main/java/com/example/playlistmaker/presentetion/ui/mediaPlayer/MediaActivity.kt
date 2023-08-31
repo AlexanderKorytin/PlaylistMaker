@@ -14,10 +14,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.playlistmaker.R
 import com.example.playlistmaker.data.dto.PlayerState
-import com.example.playlistmaker.data.mediaplayer.impl.MediaPlayerInteractorImpl
+import com.example.playlistmaker.data.mediaplayer.impl.MediaPlayerDataImpl
 import com.example.playlistmaker.databinding.ActivityMediaBinding
 import com.example.playlistmaker.domain.impl.GetClickedTrackFromGsonUseCase
 import com.example.playlistmaker.domain.impl.ImageLoaderUseCase
+import com.example.playlistmaker.domain.impl.MediaPlayerInteractor
 import com.example.playlistmaker.domain.models.ClickedTrack
 import com.example.playlistmaker.domain.models.ClickedTrackGson
 import com.example.playlistmaker.presentetion.dpToPx
@@ -40,16 +41,10 @@ class MediaActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMediaBinding
     private lateinit var outAnim: Animation
     private lateinit var inAnim: Animation
-
-    // инициализируем медиа плеер
-    // и задаем его состояние по умолчанию
-    private var trackUrl: String? = null
-
     private val imageLoaderUseCase = ImageLoaderUseCase()
     private val getClickedTrack = GetClickedTrackFromGsonUseCase()
-    private lateinit var mediaPlayer: MediaPlayerInteractorImpl
+    private lateinit var mediaPlayer: MediaPlayerInteractor
     private val handlerMain = Handler(Looper.getMainLooper())
-    private val timerStart = 0L
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -73,8 +68,7 @@ class MediaActivity : AppCompatActivity() {
         receivedTrack = savedInstanceState?.getString(CLICKED_TRACK, "")
             ?: intent.getStringExtra("clickedTrack")
         val clickedTrack = getClickedTrack.execute(ClickedTrackGson(receivedTrack))
-        trackUrl = clickedTrack.previewUrl
-        mediaPlayer = MediaPlayerInteractorImpl(clickedTrack.toMediaPlayer())
+        mediaPlayer = MediaPlayerInteractor(clickedTrack)
         filledTrackMeans(clickedTrack)
 
 
@@ -98,7 +92,7 @@ class MediaActivity : AppCompatActivity() {
         })
         inAnim.setAnimationListener(object : AnimationListener {
             override fun onAnimationStart(animation: Animation?) {
-               playbackControl()
+                playbackControl()
             }
 
             override fun onAnimationEnd(animation: Animation?) {
@@ -110,8 +104,6 @@ class MediaActivity : AppCompatActivity() {
             }
 
         })
-
-// Подготовка плеера и установка слушателей
         binding.backMedia.setOnClickListenerWithViber {
             finish()
         }
@@ -192,7 +184,7 @@ class MediaActivity : AppCompatActivity() {
     private fun updateTimerMedia(): Runnable {
         return object : Runnable {
             override fun run() {
-                if (mediaPlayer.playerState == PlayerState.STATE_PLAYING) {
+                if (mediaPlayer.getPlayerState() == PlayerState.STATE_PLAYING) {
                     binding.timerMedia.text = SimpleDateFormat(
                         "mm:ss", Locale.getDefault()
                     ).format(mediaPlayer.getCurrentPosition())
@@ -202,8 +194,9 @@ class MediaActivity : AppCompatActivity() {
 
         }
     }
+
     fun playbackControl() {
-        when (mediaPlayer.playerState) {
+        when (mediaPlayer.getPlayerState()) {
             PlayerState.STATE_PLAYING -> {
                 pausePlayer()
             }
@@ -217,13 +210,13 @@ class MediaActivity : AppCompatActivity() {
     }
 
     private fun analyzPlayerState() {
-        when (mediaPlayer.playerState.i) {
+        when (mediaPlayer.getPlayerState().i) {
             1 -> {
                 binding.playPause.setImageDrawable(getDrawable(R.drawable.play_button))
                 binding.playPause.isEnabled = true
                 binding.timerMedia.text = SimpleDateFormat(
                     "mm:ss", Locale.getDefault()
-                ).format(timerStart)
+                ).format(mediaPlayer.getTimerStart())
             }
 
             2 -> {
@@ -233,6 +226,7 @@ class MediaActivity : AppCompatActivity() {
             3 -> {
                 binding.playPause.setImageDrawable(getDrawable(R.drawable.play_button))
             }
+
             4 -> {}
 
         }

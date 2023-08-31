@@ -3,12 +3,10 @@ package com.example.playlistmaker.data.mediaplayer.impl
 import android.media.MediaPlayer
 import com.example.playlistmaker.data.dto.PlayerState
 import com.example.playlistmaker.data.dto.TrackUrl
-import com.example.playlistmaker.data.mediaplayer.api.MediaPlayerInteractor
-import com.example.playlistmaker.databinding.ActivityMediaBinding
 
-class MediaPlayerInteractorImpl(
+class MediaPlayerDataImpl(
     private val urlTrack: TrackUrl
-) : MediaPlayerInteractor {
+) : com.example.playlistmaker.data.mediaplayer.api.MediaPlayerData {
     private var mediaPlayer = MediaPlayer()
     var playerState = PlayerState.STATE_DEFAULT
     private val timerStart = 0L
@@ -44,13 +42,12 @@ class MediaPlayerInteractorImpl(
         mediaPlayer.release()
     }
 
-    fun getTimerStart(): Long {
+    override fun getTimerStart(): Long {
         return timerStart
     }
 
-    fun getCurrentPosition(): Int {
+    override fun getCurrentPosition(): Int {
         return mediaPlayer.currentPosition
-
     }
 
 }
