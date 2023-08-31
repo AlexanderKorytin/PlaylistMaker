@@ -13,13 +13,13 @@ import com.example.playlistmaker.domain.api.MediaPlayerData
 import com.example.playlistmaker.domain.api.MediaPlayerInteractor
 import com.example.playlistmaker.domain.api.SearchHistory
 import com.example.playlistmaker.domain.api.SetViewVisibilityUseCase
-import com.example.playlistmaker.domain.api.TracksInteractor
+import com.example.playlistmaker.domain.api.GetTracksInteractor
 import com.example.playlistmaker.domain.api.TracksRepository
 import com.example.playlistmaker.domain.impl.ClearButtonSetViewVisibilityUseCase
 import com.example.playlistmaker.domain.impl.ImageLoaderUseCase
 import com.example.playlistmaker.domain.impl.MediaPlayerInteractorImpl
 import com.example.playlistmaker.domain.impl.SearchHistoryInteractorImpl
-import com.example.playlistmaker.domain.impl.TracksInteractorImpl
+import com.example.playlistmaker.domain.impl.GetGetTracksInteractorImpl
 
 object Creator {
     lateinit var url: TrackUrl
@@ -32,8 +32,8 @@ object Creator {
         return MediaPlayerDataImpl(url)
     }
 
-    fun provideGetTrackInteractor(): TracksInteractor {
-        return TracksInteractorImpl(provideGetTracksRepository())
+    fun provideGetTrackInteractor(): GetTracksInteractor {
+        return GetGetTracksInteractorImpl(provideGetTracksRepository())
     }
 
     private fun provideGetTracksRepository(): TracksRepository {
