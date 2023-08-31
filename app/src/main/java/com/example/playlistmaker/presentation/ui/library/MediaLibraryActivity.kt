@@ -1,9 +1,9 @@
-package com.example.playlistmaker.presentetion.ui.library
+package com.example.playlistmaker.presentation.ui.library
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.databinding.ActivityMediaLibraryBinding
-import com.example.playlistmaker.presentetion.setOnClickListenerWithViber
+import com.example.playlistmaker.presentation.setOnClickListenerWithViber
 
 class MediaLibraryActivity : AppCompatActivity() {
 

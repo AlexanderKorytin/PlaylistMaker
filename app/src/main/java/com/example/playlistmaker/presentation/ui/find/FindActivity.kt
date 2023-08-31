@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentetion.ui.find
+package com.example.playlistmaker.presentation.ui.find
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -13,17 +13,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.network.RetrofitNetworkClient
-import com.example.playlistmaker.data.network.TracksRepositoryImpl
 import com.example.playlistmaker.databinding.ActivityFindBinding
 import com.example.playlistmaker.domain.impl.ClearButtonSetViewVisibilityUseCase
-import com.example.playlistmaker.data.EditText.EditTextInteractor
 import com.example.playlistmaker.domain.impl.SearchHistoryInteractor
-import com.example.playlistmaker.domain.impl.TracksInteractorImpl
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.presentetion.getTrackListFromJson
-import com.example.playlistmaker.presentetion.setOnClickListenerWithViber
-import com.example.playlistmaker.presentetion.ui.mediaPlayer.MediaActivity
+import com.example.playlistmaker.presentation.App
+import com.example.playlistmaker.presentation.getTrackListFromJson
+import com.example.playlistmaker.presentation.setOnClickListenerWithViber
+import com.example.playlistmaker.presentation.ui.mediaPlayer.MediaActivity
 import com.google.gson.Gson
 import java.io.IOException
 
@@ -44,12 +41,8 @@ class FindActivity : AppCompatActivity() {
     private var trackList: ArrayList<Track>? = ArrayList()
     private var tracklistInterator: List<Track>? = emptyList()
     private val handlerMain: Handler = Handler(Looper.getMainLooper())
-
-    private val networkClient = RetrofitNetworkClient()
-    private val tracksRepository = TracksRepositoryImpl(networkClient)
-    private val trackInteractor = TracksInteractorImpl(tracksRepository)
+    private val trackInteractor = App().creator.provideGetTrackInteractor()
     private val setVisibilityClearButton = ClearButtonSetViewVisibilityUseCase()
-    private val editTextInteractor by lazy {  EditTextInteractor(bindingFindActivity) }
 
 
     //---------------------------------------------------
@@ -100,7 +93,7 @@ class FindActivity : AppCompatActivity() {
                             )
                         )
                     )
-                    editTextInteractor.setVisibilityViewsForShowSearchHistory(
+                    setVisibilityViewsForShowSearchHistory(
                         bindingFindActivity.menuFindSearchEditText.text.isEmpty() && searchHistoryInteractor.getTracksList()
                             .isNotEmpty(),
                         findAdapter, historyAdapter, searchHistoryInteractor
@@ -130,7 +123,7 @@ class FindActivity : AppCompatActivity() {
             bindingFindActivity.menuFindSearchEditText.setText("")
             trackList?.clear()
             findAdapter.notifyDataSetChanged()
-            editTextInteractor.setVisibilityViewsForShowSearchHistory(
+            setVisibilityViewsForShowSearchHistory(
                 searchHistoryInteractor.getTracksList().isNotEmpty(),
                 findAdapter, historyAdapter, searchHistoryInteractor,
             )
@@ -146,7 +139,7 @@ class FindActivity : AppCompatActivity() {
                     searchHistorySharedPreferences.getString(SEARCH_HISTORY_TRACK_LIST, null)
                 )
             )
-            editTextInteractor.setVisibilityViewsForShowSearchHistory(
+            setVisibilityViewsForShowSearchHistory(
                 hasFocus
                         && bindingFindActivity.menuFindSearchEditText.text.isEmpty()
                         && searchHistoryInteractor.getTracksList().isNotEmpty(),
@@ -156,7 +149,7 @@ class FindActivity : AppCompatActivity() {
 //---------------------------------------------------
         bindingFindActivity.clearSearchHistory.setOnClickListenerWithViber {
             searchHistoryInteractor.clear()
-            editTextInteractor.setVisibilityViewsForShowSearchHistory(
+            setVisibilityViewsForShowSearchHistory(
                 searchHistoryInteractor.getTracksList().isNotEmpty(),
                 findAdapter, historyAdapter, searchHistoryInteractor,
             )
@@ -167,7 +160,7 @@ class FindActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                editTextInteractor.setVisibilityViewsForShowSearchHistory(
+                setVisibilityViewsForShowSearchHistory(
                     bindingFindActivity.menuFindSearchEditText.hasFocus()
                             && s?.isEmpty() == true
                             && searchHistoryInteractor.getTracksList().isNotEmpty(),
@@ -283,6 +276,30 @@ class FindActivity : AppCompatActivity() {
         }
         return current
     }
-
+    fun setVisibilityViewsForShowSearchHistory(
+        flag: Boolean,
+        findAdapter: FindAdapter,
+        historyAdapter: FindAdapter,
+        iteractor: SearchHistoryInteractor
+    ) {
+        if (flag) {
+            bindingFindActivity.progressBar.visibility = View.GONE
+            bindingFindActivity.searchHistoryListView.visibility = View.VISIBLE
+            bindingFindActivity.tracksList.visibility = View.GONE
+            bindingFindActivity.placeholderFindViewGroup.visibility = View.GONE
+            bindingFindActivity.placeholderButton.visibility = View.GONE
+            findAdapter.trackList.clear()
+            findAdapter.notifyDataSetChanged()
+            historyAdapter.trackList = iteractor.getTracksList()
+            historyAdapter.notifyDataSetChanged()
+        } else {
+            bindingFindActivity.progressBar.visibility = View.GONE
+            bindingFindActivity.searchHistoryListView.visibility = View.GONE
+            bindingFindActivity.tracksList.visibility = View.VISIBLE
+            bindingFindActivity.placeholderFindViewGroup.visibility = View.GONE
+            historyAdapter.trackList = iteractor.getTracksList()
+            historyAdapter.notifyDataSetChanged()
+        }
+    }
 }
 //---------------------------------------------------

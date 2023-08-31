@@ -3,8 +3,8 @@ package com.example.playlistmaker.data.network
 import android.content.SharedPreferences
 import com.example.playlistmaker.domain.api.SearchHistory
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.presentetion.getTrackListFromJson
-import com.example.playlistmaker.presentetion.ui.find.SEARCH_HISTORY_TRACK_LIST
+import com.example.playlistmaker.presentation.getTrackListFromJson
+import com.example.playlistmaker.presentation.ui.find.SEARCH_HISTORY_TRACK_LIST
 import com.google.gson.Gson
 
 class SearchHistoryImpl(val sharedPreference: SharedPreferences) : SearchHistory {

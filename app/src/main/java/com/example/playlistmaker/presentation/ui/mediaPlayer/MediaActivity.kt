@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentetion.ui.mediaPlayer
+package com.example.playlistmaker.presentation.ui.mediaPlayer
 
 import android.annotation.SuppressLint
 import android.icu.text.SimpleDateFormat
@@ -12,17 +12,17 @@ import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.models.PlayerState
 import com.example.playlistmaker.databinding.ActivityMediaBinding
-import com.example.playlistmaker.domain.impl.GetClickedTrackFromGsonUseCase
+import com.example.playlistmaker.presentation.mappers.GetClickedTrackFromGsonUseCase
 import com.example.playlistmaker.domain.impl.ImageLoaderUseCase
-import com.example.playlistmaker.domain.models.ClickedTrack
-import com.example.playlistmaker.domain.models.ClickedTrackGson
-import com.example.playlistmaker.presentetion.dpToPx
-import com.example.playlistmaker.presentetion.setOnClickListenerWithViber
-import com.example.playlistmaker.presentetion.setVibe
+import com.example.playlistmaker.presentation.models.ClickedTrack
+import com.example.playlistmaker.presentation.models.ClickedTrackGson
+import com.example.playlistmaker.presentation.App
+import com.example.playlistmaker.presentation.dpToPx
+import com.example.playlistmaker.presentation.setOnClickListenerWithViber
+import com.example.playlistmaker.presentation.setVibe
 import java.util.Locale
 
 
@@ -42,8 +42,7 @@ class MediaActivity : AppCompatActivity() {
     private lateinit var inAnim: Animation
     private val imageLoaderUseCase = ImageLoaderUseCase()
     private val getClickedTrack = GetClickedTrackFromGsonUseCase()
-    private val creator = Creator
-    private val mediaPlayer by lazy { creator.provideGetMediplayerInteractor() }
+    private val mediaPlayer by lazy { App().creator.provideGetMediplayerInteractor() }
     private val handlerMain = Handler(Looper.getMainLooper())
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -67,8 +66,8 @@ class MediaActivity : AppCompatActivity() {
 
         receivedTrack = savedInstanceState?.getString(CLICKED_TRACK, "")
             ?: intent.getStringExtra("clickedTrack")
-        val clickedTrack = getClickedTrack.execute(ClickedTrackGson(receivedTrack))
-        creator.url = clickedTrack.toMediaPlayer()
+        val clickedTrack = getClickedTrack.map(ClickedTrackGson(receivedTrack))
+        App().creator.url = clickedTrack.toMediaPlayer()
         filledTrackMeans(clickedTrack)
 
 

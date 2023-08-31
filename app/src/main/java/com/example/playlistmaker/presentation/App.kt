@@ -1,12 +1,15 @@
-package com.example.playlistmaker.presentetion
+package com.example.playlistmaker.presentation
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.Creator
 
 const val APP_SETTINGS_PREF_KEY = "App settings"
 const val DARK_THEME = "dark_theme"
 
 class App : Application() {
+
+    val creator = Creator
 
     var darkTheme = false
 

@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentetion.ui.find
+package com.example.playlistmaker.presentation.ui.find
 
 import android.view.View
 import android.widget.ImageView
@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.impl.ImageLoaderUseCase
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.presentetion.dpToPx
+import com.example.playlistmaker.presentation.dpToPx
 
 class FindViewHolder(private val parentView: View, val imageLoaderGlide: ImageLoaderUseCase) :
     RecyclerView.ViewHolder(parentView) {

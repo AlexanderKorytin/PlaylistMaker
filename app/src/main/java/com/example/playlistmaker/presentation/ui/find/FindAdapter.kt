@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentetion.ui.find
+package com.example.playlistmaker.presentation.ui.find
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,7 +7,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.data.dto.ImageLoaderGlide
 import com.example.playlistmaker.domain.impl.ImageLoaderUseCase
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.presentetion.setOnClickListenerWithViber
+import com.example.playlistmaker.presentation.setOnClickListenerWithViber
 
 
 class FindAdapter(val trackClickListner: TrackClickListner) :

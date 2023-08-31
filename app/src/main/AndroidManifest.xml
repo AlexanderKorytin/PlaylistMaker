@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
-        android:name="com.example.playlistmaker.presentetion.App"
+        android:name="com.example.playlistmaker.presentation.App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -18,25 +18,25 @@
 
         <activity
             android:screenOrientation="portrait"
-            android:name=".presentetion.ui.find.FindActivity"
+            android:name=".presentation.ui.find.FindActivity"
             android:exported="false"
             android:theme="@style/Theme.SettingsActivity" />
         <activity
-            android:name=".presentetion.ui.mediaPlayer.MediaActivity"
+            android:name=".presentation.ui.mediaPlayer.MediaActivity"
             android:exported="false"
             android:theme="@style/Theme.SettingsActivity" />
         <activity
-            android:name=".presentetion.ui.settings.SettingsActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.SettingsActivity" />
-        <activity
-            android:name=".presentetion.ui.library.MediaLibraryActivity"
+            android:name=".presentation.ui.settings.SettingsActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.SettingsActivity" />
         <activity
-            android:name=".presentetion.ui.main.MainActivity"
+            android:name=".presentation.ui.library.MediaLibraryActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.SettingsActivity" />
+        <activity
+            android:name=".presentation.ui.main.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MainActivity">

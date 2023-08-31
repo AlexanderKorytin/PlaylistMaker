@@ -1,14 +1,14 @@
-package com.example.playlistmaker.presentetion.ui.main
+package com.example.playlistmaker.presentation.ui.main
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import com.example.playlistmaker.presentetion.ui.library.MediaLibraryActivity
+import com.example.playlistmaker.presentation.ui.library.MediaLibraryActivity
 import com.example.playlistmaker.R
-import com.example.playlistmaker.presentetion.ui.settings.SettingsActivity
-import com.example.playlistmaker.presentetion.setOnClickListenerWithViber
-import com.example.playlistmaker.presentetion.ui.find.FindActivity
+import com.example.playlistmaker.presentation.ui.settings.SettingsActivity
+import com.example.playlistmaker.presentation.setOnClickListenerWithViber
+import com.example.playlistmaker.presentation.ui.find.FindActivity
 
 class MainActivity : AppCompatActivity() {
 
