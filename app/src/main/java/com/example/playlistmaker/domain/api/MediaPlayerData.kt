@@ -1,4 +1,4 @@
-package com.example.playlistmaker.data.mediaplayer.api
+package com.example.playlistmaker.domain.api
 
 interface MediaPlayerData {
 
