@@ -3,6 +3,9 @@ package com.example.playlistmaker.domain.api
 import com.example.playlistmaker.domain.models.Track
 
 interface SearchHistory {
+
+    var searchHistoryList: ArrayList<Track>
+
     fun savedTrack(track: Track)
 
     fun clearHistory()

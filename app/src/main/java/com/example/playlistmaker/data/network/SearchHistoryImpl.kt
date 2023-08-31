@@ -9,7 +9,7 @@ import com.google.gson.Gson
 
 class SearchHistoryImpl(val sharedPreference: SharedPreferences) : SearchHistory {
 
-    internal var searchHistoryList = ArrayList<Track>()
+    override var searchHistoryList = ArrayList<Track>()
 
     override fun savedTrack(track: Track) {
         val jsonTrackList = sharedPreference.getString(SEARCH_HISTORY_TRACK_LIST, null)

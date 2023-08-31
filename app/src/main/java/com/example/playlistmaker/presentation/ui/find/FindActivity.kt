@@ -14,8 +14,6 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityFindBinding
-import com.example.playlistmaker.domain.impl.ClearButtonSetViewVisibilityUseCase
-import com.example.playlistmaker.domain.impl.SearchHistoryInteractor
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.presentation.App
 import com.example.playlistmaker.presentation.getTrackListFromJson
@@ -41,8 +39,9 @@ class FindActivity : AppCompatActivity() {
     private var trackList: ArrayList<Track>? = ArrayList()
     private var tracklistInterator: List<Track>? = emptyList()
     private val handlerMain: Handler = Handler(Looper.getMainLooper())
+    private val searchHistoryInteractorImpl by lazy { App().creator.provideGetSearchHistoryInteractor() }
     private val trackInteractor = App().creator.provideGetTrackInteractor()
-    private val setVisibilityClearButton = ClearButtonSetViewVisibilityUseCase()
+    private val setVisibilityClearButton = App().creator.provideGetSetViewVisibilityUseCase()
 
 
     //---------------------------------------------------
@@ -73,19 +72,19 @@ class FindActivity : AppCompatActivity() {
                 TRACK_HISTORY_SHAREDPREFERENCES,
                 MODE_PRIVATE
             )
-        val searchHistoryInteractor = SearchHistoryInteractor(searchHistorySharedPreferences)
+        App().creator.sharedPreferences = searchHistorySharedPreferences
         // Задаем адаптеры
         val findAdapter = FindAdapter {
-            clickedTrack(it, searchHistoryInteractor)
+            clickedTrack(it)
         }
         val historyAdapter = FindAdapter {
-            clickedTrack(it, searchHistoryInteractor)
+            clickedTrack(it)
         }
 
         val listener =
             SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
                 if (key == SEARCH_HISTORY_TRACK_LIST) {
-                    searchHistoryInteractor.setTrackList(
+                    searchHistoryInteractorImpl.setTrackList(
                         getTrackListFromJson(
                             searchHistorySharedPreferences.getString(
                                 SEARCH_HISTORY_TRACK_LIST,
@@ -94,15 +93,15 @@ class FindActivity : AppCompatActivity() {
                         )
                     )
                     setVisibilityViewsForShowSearchHistory(
-                        bindingFindActivity.menuFindSearchEditText.text.isEmpty() && searchHistoryInteractor.getTracksList()
+                        bindingFindActivity.menuFindSearchEditText.text.isEmpty() && searchHistoryInteractorImpl.getTracksList()
                             .isNotEmpty(),
-                        findAdapter, historyAdapter, searchHistoryInteractor
+                        findAdapter, historyAdapter
                     )
                 }
             }
         searchHistorySharedPreferences.registerOnSharedPreferenceChangeListener(listener)
         findAdapter.trackList = (trackList as ArrayList<Track>)
-        historyAdapter.trackList = searchHistoryInteractor.getTracksList()
+        historyAdapter.trackList = searchHistoryInteractorImpl.getTracksList()
 //---------------------------------------------------
         bindingFindActivity.tracksList.layoutManager = LinearLayoutManager(this)
         bindingFindActivity.tracksList.adapter = findAdapter
@@ -124,8 +123,8 @@ class FindActivity : AppCompatActivity() {
             trackList?.clear()
             findAdapter.notifyDataSetChanged()
             setVisibilityViewsForShowSearchHistory(
-                searchHistoryInteractor.getTracksList().isNotEmpty(),
-                findAdapter, historyAdapter, searchHistoryInteractor,
+                searchHistoryInteractorImpl.getTracksList().isNotEmpty(),
+                findAdapter, historyAdapter
             )
         }
 //---------------------------------------------------
@@ -134,7 +133,7 @@ class FindActivity : AppCompatActivity() {
         }
 //---------------------------------------------------
         bindingFindActivity.menuFindSearchEditText.setOnFocusChangeListener { _, hasFocus ->
-            searchHistoryInteractor.setTrackList(
+            searchHistoryInteractorImpl.setTrackList(
                 getTrackListFromJson(
                     searchHistorySharedPreferences.getString(SEARCH_HISTORY_TRACK_LIST, null)
                 )
@@ -142,16 +141,16 @@ class FindActivity : AppCompatActivity() {
             setVisibilityViewsForShowSearchHistory(
                 hasFocus
                         && bindingFindActivity.menuFindSearchEditText.text.isEmpty()
-                        && searchHistoryInteractor.getTracksList().isNotEmpty(),
-                findAdapter, historyAdapter, searchHistoryInteractor
+                        && searchHistoryInteractorImpl.getTracksList().isNotEmpty(),
+                findAdapter, historyAdapter
             )
         }
 //---------------------------------------------------
         bindingFindActivity.clearSearchHistory.setOnClickListenerWithViber {
-            searchHistoryInteractor.clear()
+            searchHistoryInteractorImpl.clear()
             setVisibilityViewsForShowSearchHistory(
-                searchHistoryInteractor.getTracksList().isNotEmpty(),
-                findAdapter, historyAdapter, searchHistoryInteractor,
+                searchHistoryInteractorImpl.getTracksList().isNotEmpty(),
+                findAdapter, historyAdapter
             )
         }
 //---------------------------------------------------
@@ -163,8 +162,8 @@ class FindActivity : AppCompatActivity() {
                 setVisibilityViewsForShowSearchHistory(
                     bindingFindActivity.menuFindSearchEditText.hasFocus()
                             && s?.isEmpty() == true
-                            && searchHistoryInteractor.getTracksList().isNotEmpty(),
-                    findAdapter, historyAdapter, searchHistoryInteractor
+                            && searchHistoryInteractorImpl.getTracksList().isNotEmpty(),
+                    findAdapter, historyAdapter
                 )
 
                 textSearch = bindingFindActivity.menuFindSearchEditText.text.toString()
@@ -249,9 +248,9 @@ class FindActivity : AppCompatActivity() {
     }
 
 
-    private fun clickedTrack(track: Track, searchHistory: SearchHistoryInteractor) {
+    private fun clickedTrack(track: Track) {
         if (trackClickedDebounce()) {
-            searchHistory.saved(track)
+            searchHistoryInteractorImpl.saved(track)
             val mediaIntent = Intent(this, MediaActivity::class.java)
             mediaIntent.putExtra("clickedTrack", Gson().toJson(track))
             startActivity(mediaIntent)
@@ -279,8 +278,7 @@ class FindActivity : AppCompatActivity() {
     fun setVisibilityViewsForShowSearchHistory(
         flag: Boolean,
         findAdapter: FindAdapter,
-        historyAdapter: FindAdapter,
-        iteractor: SearchHistoryInteractor
+        historyAdapter: FindAdapter
     ) {
         if (flag) {
             bindingFindActivity.progressBar.visibility = View.GONE
@@ -290,14 +288,14 @@ class FindActivity : AppCompatActivity() {
             bindingFindActivity.placeholderButton.visibility = View.GONE
             findAdapter.trackList.clear()
             findAdapter.notifyDataSetChanged()
-            historyAdapter.trackList = iteractor.getTracksList()
+            historyAdapter.trackList = searchHistoryInteractorImpl.getTracksList()
             historyAdapter.notifyDataSetChanged()
         } else {
             bindingFindActivity.progressBar.visibility = View.GONE
             bindingFindActivity.searchHistoryListView.visibility = View.GONE
             bindingFindActivity.tracksList.visibility = View.VISIBLE
             bindingFindActivity.placeholderFindViewGroup.visibility = View.GONE
-            historyAdapter.trackList = iteractor.getTracksList()
+            historyAdapter.trackList = searchHistoryInteractorImpl.getTracksList()
             historyAdapter.notifyDataSetChanged()
         }
     }
