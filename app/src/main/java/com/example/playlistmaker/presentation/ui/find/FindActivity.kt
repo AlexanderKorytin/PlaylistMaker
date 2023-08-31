@@ -14,9 +14,10 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityFindBinding
-import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.presentation.App
 import com.example.playlistmaker.presentation.getTrackListFromJson
+import com.example.playlistmaker.presentation.mappers.MapToTrackUI
+import com.example.playlistmaker.presentation.models.TrackUI
 import com.example.playlistmaker.presentation.setOnClickListenerWithViber
 import com.example.playlistmaker.presentation.ui.mediaPlayer.MediaActivity
 import com.google.gson.Gson
@@ -36,8 +37,8 @@ class FindActivity : AppCompatActivity() {
     private var isClickTrackAllowed = true
     private var textSearch = ""
     private var textSearchLast = ""
-    private var trackList: ArrayList<Track>? = ArrayList()
-    private var tracklistInterator: List<Track>? = emptyList()
+    private var trackList: ArrayList<TrackUI>? = ArrayList()
+    private var tracklistInterator: List<TrackUI>? = emptyList()
     private val handlerMain: Handler = Handler(Looper.getMainLooper())
     private val searchHistoryInteractorImpl by lazy { App().creator.provideGetSearchHistoryInteractor() }
     private val trackInteractor = App().creator.provideGetTrackInteractor()
@@ -100,8 +101,9 @@ class FindActivity : AppCompatActivity() {
                 }
             }
         searchHistorySharedPreferences.registerOnSharedPreferenceChangeListener(listener)
-        findAdapter.trackList = (trackList as ArrayList<Track>)
-        historyAdapter.trackList = searchHistoryInteractorImpl.getTracksList()
+        findAdapter.trackList = (trackList as ArrayList<TrackUI>)
+        historyAdapter.trackList =
+            MapToTrackUI().mapList(searchHistoryInteractorImpl.getTracksList())
 //---------------------------------------------------
         bindingFindActivity.tracksList.layoutManager = LinearLayoutManager(this)
         bindingFindActivity.tracksList.adapter = findAdapter
@@ -187,7 +189,7 @@ class FindActivity : AppCompatActivity() {
             val t = Thread {
                 var flagIOException = false
                 try {
-                    tracklistInterator = trackInteractor.getMusic(text)
+                    tracklistInterator = MapToTrackUI().mapList(trackInteractor.getMusic(text))
                 } catch (e: IOException) {
                     handlerMain.post { setPlaceholderCommunicationProblems(adapter) }
                     textSearchLast = textSearch
@@ -197,7 +199,7 @@ class FindActivity : AppCompatActivity() {
                     handlerMain.post { setPlaceholderNothingFound(adapter) }
                 }
                 if (tracklistInterator?.isNotEmpty() == true && !flagIOException) {
-                    trackList?.addAll(0, tracklistInterator as ArrayList<Track>)
+                    trackList?.addAll(0, tracklistInterator as ArrayList<TrackUI>)
                     handlerMain.post { visibilitySearchingСomplet() }
                     adapter.trackList = trackList!!
                 }
@@ -248,9 +250,9 @@ class FindActivity : AppCompatActivity() {
     }
 
 
-    private fun clickedTrack(track: Track) {
+    private fun clickedTrack(track: TrackUI) {
         if (trackClickedDebounce()) {
-            searchHistoryInteractorImpl.saved(track)
+            searchHistoryInteractorImpl.saved(track.toTrack())
             val mediaIntent = Intent(this, MediaActivity::class.java)
             mediaIntent.putExtra("clickedTrack", Gson().toJson(track))
             startActivity(mediaIntent)
@@ -275,6 +277,7 @@ class FindActivity : AppCompatActivity() {
         }
         return current
     }
+
     fun setVisibilityViewsForShowSearchHistory(
         flag: Boolean,
         findAdapter: FindAdapter,
@@ -288,14 +291,16 @@ class FindActivity : AppCompatActivity() {
             bindingFindActivity.placeholderButton.visibility = View.GONE
             findAdapter.trackList.clear()
             findAdapter.notifyDataSetChanged()
-            historyAdapter.trackList = searchHistoryInteractorImpl.getTracksList()
+            historyAdapter.trackList =
+                MapToTrackUI().mapList(searchHistoryInteractorImpl.getTracksList())
             historyAdapter.notifyDataSetChanged()
         } else {
             bindingFindActivity.progressBar.visibility = View.GONE
             bindingFindActivity.searchHistoryListView.visibility = View.GONE
             bindingFindActivity.tracksList.visibility = View.VISIBLE
             bindingFindActivity.placeholderFindViewGroup.visibility = View.GONE
-            historyAdapter.trackList = searchHistoryInteractorImpl.getTracksList()
+            historyAdapter.trackList =
+                MapToTrackUI().mapList(searchHistoryInteractorImpl.getTracksList())
             historyAdapter.notifyDataSetChanged()
         }
     }

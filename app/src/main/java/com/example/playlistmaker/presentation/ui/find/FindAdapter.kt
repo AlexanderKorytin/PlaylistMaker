@@ -4,13 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.presentation.models.TrackUI
 import com.example.playlistmaker.presentation.setOnClickListenerWithViber
 
 
 class FindAdapter(val trackClickListner: TrackClickListner) :
     RecyclerView.Adapter<FindViewHolder>() {
-    var trackList = ArrayList<Track>()
+    var trackList = ArrayList<TrackUI>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FindViewHolder {
 
         val view = LayoutInflater.from(parent.context).inflate(R.layout.track_view, parent, false)
@@ -27,6 +27,6 @@ class FindAdapter(val trackClickListner: TrackClickListner) :
     }
 
     fun interface TrackClickListner {
-        fun onTrackClick(track: Track)
+        fun onTrackClick(track: TrackUI)
     }
 }

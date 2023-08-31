@@ -5,10 +5,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.presentation.App
-import com.example.playlistmaker.presentation.models.TrackUI
 import com.example.playlistmaker.presentation.dpToPx
+import com.example.playlistmaker.presentation.models.TrackUI
 
 class FindViewHolder(private val parentView: View) :
     RecyclerView.ViewHolder(parentView) {
@@ -21,7 +20,7 @@ class FindViewHolder(private val parentView: View) :
     private val radiusIconTrackPx = dpToPx(radiusIconTrackDp, parentView.context)
     private val imageLoaderGlide = App().creator.provideGetImageLoaderUseCase()
 
-    fun bind(track: Track) {
+    fun bind(track: TrackUI) {
 
         trackName.text = track.trackName
         artistName.text = track.artistName
