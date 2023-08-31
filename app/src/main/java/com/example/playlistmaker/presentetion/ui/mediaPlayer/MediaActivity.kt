@@ -14,11 +14,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.playlistmaker.R
 import com.example.playlistmaker.data.dto.PlayerState
-import com.example.playlistmaker.data.mediaplayer.impl.MediaPlayerDataImpl
 import com.example.playlistmaker.databinding.ActivityMediaBinding
 import com.example.playlistmaker.domain.impl.GetClickedTrackFromGsonUseCase
 import com.example.playlistmaker.domain.impl.ImageLoaderUseCase
-import com.example.playlistmaker.domain.impl.MediaPlayerInteractor
+import com.example.playlistmaker.domain.impl.MediaPlayerInteractorImpl
 import com.example.playlistmaker.domain.models.ClickedTrack
 import com.example.playlistmaker.domain.models.ClickedTrackGson
 import com.example.playlistmaker.presentetion.dpToPx
@@ -43,7 +42,7 @@ class MediaActivity : AppCompatActivity() {
     private lateinit var inAnim: Animation
     private val imageLoaderUseCase = ImageLoaderUseCase()
     private val getClickedTrack = GetClickedTrackFromGsonUseCase()
-    private lateinit var mediaPlayer: MediaPlayerInteractor
+    private lateinit var mediaPlayer: MediaPlayerInteractorImpl
     private val handlerMain = Handler(Looper.getMainLooper())
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -68,7 +67,7 @@ class MediaActivity : AppCompatActivity() {
         receivedTrack = savedInstanceState?.getString(CLICKED_TRACK, "")
             ?: intent.getStringExtra("clickedTrack")
         val clickedTrack = getClickedTrack.execute(ClickedTrackGson(receivedTrack))
-        mediaPlayer = MediaPlayerInteractor(clickedTrack)
+        mediaPlayer = MediaPlayerInteractorImpl(clickedTrack)
         filledTrackMeans(clickedTrack)
 
 
