@@ -1,7 +1,6 @@
 package com.example.playlistmaker.domain.api
 
-import com.example.playlistmaker.data.dto.PlayerState
-import com.example.playlistmaker.domain.models.ClickedTrack
+import com.example.playlistmaker.domain.models.PlayerState
 
 interface MediaPlayerInteractor {
     fun play()
