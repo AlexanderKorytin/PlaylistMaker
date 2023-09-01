@@ -2,9 +2,12 @@ package com.example.playlistmaker.domain.api
 
 import com.example.playlistmaker.domain.models.Track
 
-interface SearchHistory {
+interface SearchHistoryRepository {
 
-    var searchHistoryList: ArrayList<Track>
+
+    fun getSearchHistoryList(): ArrayList<Track>
+
+    fun setSearchHistoryList(list: ArrayList<Track>)
 
     fun savedTrack(track: Track)
 

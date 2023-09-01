@@ -6,12 +6,12 @@ import com.example.playlistmaker.data.dto.ImageLoaderGlide
 import com.example.playlistmaker.data.dto.TrackUrl
 import com.example.playlistmaker.data.mediaplayer.impl.MediaPlayerDataImpl
 import com.example.playlistmaker.data.network.RetrofitNetworkClient
-import com.example.playlistmaker.data.network.SearchHistoryImpl
+import com.example.playlistmaker.data.network.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.data.network.TracksRepositoryImpl
 import com.example.playlistmaker.domain.api.ImageLoader
 import com.example.playlistmaker.domain.api.MediaPlayerData
 import com.example.playlistmaker.domain.api.MediaPlayerInteractor
-import com.example.playlistmaker.domain.api.SearchHistory
+import com.example.playlistmaker.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.domain.api.SetViewVisibilityUseCase
 import com.example.playlistmaker.domain.api.GetTracksInteractor
 import com.example.playlistmaker.domain.api.TracksRepository
@@ -59,7 +59,7 @@ object Creator {
     fun provideGetSearchHistoryInteractor(): SearchHistoryInteractorImpl {
         return  SearchHistoryInteractorImpl(provideGetSearchHistory())
     }
-    private fun provideGetSearchHistory(): SearchHistory{
-        return SearchHistoryImpl(sharedPreferences)
+    private fun provideGetSearchHistory(): SearchHistoryRepository{
+        return SearchHistoryRepositoryImpl(sharedPreferences)
     }
 }

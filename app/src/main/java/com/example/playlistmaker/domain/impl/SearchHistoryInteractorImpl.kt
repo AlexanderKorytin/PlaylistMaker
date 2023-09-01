@@ -1,22 +1,22 @@
 package com.example.playlistmaker.domain.impl
 
-import com.example.playlistmaker.domain.api.SearchHistory
+import com.example.playlistmaker.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.domain.models.Track
 
-class SearchHistoryInteractorImpl(val searchHistory: SearchHistory): SearchHistoryInteractor {
-    override fun getTracksList(): ArrayList<Track> = searchHistory.searchHistoryList
+class SearchHistoryInteractorImpl(val searchHistoryRepository: SearchHistoryRepository): SearchHistoryInteractor {
+    override fun getTracksList(): ArrayList<Track> = searchHistoryRepository.getSearchHistoryList()
 
     override fun setTrackList(list: ArrayList<Track>) {
-        searchHistory.searchHistoryList = list
+        searchHistoryRepository.setSearchHistoryList(list)
     }
 
     override fun clear() {
-        searchHistory.clearHistory()
+        searchHistoryRepository.clearHistory()
     }
 
     override fun saved(track: Track) {
-        searchHistory.savedTrack(track)
+        searchHistoryRepository.savedTrack(track)
     }
 
 }
