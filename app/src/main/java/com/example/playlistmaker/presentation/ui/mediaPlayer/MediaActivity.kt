@@ -188,6 +188,12 @@ class MediaActivity : AppCompatActivity() {
                     ).format(mediaPlayer.getCurrentPosition())
                     handlerMain.postDelayed(this, UPDATE_TIMER_TRACK)
                 }
+                if (mediaPlayer.getPlayerState() == PlayerState.STATE_PREPARED){
+                    binding.timerMedia.text = SimpleDateFormat(
+                        "mm:ss", Locale.getDefault()
+                    ).format(mediaPlayer.getTimerStart())
+                    handlerMain.post(this)
+                }
             }
 
         }
