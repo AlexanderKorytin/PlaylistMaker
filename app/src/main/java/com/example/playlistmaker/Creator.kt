@@ -56,7 +56,7 @@ object Creator {
         return  ClearButtonSetViewVisibilityUseCase()
     }
 
-    fun provideGetSearchHistoryInteractor(): SearchHistoryInteractorImpl{
+    fun provideGetSearchHistoryInteractor(): SearchHistoryInteractorImpl {
         return  SearchHistoryInteractorImpl(provideGetSearchHistory())
     }
     private fun provideGetSearchHistory(): SearchHistory{
