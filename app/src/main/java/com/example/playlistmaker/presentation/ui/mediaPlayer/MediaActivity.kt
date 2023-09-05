@@ -10,6 +10,8 @@ import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.App
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityMediaBinding
@@ -91,7 +93,13 @@ class MediaActivity : AppCompatActivity() {
 
             binding.addFavorite.isClickable = true
             binding.addCollection.isClickable = true
-            playerVM.showTrackAlbumImage(R.drawable.placeholder_media_image, roundedCorners)
+            Glide
+                .with(this)
+                .load(track.coverArtWork)
+                .placeholder(R.drawable.placeholder_media_image)
+                .centerCrop()
+                .transform(RoundedCorners(roundedCorners))
+                .into(binding.trackImageMedia)
             binding.trackNameMedia.text = track.trackName
             binding.trackArtistMedia.text = track.artistName
             binding.yearMediaMean.text = track.year

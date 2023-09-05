@@ -12,15 +12,12 @@ class MediaPlayerViewModelFactory(
     private val round: Int
 ) : ViewModelProvider.Factory {
     val mediaPlayerInteractor = Creator.provideGetMediplayerInteractor()
-    val imageLoaderUseCase = Creator.provideGetImageLoaderUseCase(image)
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return MediaPlayerViewModel(
             mediaPlayerInteractor,
-            imageLoaderUseCase,
             clickedTrack,
-            round
         ) as T
     }
 }

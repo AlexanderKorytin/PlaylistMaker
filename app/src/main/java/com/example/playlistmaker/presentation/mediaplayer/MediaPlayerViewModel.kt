@@ -3,22 +3,17 @@ package com.example.playlistmaker.presentation.mediaplayer
 import android.icu.text.SimpleDateFormat
 import android.os.Handler
 import android.os.Looper
-import androidx.constraintlayout.widget.Placeholder
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.api.MediaPlayerInteractor
-import com.example.playlistmaker.domain.impl.ImageLoaderUseCase
 import com.example.playlistmaker.domain.models.PlayerState
 import com.example.playlistmaker.presentation.models.ClickedTrack
 import java.util.Locale
 
 class MediaPlayerViewModel(
     private val mediaPlayerInteractor: MediaPlayerInteractor,
-    private val imageLoaderUseCase: ImageLoaderUseCase,
     private val clickedTrack: ClickedTrack,
-    private val roundCornersTrackImage: Int
 ) : ViewModel() {
     companion object {
         private const val UPDATE_TIMER_TRACK = 300L
@@ -59,14 +54,6 @@ class MediaPlayerViewModel(
     override fun onCleared() {
         super.onCleared()
         mediaPlayerInteractor.release()
-    }
-
-    fun showTrackAlbumImage(placeholder: Int, round: Int) {
-        imageLoaderUseCase.execute(
-            clickedTrack.coverArtWork,
-            placeholder,
-            round
-        )
     }
 
     private fun updateTimerMedia(): Runnable {

@@ -3,6 +3,8 @@ package com.example.playlistmaker.presentation.ui.find
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.App
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.TrackViewBinding
@@ -18,7 +20,6 @@ class FindViewHolder(private val parentViewBinding: TrackViewBinding) :
     private val trackTime: TextView = parentViewBinding.trackTime
     private val radiusIconTrackDp = 2.0f
     private val radiusIconTrackPx = dpToPx(radiusIconTrackDp, parentViewBinding.root.context)
-    private val imageLoaderGlide = App().creator.provideGetImageLoaderUseCase(trackIcon)
 
     fun bind(track: TrackUI) {
 
@@ -26,11 +27,13 @@ class FindViewHolder(private val parentViewBinding: TrackViewBinding) :
         artistName.text = track.artistName
         trackTime.text = track.trackTime
 
-        imageLoaderGlide.execute(
-            track.artworkUrl100,
-            R.drawable.placeholdersnake,
-            radiusIconTrackPx
-        )
+        Glide
+            .with(parentViewBinding.root.context)
+            .load(track.coverArtWork)
+            .placeholder(R.drawable.placeholder_media_image)
+            .centerCrop()
+            .transform(RoundedCorners(radiusIconTrackPx))
+            .into(parentViewBinding.trackIcon)
 
     }
 }
