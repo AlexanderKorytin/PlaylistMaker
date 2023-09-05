@@ -87,12 +87,11 @@ class MediaActivity : AppCompatActivity() {
             }
         }
 
-        playerVM.getCurrentTrack().observe(this){track ->
+        playerVM.getCurrentTrack().observe(this) { track ->
 
             binding.addFavorite.isClickable = true
             binding.addCollection.isClickable = true
-           playerVM.showTrackAlbumImage(
-                )
+            playerVM.showTrackAlbumImage(R.drawable.placeholder_media_image, roundedCorners)
             binding.trackNameMedia.text = track.trackName
             binding.trackArtistMedia.text = track.artistName
             binding.yearMediaMean.text = track.year

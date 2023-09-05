@@ -3,6 +3,7 @@ package com.example.playlistmaker.presentation.mediaplayer
 import android.icu.text.SimpleDateFormat
 import android.os.Handler
 import android.os.Looper
+import androidx.constraintlayout.widget.Placeholder
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -60,11 +61,11 @@ class MediaPlayerViewModel(
         mediaPlayerInteractor.release()
     }
 
-    fun showTrackAlbumImage() {
+    fun showTrackAlbumImage(placeholder: Int, round: Int) {
         imageLoaderUseCase.execute(
             clickedTrack.coverArtWork,
-            R.drawable.placeholder_media_image,
-            roundCornersTrackImage
+            placeholder,
+            round
         )
     }
 
