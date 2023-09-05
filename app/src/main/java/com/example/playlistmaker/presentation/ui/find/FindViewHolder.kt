@@ -1,23 +1,23 @@
 package com.example.playlistmaker.presentation.ui.find
 
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.App
 import com.example.playlistmaker.R
-import com.example.playlistmaker.presentation.App
-import com.example.playlistmaker.presentation.dpToPx
+import com.example.playlistmaker.databinding.TrackViewBinding
+import com.example.playlistmaker.dpToPx
 import com.example.playlistmaker.presentation.models.TrackUI
 
-class FindViewHolder(private val parentView: View) :
-    RecyclerView.ViewHolder(parentView) {
+class FindViewHolder(private val parentViewBinding: TrackViewBinding) :
+    RecyclerView.ViewHolder(parentViewBinding.root) {
 
-    private val trackIcon: ImageView = parentView.findViewById(R.id.trackIcon)
-    private val trackName: TextView = parentView.findViewById(R.id.trackName)
-    private val artistName: TextView = parentView.findViewById(R.id.artistName)
-    private val trackTime: TextView = parentView.findViewById(R.id.trackTime)
+    private val trackIcon: ImageView = parentViewBinding.trackIcon
+    private val trackName: TextView = parentViewBinding.trackName
+    private val artistName: TextView = parentViewBinding.artistName
+    private val trackTime: TextView = parentViewBinding.trackTime
     private val radiusIconTrackDp = 2.0f
-    private val radiusIconTrackPx = dpToPx(radiusIconTrackDp, parentView.context)
+    private val radiusIconTrackPx = dpToPx(radiusIconTrackDp, parentViewBinding.root.context)
     private val imageLoaderGlide = App().creator.provideGetImageLoaderUseCase()
 
     fun bind(track: TrackUI) {

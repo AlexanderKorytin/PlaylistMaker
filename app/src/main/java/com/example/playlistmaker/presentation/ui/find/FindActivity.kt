@@ -12,17 +12,17 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.playlistmaker.App
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityFindBinding
 import com.example.playlistmaker.domain.consumer.Consumer
 import com.example.playlistmaker.domain.consumer.ConsumerData
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.presentation.App
-import com.example.playlistmaker.presentation.getTrackListFromJson
+import com.example.playlistmaker.getTrackListFromJson
 import com.example.playlistmaker.presentation.mappers.MapToTrackUI
 import com.example.playlistmaker.presentation.models.TrackUI
-import com.example.playlistmaker.presentation.setOnClickListenerWithViber
 import com.example.playlistmaker.presentation.ui.mediaPlayer.MediaActivity
+import com.example.playlistmaker.setOnClickListenerWithViber
 import com.google.gson.Gson
 
 const val SEARCH_HISTORY_TRACK_LIST = "Search history list"

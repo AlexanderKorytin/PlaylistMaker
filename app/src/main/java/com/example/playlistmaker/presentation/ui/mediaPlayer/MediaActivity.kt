@@ -18,10 +18,10 @@ import com.example.playlistmaker.databinding.ActivityMediaBinding
 import com.example.playlistmaker.presentation.mappers.GetClickedTrackFromGsonUseCase
 import com.example.playlistmaker.presentation.models.ClickedTrack
 import com.example.playlistmaker.presentation.models.ClickedTrackGson
-import com.example.playlistmaker.presentation.App
-import com.example.playlistmaker.presentation.dpToPx
-import com.example.playlistmaker.presentation.setOnClickListenerWithViber
-import com.example.playlistmaker.presentation.setVibe
+import com.example.playlistmaker.App
+import com.example.playlistmaker.dpToPx
+import com.example.playlistmaker.setOnClickListenerWithViber
+import com.example.playlistmaker.setVibe
 import java.util.Locale
 
 

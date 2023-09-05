@@ -3,18 +3,18 @@ package com.example.playlistmaker.presentation.ui.find
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.TrackViewBinding
 import com.example.playlistmaker.presentation.models.TrackUI
-import com.example.playlistmaker.presentation.setOnClickListenerWithViber
+import com.example.playlistmaker.setOnClickListenerWithViber
 
 
 class FindAdapter(val trackClickListner: TrackClickListner) :
     RecyclerView.Adapter<FindViewHolder>() {
     var trackList = ArrayList<TrackUI>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FindViewHolder {
-
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.track_view, parent, false)
-        return FindViewHolder(view)
+        val layoutInspector = LayoutInflater.from(parent.context)
+        val viewBinding = TrackViewBinding.inflate(layoutInspector, parent, false)
+        return FindViewHolder(viewBinding)
     }
 
     override fun getItemCount() = trackList.size

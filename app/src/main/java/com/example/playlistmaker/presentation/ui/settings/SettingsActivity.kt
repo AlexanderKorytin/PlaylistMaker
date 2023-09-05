@@ -11,11 +11,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import com.example.playlistmaker.R
-import com.example.playlistmaker.presentation.APP_SETTINGS_PREF_KEY
-import com.example.playlistmaker.presentation.App
-import com.example.playlistmaker.presentation.DARK_THEME
-import com.example.playlistmaker.presentation.setOnClickListenerWithViber
-import com.example.playlistmaker.presentation.setVibe
+import com.example.playlistmaker.APP_SETTINGS_PREF_KEY
+import com.example.playlistmaker.App
+import com.example.playlistmaker.DARK_THEME
+import com.example.playlistmaker.setOnClickListenerWithViber
+import com.example.playlistmaker.setVibe
 
 class SettingsActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId", "UseSwitchCompatOrMaterialCode")

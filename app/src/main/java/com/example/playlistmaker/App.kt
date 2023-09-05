@@ -1,8 +1,7 @@
-package com.example.playlistmaker.presentation
+package com.example.playlistmaker
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.Creator
 
 const val APP_SETTINGS_PREF_KEY = "App settings"
 const val DARK_THEME = "dark_theme"

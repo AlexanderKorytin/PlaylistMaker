@@ -7,7 +7,7 @@ import android.widget.Button
 import com.example.playlistmaker.presentation.ui.library.MediaLibraryActivity
 import com.example.playlistmaker.R
 import com.example.playlistmaker.presentation.ui.settings.SettingsActivity
-import com.example.playlistmaker.presentation.setOnClickListenerWithViber
+import com.example.playlistmaker.setOnClickListenerWithViber
 import com.example.playlistmaker.presentation.ui.find.FindActivity
 
 class MainActivity : AppCompatActivity() {
