@@ -1,10 +1,7 @@
 package com.example.playlistmaker.presentation.ui.mediaPlayer
 
 import android.annotation.SuppressLint
-import android.icu.text.SimpleDateFormat
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.DisplayMetrics
 import android.view.MotionEvent
 import android.view.animation.Animation
@@ -12,17 +9,18 @@ import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import com.example.playlistmaker.R
-import com.example.playlistmaker.domain.models.PlayerState
-import com.example.playlistmaker.databinding.ActivityMediaBinding
-import com.example.playlistmaker.presentation.mappers.GetClickedTrackFromGsonUseCase
-import com.example.playlistmaker.presentation.models.ClickedTrack
-import com.example.playlistmaker.presentation.models.ClickedTrackGson
+import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.App
+import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.ActivityMediaBinding
+import com.example.playlistmaker.domain.models.PlayerState
 import com.example.playlistmaker.dpToPx
+import com.example.playlistmaker.presentation.mappers.GetClickedTrackFromGsonUseCase
+import com.example.playlistmaker.presentation.mediaplayer.MediaPlayerViewModel
+import com.example.playlistmaker.presentation.mediaplayer.MediaPlayerViewModelFactory
+import com.example.playlistmaker.presentation.models.ClickedTrackGson
 import com.example.playlistmaker.setOnClickListenerWithViber
 import com.example.playlistmaker.setVibe
-import java.util.Locale
 
 
 class MediaActivity : AppCompatActivity() {
@@ -30,7 +28,6 @@ class MediaActivity : AppCompatActivity() {
     companion object {
         private const val CLICKED_TRACK = "CLICKED_TRACK"
         private const val cornersRatio = 120
-        private const val UPDATE_TIMER_TRACK = 300L
     }
 
     private var receivedTrack: String? = null
@@ -39,10 +36,8 @@ class MediaActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMediaBinding
     private lateinit var outAnim: Animation
     private lateinit var inAnim: Animation
-    private val imageLoaderUseCase by lazy { App().creator.provideGetImageLoaderUseCase() }
     private val getClickedTrack = GetClickedTrackFromGsonUseCase()
-    private val mediaPlayer by lazy { App().creator.provideGetMediplayerInteractor() }
-    private val handlerMain = Handler(Looper.getMainLooper())
+    private lateinit var playerVM: MediaPlayerViewModel
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -55,21 +50,65 @@ class MediaActivity : AppCompatActivity() {
         binding = ActivityMediaBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
         // вычисляем радиус углов от реального размера картинки исходя из параметров верстки радиус 8
         // при высоте дисплея 832 из которых обложка - 312
         // коэффициент примерно - 1/120
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
         widthDisplay = displayMetrics.widthPixels
+
         roundedCorners = (dpToPx(widthDisplay.toFloat(), this)) / cornersRatio
 
         receivedTrack = savedInstanceState?.getString(CLICKED_TRACK, "")
             ?: intent.getStringExtra("clickedTrack")
         val clickedTrack = getClickedTrack.map(ClickedTrackGson(receivedTrack))
         App().creator.url = clickedTrack.toMediaPlayer()
-        filledTrackMeans(clickedTrack)
 
+        playerVM = ViewModelProvider(
+            this,
+            MediaPlayerViewModelFactory(clickedTrack, binding.trackImageMedia, roundedCorners)
+        ).get(MediaPlayerViewModel::class.java)
 
+        playerVM.getTimerCurrentPositionMediaPlayer().observe(this) { currentTime ->
+            binding.timerMedia.text = currentTime
+        }
+        playerVM.getCurrentPlayerState().observe(this) { currentPlayerState ->
+            when (currentPlayerState) {
+                PlayerState.STATE_PREPARED, PlayerState.STATE_DEFAULT -> {
+                    binding.playPause.setImageDrawable(getDrawable(R.drawable.play_button))
+                }
+
+                PlayerState.STATE_PLAYING -> {
+                    binding.playPause.setImageDrawable(getDrawable(R.drawable.pause_button))
+                }
+
+                else -> binding.playPause.setImageDrawable(getDrawable(R.drawable.play_button))
+            }
+        }
+
+        playerVM.getCurrentTrack().observe(this){track ->
+
+            binding.addFavorite.isClickable = true
+            binding.addCollection.isClickable = true
+           playerVM.showTrackAlbumImage(
+                )
+            binding.trackNameMedia.text = track.trackName
+            binding.trackArtistMedia.text = track.artistName
+            binding.yearMediaMean.text = track.year
+            binding.countryMediaMean.text = track.country
+            binding.genreMediaMean.text = track.primaryGenreName
+            binding.timeMediaMean.text = track.trackTime
+            if (track.collectionName != "") {
+                binding.albumMediaMean.isVisible = true
+                binding.albumMedia.isVisible = true
+                binding.albumMediaMean.text = track.collectionName
+            } else {
+                binding.albumMediaMean.isVisible = false
+                binding.albumMedia.isVisible = false
+
+            }
+        }
         //загружаем анимации
         inAnim = AnimationUtils.loadAnimation(this, R.anim.fadein)
         outAnim = AnimationUtils.loadAnimation(this, R.anim.fadeout)
@@ -90,7 +129,7 @@ class MediaActivity : AppCompatActivity() {
         })
         inAnim.setAnimationListener(object : AnimationListener {
             override fun onAnimationStart(animation: Animation?) {
-                playbackControl()
+                playerVM.playbackControl()
             }
 
             override fun onAnimationEnd(animation: Animation?) {
@@ -128,111 +167,32 @@ class MediaActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        pausePlayer()
+        playerVM.pausePlayer()
     }
 
-    override fun onDestroy() {
-        mediaPlayer.release()
-        super.onDestroy()
-    }
-
-
-    private fun filledTrackMeans(track: ClickedTrack) {
-        binding.addFavorite.isClickable = true
-        binding.addCollection.isClickable = true
-        binding.timerMedia.text = SimpleDateFormat(
-            "mm:ss", Locale.getDefault()
-        ).format(mediaPlayer.getTimerStart())
-        imageLoaderUseCase
-            .execute(
-                track.coverArtWork,
-                R.drawable.placeholder_media_image,
-                binding.trackImageMedia,
-                roundedCorners
-            )
-        binding.trackNameMedia.text = track.trackName
-        binding.trackArtistMedia.text = track.artistName
-        binding.yearMediaMean.text = track.year
-        binding.countryMediaMean.text = track.country
-        binding.genreMediaMean.text = track.primaryGenreName
-        binding.timeMediaMean.text = track.trackTime
-        if (track.collectionName != "") {
-            binding.albumMediaMean.isVisible = true
-            binding.albumMedia.isVisible = true
-            binding.albumMediaMean.text = track.collectionName
-        } else {
-            binding.albumMediaMean.isVisible = false
-            binding.albumMedia.isVisible = false
-        }
-    }
-
-
-    private fun startPlayer() {
-        mediaPlayer.play()
-        analyzPlayerState()
-        handlerMain.post(updateTimerMedia())
-    }
-
-    private fun pausePlayer() {
-        mediaPlayer.pause()
-        analyzPlayerState()
-        handlerMain.removeCallbacks(updateTimerMedia())
-    }
-
-    private fun updateTimerMedia(): Runnable {
-        return object : Runnable {
-            override fun run() {
-                if (mediaPlayer.getPlayerState() == PlayerState.STATE_PLAYING) {
-                    binding.timerMedia.text = SimpleDateFormat(
-                        "mm:ss", Locale.getDefault()
-                    ).format(mediaPlayer.getCurrentPosition())
-                    handlerMain.postDelayed(this, UPDATE_TIMER_TRACK)
-                }
-                if (mediaPlayer.getPlayerState() == PlayerState.STATE_PREPARED){
-                    binding.timerMedia.text = SimpleDateFormat(
-                        "mm:ss", Locale.getDefault()
-                    ).format(mediaPlayer.getTimerStart())
-                    handlerMain.post(this)
-                }
-            }
-
-        }
-    }
-
-    fun playbackControl() {
-        when (mediaPlayer.getPlayerState()) {
-            PlayerState.STATE_PLAYING -> {
-                pausePlayer()
-            }
-
-            PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED -> {
-                startPlayer()
-            }
-
-            else -> {}
-        }
-    }
-
-    private fun analyzPlayerState() {
-        when (mediaPlayer.getPlayerState()) {
-            PlayerState.STATE_PREPARED -> {
-                binding.playPause.setImageDrawable(getDrawable(R.drawable.play_button))
-                binding.playPause.isEnabled = true
-                binding.timerMedia.text = SimpleDateFormat(
-                    "mm:ss", Locale.getDefault()
-                ).format(mediaPlayer.getTimerStart())
-            }
-
-            PlayerState.STATE_PLAYING -> {
-                binding.playPause.setImageDrawable(getDrawable(R.drawable.pause_button))
-            }
-
-            PlayerState.STATE_PAUSED -> {
-                binding.playPause.setImageDrawable(getDrawable(R.drawable.play_button))
-            }
-
-            PlayerState.STATE_DEFAULT -> {}
-
-        }
-    }
+//    private fun filledTrackMeans(track: ClickedTrack) {
+//        binding.addFavorite.isClickable = true
+//        binding.addCollection.isClickable = true
+//        imageLoaderUseCase
+//            .execute(
+//                track.coverArtWork,
+//                R.drawable.placeholder_media_image,
+//                binding.trackImageMedia,
+//                roundedCorners
+//            )
+//        binding.trackNameMedia.text = track.trackName
+//        binding.trackArtistMedia.text = track.artistName
+//        binding.yearMediaMean.text = track.year
+//        binding.countryMediaMean.text = track.country
+//        binding.genreMediaMean.text = track.primaryGenreName
+//        binding.timeMediaMean.text = track.trackTime
+//        if (track.collectionName != "") {
+//            binding.albumMediaMean.isVisible = true
+//            binding.albumMedia.isVisible = true
+//            binding.albumMediaMean.text = track.collectionName
+//        } else {
+//            binding.albumMediaMean.isVisible = false
+//            binding.albumMedia.isVisible = false
+//        }
+//    }
 }

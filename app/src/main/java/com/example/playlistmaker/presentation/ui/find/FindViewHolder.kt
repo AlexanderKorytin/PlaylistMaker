@@ -18,7 +18,7 @@ class FindViewHolder(private val parentViewBinding: TrackViewBinding) :
     private val trackTime: TextView = parentViewBinding.trackTime
     private val radiusIconTrackDp = 2.0f
     private val radiusIconTrackPx = dpToPx(radiusIconTrackDp, parentViewBinding.root.context)
-    private val imageLoaderGlide = App().creator.provideGetImageLoaderUseCase()
+    private val imageLoaderGlide = App().creator.provideGetImageLoaderUseCase(trackIcon)
 
     fun bind(track: TrackUI) {
 
@@ -29,7 +29,6 @@ class FindViewHolder(private val parentViewBinding: TrackViewBinding) :
         imageLoaderGlide.execute(
             track.artworkUrl100,
             R.drawable.placeholdersnake,
-            trackIcon,
             radiusIconTrackPx
         )
 

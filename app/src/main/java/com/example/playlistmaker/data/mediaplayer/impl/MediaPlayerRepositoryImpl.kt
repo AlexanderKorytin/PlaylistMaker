@@ -2,12 +2,12 @@ package com.example.playlistmaker.data.mediaplayer.impl
 
 import android.media.MediaPlayer
 import com.example.playlistmaker.data.dto.TrackUrl
-import com.example.playlistmaker.domain.api.MediaPlayerData
+import com.example.playlistmaker.domain.api.MediaPlayerRepository
 import com.example.playlistmaker.domain.models.PlayerState
 
-class MediaPlayerDataImpl(
+class MediaPlayerRepositoryImpl(
     private val urlTrack: TrackUrl
-) : MediaPlayerData {
+) : MediaPlayerRepository {
     private var mediaPlayer = MediaPlayer()
     override var playerState = PlayerState.STATE_DEFAULT
     private val timerStart = 0L

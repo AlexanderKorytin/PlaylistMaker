@@ -1,15 +1,16 @@
 package com.example.playlistmaker
 
 import android.content.SharedPreferences
+import android.widget.ImageView
 import com.example.playlistmaker.data.NetworkClient
 import com.example.playlistmaker.data.dto.ImageLoaderGlide
 import com.example.playlistmaker.data.dto.TrackUrl
-import com.example.playlistmaker.data.mediaplayer.impl.MediaPlayerDataImpl
+import com.example.playlistmaker.data.mediaplayer.impl.MediaPlayerRepositoryImpl
 import com.example.playlistmaker.data.network.RetrofitNetworkClient
 import com.example.playlistmaker.data.network.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.data.network.TracksRepositoryImpl
 import com.example.playlistmaker.domain.api.ImageLoader
-import com.example.playlistmaker.domain.api.MediaPlayerData
+import com.example.playlistmaker.domain.api.MediaPlayerRepository
 import com.example.playlistmaker.domain.api.MediaPlayerInteractor
 import com.example.playlistmaker.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.domain.api.SetViewVisibilityUseCase
@@ -28,8 +29,8 @@ object Creator {
         return MediaPlayerInteractorImpl(provideGetMediplayerData())
     }
 
-    private fun provideGetMediplayerData(): MediaPlayerData {
-        return MediaPlayerDataImpl(url)
+    private fun provideGetMediplayerData(): com.example.playlistmaker.domain.api.MediaPlayerRepository {
+        return MediaPlayerRepositoryImpl(url)
     }
 
     fun provideGetTrackInteractor(): GetTracksInteractor {
@@ -44,12 +45,12 @@ object Creator {
         return RetrofitNetworkClient()
     }
 
-    fun provideGetImageLoaderUseCase(): ImageLoaderUseCase {
-        return ImageLoaderUseCase(provideGetImageLoader())
+    fun provideGetImageLoaderUseCase(image: ImageView): ImageLoaderUseCase {
+        return ImageLoaderUseCase(provideGetImageLoader(image))
     }
 
-    private fun provideGetImageLoader(): ImageLoader {
-        return ImageLoaderGlide()
+    private fun provideGetImageLoader(image: ImageView): ImageLoader {
+        return ImageLoaderGlide(image)
     }
 
     fun provideGetSetViewVisibilityUseCase(): SetViewVisibilityUseCase{
