@@ -2,7 +2,6 @@ package com.example.playlistmaker.search.ui
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -18,15 +17,13 @@ import com.example.playlistmaker.databinding.ActivityFindBinding
 import com.example.playlistmaker.search.domain.consumer.Consumer
 import com.example.playlistmaker.search.domain.consumer.ConsumerData
 import com.example.playlistmaker.search.domain.models.Track
-import com.example.playlistmaker.Util.getTrackListFromJson
 import com.example.playlistmaker.player.ui.mappers.MapToTrackUI
 import com.example.playlistmaker.search.ui.models.TrackUI
 import com.example.playlistmaker.presentation.ui.mediaPlayer.MediaActivity
 import com.example.playlistmaker.Util.setOnClickListenerWithViber
+import com.example.playlistmaker.search.ui.viewmodel.SearchViewModel
 import com.google.gson.Gson
 
-const val SEARCH_HISTORY_TRACK_LIST = "Search history list"
-const val TRACK_HISTORY_SHAREDPREFERENCES = "Track history"
 
 class FindActivity : AppCompatActivity() {
     companion object {
@@ -38,11 +35,11 @@ class FindActivity : AppCompatActivity() {
     private lateinit var bindingFindActivity: ActivityFindBinding
     private var isClickTrackAllowed = true
     private var textSearch = ""
-    private var textSearchLast = ""
     private var trackList: ArrayList<TrackUI>? = ArrayList()
     private var tracklistInterator: List<TrackUI>? = emptyList()
     private val handlerMain: Handler = Handler(Looper.getMainLooper())
-    private val searchHistoryInteractorImpl by lazy { App().creator.provideGetSearchHistoryInteractor() }
+    private lateinit var searchVM: SearchViewModel
+    private val searchHistoryInteractorImpl by lazy { App().creator.provideGetSearchHistoryInteractor(this) }
     private val trackInteractor = App().creator.provideGetTrackInteractor()
     private val setVisibilityClearButton = App().creator.provideGetSetViewVisibilityUseCase()
 
@@ -69,13 +66,6 @@ class FindActivity : AppCompatActivity() {
         val viewFind = bindingFindActivity.root
         setContentView(viewFind)
 //---------------------------------------------------
-
-        val searchHistorySharedPreferences =
-            getSharedPreferences(
-                TRACK_HISTORY_SHAREDPREFERENCES,
-                MODE_PRIVATE
-            )
-        App().creator.sharedPreferences = searchHistorySharedPreferences
         // Задаем адаптеры
         val findAdapter = FindAdapter {
             clickedTrack(it)
@@ -84,25 +74,6 @@ class FindActivity : AppCompatActivity() {
             clickedTrack(it)
         }
 
-        val listener =
-            SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-                if (key == SEARCH_HISTORY_TRACK_LIST) {
-                    searchHistoryInteractorImpl.setTrackList(
-                        getTrackListFromJson(
-                            searchHistorySharedPreferences.getString(
-                                SEARCH_HISTORY_TRACK_LIST,
-                                null
-                            )
-                        )
-                    )
-                    setVisibilityViewsForShowSearchHistory(
-                        bindingFindActivity.menuFindSearchEditText.text.isEmpty() && searchHistoryInteractorImpl.getTracksList()
-                            .isNotEmpty(),
-                        findAdapter, historyAdapter
-                    )
-                }
-            }
-        searchHistorySharedPreferences.registerOnSharedPreferenceChangeListener(listener)
         findAdapter.trackList = (trackList as ArrayList<TrackUI>)
         historyAdapter.trackList =
             MapToTrackUI().mapList(searchHistoryInteractorImpl.getTracksList())
@@ -138,9 +109,7 @@ class FindActivity : AppCompatActivity() {
 //---------------------------------------------------
         bindingFindActivity.menuFindSearchEditText.setOnFocusChangeListener { _, hasFocus ->
             searchHistoryInteractorImpl.setTrackList(
-                getTrackListFromJson(
-                    searchHistorySharedPreferences.getString(SEARCH_HISTORY_TRACK_LIST, null)
-                )
+                   searchHistoryInteractorImpl.getTracksList()
             )
             setVisibilityViewsForShowSearchHistory(
                 hasFocus
