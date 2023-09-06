@@ -1,5 +1,6 @@
 package com.example.playlistmaker.Util
 
+import android.content.Context
 import android.content.SharedPreferences
 import com.example.playlistmaker.search.data.NetworkClient
 import com.example.playlistmaker.player.data.dto.TrackUrl
@@ -45,10 +46,10 @@ object Creator {
         return  ClearButtonSetViewVisibilityUseCase()
     }
 
-    fun provideGetSearchHistoryInteractor(): SearchHistoryInteractorImpl {
-        return  SearchHistoryInteractorImpl(provideGetSearchHistory())
+    fun provideGetSearchHistoryInteractor(context: Context): SearchHistoryInteractorImpl {
+        return  SearchHistoryInteractorImpl(provideGetSearchHistoryRepository(context))
     }
-    private fun provideGetSearchHistory(): SearchHistoryRepository {
-        return SearchHistoryRepositoryImpl(sharedPreferences)
+    private fun provideGetSearchHistoryRepository(context: Context): SearchHistoryRepository {
+        return SearchHistoryRepositoryImpl(context)
     }
 }
