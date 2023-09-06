@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
-        android:name="com.example.playlistmaker.App"
+        android:name="com.example.playlistmaker.Util.App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -18,7 +18,7 @@
 
         <activity
             android:screenOrientation="portrait"
-            android:name=".presentation.ui.find.FindActivity"
+            android:name=".search.ui.FindActivity"
             android:exported="false"
             android:theme="@style/Theme.SettingsActivity" />
         <activity
@@ -27,16 +27,16 @@
             android:screenOrientation="fullSensor"
             android:theme="@style/Theme.SettingsActivity" />
         <activity
-            android:name=".presentation.ui.settings.SettingsActivity"
+            android:name=".settings.ui.SettingsActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.SettingsActivity" />
         <activity
-            android:name=".presentation.ui.library.MediaLibraryActivity"
+            android:name=".library.ui.MediaLibraryActivity"
             android:exported="false"
             android:theme="@style/Theme.SettingsActivity" />
         <activity
-            android:name=".presentation.ui.main.MainActivity"
+            android:name=".main.ui.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MainActivity">
