@@ -32,7 +32,7 @@ class SearchViewModel(
 
     fun clearSearchHistory() {
         searchHistoryInteractor.clear()
-        currentSearchViewScreenState.value = (SearchScreenState.EmptyHistory(false))
+        currentSearchViewScreenState.value = (SearchScreenState.EmptyHistory(emptyList(), false))
     }
 
     fun showSearchHistory(flag: Boolean) {
@@ -44,18 +44,19 @@ class SearchViewModel(
                 )
             )
         } else {
-            currentSearchViewScreenState.value = (SearchScreenState.EmptyHistory(false))
+            currentSearchViewScreenState.value =
+                (SearchScreenState.EmptyHistory(emptyList(), false))
         }
     }
 
     private var latestSearchText: String? = null
 
     fun searchDebounce(changedText: String) {
-        currentSearchViewScreenState.value =
-            SearchScreenState.Start(setVisibilityClearButton.execute(changedText))
         if (latestSearchText == changedText) {
             return
         }
+        currentSearchViewScreenState.value =
+            SearchScreenState.Start(setVisibilityClearButton.execute(changedText))
         this.latestSearchText = changedText
         handlerMain.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
 
@@ -67,6 +68,11 @@ class SearchViewModel(
             SEARCH_REQUEST_TOKEN,
             postTime,
         )
+    }
+
+    fun getSearchHstoryTracks() = searchHistoryInteractor.getTracksList()
+    fun savedTrack(track: Track) {
+        searchHistoryInteractor.saved(track)
     }
 
     fun getMusic(text: String) {

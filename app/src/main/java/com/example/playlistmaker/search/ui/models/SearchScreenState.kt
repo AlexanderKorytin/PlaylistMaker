@@ -10,7 +10,7 @@ sealed class SearchScreenState {
 
     data class Empty(val isVisibility: Boolean): SearchScreenState()
 
-    data class EmptyHistory(val isVisibility: Boolean): SearchScreenState()
+    data class EmptyHistory(val tracks: List<TrackUI>, val isVisibility: Boolean): SearchScreenState()
 
     data class Hictory(val tracks: List<TrackUI>, val isVisibility: Boolean): SearchScreenState()
 
