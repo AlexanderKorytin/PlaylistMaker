@@ -13,33 +13,31 @@ import com.example.playlistmaker.Util.App
 import com.example.playlistmaker.Util.DARK_THEME
 import com.example.playlistmaker.Util.setOnClickListenerWithViber
 import com.example.playlistmaker.Util.setVibe
+import com.example.playlistmaker.databinding.ActivitySettingsBinding
 import com.example.playlistmaker.settings.ui.viewmodel.SettingsViewModelFactory
 import com.example.playlistmaker.settings.ui.viewmodel.SettingsViewModel
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var SettinsVM: SettingsViewModel
+    private lateinit var bindingSettings: ActivitySettingsBinding
 
     @SuppressLint("MissingInflatedId", "UseSwitchCompatOrMaterialCode")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+        bindingSettings = ActivitySettingsBinding.inflate(layoutInflater)
+        setContentView(bindingSettings.root)
 
-        val back = findViewById<ImageView>(R.id.backSetting)
-        val nightTheme = findViewById<SwitchCompat>(R.id.themeSwitch)
-        val writeToSupport = findViewById<TextView>(R.id.writeToSupport)
-        val shareApp = findViewById<TextView>(R.id.shareApp)
-        val userAgreement = findViewById<TextView>(R.id.userAgreement)
         val switchPreference = getSharedPreferences(APP_SETTINGS_PREF_KEY, MODE_PRIVATE)
-        nightTheme.isChecked = (applicationContext as App).darkTheme
+        bindingSettings.themeSwitch.isChecked = (applicationContext as App).darkTheme
 
         SettinsVM =
             ViewModelProvider(this, SettingsViewModelFactory(this))[SettingsViewModel::class.java]
 
-        back.setOnClickListenerWithViber {
+        bindingSettings.backSetting.setOnClickListenerWithViber {
             finish()
         }
 
-        nightTheme.setOnCheckedChangeListener { switcher, checked ->
+        bindingSettings.themeSwitch.setOnCheckedChangeListener { switcher, checked ->
             applicationContext.setVibe()
             (applicationContext as App).switchTheme(checked)
             switchPreference.edit()
@@ -47,15 +45,15 @@ class SettingsActivity : AppCompatActivity() {
                 .apply()
         }
 
-        shareApp.setOnClickListenerWithViber {
+        bindingSettings.shareApp.setOnClickListenerWithViber {
             SettinsVM.shareApp()
         }
 
-        writeToSupport.setOnClickListenerWithViber {
+        bindingSettings.writeToSupport.setOnClickListenerWithViber {
             SettinsVM.writeToSupport()
         }
 
-        userAgreement.setOnClickListenerWithViber {
+        bindingSettings.userAgreement.setOnClickListenerWithViber {
             SettinsVM.seeUserAgreement()
         }
 
