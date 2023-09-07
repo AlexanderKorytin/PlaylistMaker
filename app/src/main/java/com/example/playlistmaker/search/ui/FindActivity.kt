@@ -13,7 +13,6 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
-import com.example.playlistmaker.Util.App
 import com.example.playlistmaker.Util.setOnClickListenerWithViber
 import com.example.playlistmaker.databinding.ActivityFindBinding
 import com.example.playlistmaker.player.ui.mappers.MapToTrackUI
@@ -33,15 +32,10 @@ class FindActivity : AppCompatActivity() {
 
     private lateinit var bindingFindActivity: ActivityFindBinding
     private var isClickTrackAllowed = true
-    private  var textSearch: String = ""
+    private var textSearch: String = ""
     private var trackList: ArrayList<TrackUI>? = ArrayList()
     private val handlerMain: Handler = Handler(Looper.getMainLooper())
     private lateinit var searchVM: SearchViewModel
-    private val searchHistoryInteractorImpl by lazy {
-        App().creator.provideGetSearchHistoryInteractor(
-            this
-        )
-    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -51,7 +45,7 @@ class FindActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        textSearch = savedInstanceState?.getString(SEARCH_QUERY, "")?:""
+        textSearch = savedInstanceState?.getString(SEARCH_QUERY, "") ?: ""
         bindingFindActivity = ActivityFindBinding.inflate(layoutInflater)
         val viewFind = bindingFindActivity.root
         setContentView(viewFind)

@@ -18,6 +18,15 @@ import com.example.playlistmaker.player.domain.impl.MediaPlayerInteractorImpl
 import com.example.playlistmaker.search.domain.impl.SearchHistoryInteractorImpl
 import com.example.playlistmaker.search.domain.impl.SearchTracksInteractorImpl
 import com.example.playlistmaker.player.domain.api.MediaPlayerRepository
+import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
+import com.example.playlistmaker.settings.data.impl.SettingsRepositoryImpl
+import com.example.playlistmaker.settings.domain.api.SettingsInteractor
+import com.example.playlistmaker.settings.domain.api.SettingsRepository
+import com.example.playlistmaker.settings.domain.impl.SettingsInteractorImpl
+import com.example.playlistmaker.sharing.data.impl.ExternalNavigatorImpl
+import com.example.playlistmaker.sharing.domain.api.ExternalNavigator
+import com.example.playlistmaker.sharing.domain.api.SharingInteractor
+import com.example.playlistmaker.sharing.domain.impl.SharingInteractorImpl
 
 object Creator {
     lateinit var url: TrackUrl
@@ -46,10 +55,23 @@ object Creator {
         return  ClearButtonSetViewVisibilityUseCase()
     }
 
-    fun provideGetSearchHistoryInteractor(context: Context): SearchHistoryInteractorImpl {
+    fun provideGetSearchHistoryInteractor(context: Context): SearchHistoryInteractor {
         return  SearchHistoryInteractorImpl(provideGetSearchHistoryRepository(context))
     }
     private fun provideGetSearchHistoryRepository(context: Context): SearchHistoryRepository {
         return SearchHistoryRepositoryImpl(context)
+    }
+    fun provideGetSharingInteractor(context: Context): SharingInteractor{
+        return  SharingInteractorImpl(provideGetExternalNavigation(context))
+    }
+   private fun provideGetExternalNavigation(context: Context): ExternalNavigator {
+        return ExternalNavigatorImpl(context)
+    }
+
+    fun provideGetSettingsInteractor(context: Context): SettingsInteractor{
+        return SettingsInteractorImpl(provideGetSettingsRepository(context))
+    }
+    private fun provideGetSettingsRepository(context: Context): SettingsRepository{
+        return SettingsRepositoryImpl(context)
     }
 }
