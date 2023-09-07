@@ -86,28 +86,39 @@ class FindActivity : AppCompatActivity() {
 // ------------- подписки----------------------------
         searchVM.getcurrentSearchViewScreenState().observe(this) {
             when (it) {
+                is SearchScreenState.Start -> {
+                    showStart(findAdapter)
+                    showClearIcon(it.isVisibility)
+                }
+
                 is SearchScreenState.Hictory -> {
                     showSearchHistory(true, findAdapter, historyAdapter)
+                    showClearIcon(it.isVisibility)
                 }
 
                 is SearchScreenState.EmptyHistory -> {
                     showSearchHistory(false, findAdapter, historyAdapter)
+                    showClearIcon(it.isVisibility)
                 }
 
                 is SearchScreenState.Empty -> {
                     showEmpty(findAdapter)
+                    showClearIcon(it.isVisibility)
                 }
 
-                is SearchScreenState.isLoading -> {
+                is SearchScreenState.IsLoading -> {
                     showLoading(findAdapter)
+                    showClearIcon(it.isVisibility)
                 }
 
                 is SearchScreenState.Error -> {
                     showError(findAdapter)
+                    showClearIcon(it.isVisibility)
                 }
 
                 is SearchScreenState.Content -> {
                     showContent(findAdapter, it.tracks as ArrayList<TrackUI>)
+                    showClearIcon(it.isVisibility)
                 }
             }
         }
@@ -144,14 +155,26 @@ class FindActivity : AppCompatActivity() {
                 searchVM.showSearchHistory(flag)
                 textSearch = s.toString()
                 searchVM.searchDebounce(textSearch)
-                bindingFindActivity.clearIcon.isVisible = setVisibilityClearButton.execute(s)
-                bindingFindActivity.clearIcon.isClickable = false
+                // bindingFindActivity.clearIcon.isVisible = setVisibilityClearButton.execute(s)
             }
 
             override fun afterTextChanged(s: Editable?) {
             }
         }
         bindingFindActivity.menuFindSearchEditText.addTextChangedListener(simpleTextWatcher)
+    }
+
+    private fun showStart(adapter: FindAdapter) {
+        bindingFindActivity.clearIcon.isClickable = false
+        bindingFindActivity.searchHistoryListView.isVisible = false
+        bindingFindActivity.progressBar.isVisible = false
+        bindingFindActivity.clearIcon.isClickable = false
+        bindingFindActivity.placeholderFindViewGroup.isVisible = false
+        bindingFindActivity.placeholderButton.isVisible = false
+        bindingFindActivity.tracksList.isVisible = true
+        adapter.trackList.clear()
+        adapter.notifyDataSetChanged()
+
     }
 
     private fun showContent(adapter: FindAdapter, tracks: ArrayList<TrackUI>) {
@@ -168,6 +191,7 @@ class FindActivity : AppCompatActivity() {
     }
 
     private fun showLoading(adapter: FindAdapter) {
+        bindingFindActivity.clearIcon.isClickable = false
         bindingFindActivity.searchHistoryListView.isVisible = false
         bindingFindActivity.progressBar.isVisible = true
         bindingFindActivity.clearIcon.isClickable = false
@@ -210,6 +234,10 @@ class FindActivity : AppCompatActivity() {
         }
     }
 
+    private fun showClearIcon(value: Boolean) {
+        bindingFindActivity.clearIcon.isVisible = value
+    }
+
 
     private fun clickedTrack(track: TrackUI) {
         if (trackClickedDebounce()) {
@@ -234,7 +262,7 @@ class FindActivity : AppCompatActivity() {
         findAdapter: FindAdapter,
         historyAdapter: FindAdapter
     ) {
-      if (flag) {
+        if (flag) {
             bindingFindActivity.progressBar.visibility = View.GONE
             bindingFindActivity.searchHistoryListView.visibility = View.VISIBLE
             bindingFindActivity.tracksList.visibility = View.GONE
@@ -245,15 +273,15 @@ class FindActivity : AppCompatActivity() {
             historyAdapter.trackList =
                 MapToTrackUI().mapList(searchHistoryInteractorImpl.getTracksList())
             historyAdapter.notifyDataSetChanged()
-      } else {
-          bindingFindActivity.progressBar.visibility = View.GONE
-          bindingFindActivity.searchHistoryListView.visibility = View.GONE
-          bindingFindActivity.tracksList.visibility = View.GONE
-          bindingFindActivity.placeholderFindViewGroup.visibility = View.GONE
-          historyAdapter.trackList =
-              MapToTrackUI().mapList(searchHistoryInteractorImpl.getTracksList())
-          historyAdapter.notifyDataSetChanged()
-      }
+        } else {
+            bindingFindActivity.progressBar.visibility = View.GONE
+            bindingFindActivity.searchHistoryListView.visibility = View.GONE
+            bindingFindActivity.tracksList.visibility = View.GONE
+            bindingFindActivity.placeholderFindViewGroup.visibility = View.GONE
+            historyAdapter.trackList =
+                MapToTrackUI().mapList(searchHistoryInteractorImpl.getTracksList())
+            historyAdapter.notifyDataSetChanged()
+        }
     }
 }
 //---------------------------------------------------

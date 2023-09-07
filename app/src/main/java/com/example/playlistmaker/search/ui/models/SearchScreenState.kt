@@ -1,17 +1,17 @@
 package com.example.playlistmaker.search.ui.models
 
 sealed class SearchScreenState {
-    val isVisibility = false
-    object isLoading : SearchScreenState()
+    data class Start(val isVisibility: Boolean): SearchScreenState()
+    data class IsLoading(val isVisibility: Boolean) : SearchScreenState()
 
-    data class Content(val tracks: List<TrackUI>): SearchScreenState()
+    data class Content(val tracks: List<TrackUI>, val isVisibility: Boolean): SearchScreenState()
 
-    data class Error(val message: String): SearchScreenState()
+    data class Error(val message: String, val isVisibility: Boolean): SearchScreenState()
 
-    object Empty: SearchScreenState()
+    data class Empty(val isVisibility: Boolean): SearchScreenState()
 
-    object EmptyHistory: SearchScreenState()
+    data class EmptyHistory(val isVisibility: Boolean): SearchScreenState()
 
-    data class Hictory(val tracks: List<TrackUI>): SearchScreenState()
+    data class Hictory(val tracks: List<TrackUI>, val isVisibility: Boolean): SearchScreenState()
 
 }

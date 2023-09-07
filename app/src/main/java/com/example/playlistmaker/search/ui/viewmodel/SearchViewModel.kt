@@ -32,7 +32,7 @@ class SearchViewModel(
 
     fun clearSearchHistory() {
         searchHistoryInteractor.clear()
-        currentSearchViewScreenState.value = (SearchScreenState.EmptyHistory)
+        currentSearchViewScreenState.value = (SearchScreenState.EmptyHistory(false))
     }
 
     fun showSearchHistory(flag: Boolean) {
@@ -40,17 +40,19 @@ class SearchViewModel(
         if (flag && currentList.isNotEmpty()) {
             currentSearchViewScreenState.postValue(
                 SearchScreenState.Hictory(
-                    currentList.map { it -> it.toTrackUI() })
+                    currentList.map { it -> it.toTrackUI() }, false
+                )
             )
         } else {
-            currentSearchViewScreenState.value = (SearchScreenState.EmptyHistory)
+            currentSearchViewScreenState.value = (SearchScreenState.EmptyHistory(false))
         }
-
     }
 
     private var latestSearchText: String? = null
 
     fun searchDebounce(changedText: String) {
+        currentSearchViewScreenState.value =
+            SearchScreenState.Start(setVisibilityClearButton.execute(changedText))
         if (latestSearchText == changedText) {
             return
         }
@@ -69,7 +71,8 @@ class SearchViewModel(
 
     fun getMusic(text: String) {
         if (text.isNotEmpty()) {
-            currentSearchViewScreenState.value = SearchScreenState.isLoading
+            currentSearchViewScreenState.value =
+                SearchScreenState.IsLoading(setVisibilityClearButton.execute(text))
             val result = trackInteractor.getMusic(text, object : Consumer<List<Track>> {
                 override fun consume(data: ConsumerData<List<Track>>) {
                     when (data) {
@@ -77,16 +80,26 @@ class SearchViewModel(
                             if (data.value.isNotEmpty()) {
                                 currentSearchViewScreenState.postValue(
                                     SearchScreenState.Content(
-                                        MapToTrackUI().mapList(data.value)
+                                        MapToTrackUI().mapList(data.value),
+                                        setVisibilityClearButton.execute(text)
                                     )
                                 )
                             } else {
-                                currentSearchViewScreenState.postValue(SearchScreenState.Empty)
+                                currentSearchViewScreenState.postValue(
+                                    SearchScreenState.Empty(
+                                        setVisibilityClearButton.execute(text)
+                                    )
+                                )
                             }
                         }
 
                         is ConsumerData.Error -> {
-                            currentSearchViewScreenState.postValue(SearchScreenState.Error(""))
+                            currentSearchViewScreenState.postValue(
+                                SearchScreenState.Error(
+                                    "",
+                                    setVisibilityClearButton.execute(text)
+                                )
+                            )
                         }
 
                     }
