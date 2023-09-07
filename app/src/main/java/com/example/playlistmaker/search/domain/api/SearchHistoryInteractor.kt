@@ -6,7 +6,6 @@ interface SearchHistoryInteractor {
 
     fun getTracksList(): ArrayList<Track>
 
-    fun setTrackList(list: ArrayList<Track>)
 
     fun clear()
 

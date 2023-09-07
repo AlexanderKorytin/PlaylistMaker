@@ -8,7 +8,7 @@ import com.example.playlistmaker.Util.App
 class SearchViewModelFactory(private val context: Context): ViewModelProvider.Factory {
 
     private val searchHistoryInteractor by lazy { App().creator.provideGetSearchHistoryInteractor(context) }
-    private val trackInteractor = App().creator.provideGetTrackInteractor()
+    private val trackInteractor = App().creator.provideGetTrackInteractor(context)
     private val setVisibilityClearButton = App().creator.provideGetSetViewVisibilityUseCase()
 
     @Suppress("UNCHECKED_CAST")

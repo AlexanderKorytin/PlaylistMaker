@@ -6,7 +6,7 @@ import com.example.playlistmaker.Util.getTrackListFromJson
 import com.example.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
-private const val SEARCH_HISTORY_TRACK_LIST = "Search history list"
+const val SEARCH_HISTORY_TRACK_LIST = "Search history list"
 private const val TRACK_HISTORY_SHAREDPREFERENCES = "Track history"
 
 class SearchHistoryRepositoryImpl(context: Context) :
@@ -28,10 +28,6 @@ class SearchHistoryRepositoryImpl(context: Context) :
             )
         )
         return searchHistoryList
-    }
-
-    override fun setSearchHistoryList(list: ArrayList<Track>) {
-        searchHistoryList = list
     }
 
     override fun savedTrack(track: Track) {

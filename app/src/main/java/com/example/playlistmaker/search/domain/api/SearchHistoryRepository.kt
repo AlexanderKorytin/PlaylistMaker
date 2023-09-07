@@ -7,8 +7,6 @@ interface SearchHistoryRepository {
 
     fun getSearchHistoryList(): ArrayList<Track>
 
-    fun setSearchHistoryList(list: ArrayList<Track>)
-
     fun savedTrack(track: Track)
 
     fun clearHistory()

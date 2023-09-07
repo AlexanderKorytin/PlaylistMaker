@@ -11,12 +11,12 @@ import com.example.playlistmaker.search.data.network.TracksRepositoryImpl
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
 import com.example.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.search.domain.api.SetViewVisibilityUseCase
-import com.example.playlistmaker.search.domain.api.GetTracksInteractor
+import com.example.playlistmaker.search.domain.api.SearchTracksInteractor
 import com.example.playlistmaker.search.domain.api.TracksRepository
 import com.example.playlistmaker.search.domain.impl.ClearButtonSetViewVisibilityUseCase
 import com.example.playlistmaker.player.domain.impl.MediaPlayerInteractorImpl
 import com.example.playlistmaker.search.domain.impl.SearchHistoryInteractorImpl
-import com.example.playlistmaker.search.domain.impl.GetTracksInteractorImpl
+import com.example.playlistmaker.search.domain.impl.SearchTracksInteractorImpl
 import com.example.playlistmaker.player.domain.api.MediaPlayerRepository
 
 object Creator {
@@ -30,16 +30,16 @@ object Creator {
         return MediaPlayerRepositoryImpl(url)
     }
 
-    fun provideGetTrackInteractor(): GetTracksInteractor {
-        return GetTracksInteractorImpl(provideGetTracksRepository())
+    fun provideGetTrackInteractor(context: Context): SearchTracksInteractor {
+        return SearchTracksInteractorImpl(provideGetTracksRepository(context = context))
     }
 
-    private fun provideGetTracksRepository(): TracksRepository {
-        return TracksRepositoryImpl(provideGetNetworkClient())
+    private fun provideGetTracksRepository(context: Context): TracksRepository {
+        return TracksRepositoryImpl(provideGetNetworkClient(context = context))
     }
 
-    private fun provideGetNetworkClient(): NetworkClient {
-        return RetrofitNetworkClient()
+    private fun provideGetNetworkClient(context: Context): NetworkClient {
+        return RetrofitNetworkClient(context = context)
     }
 
     fun provideGetSetViewVisibilityUseCase(): SetViewVisibilityUseCase {

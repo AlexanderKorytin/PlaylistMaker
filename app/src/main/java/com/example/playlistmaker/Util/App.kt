@@ -1,6 +1,9 @@
 package com.example.playlistmaker.Util
 
 import android.app.Application
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.appcompat.app.AppCompatDelegate
 
 const val APP_SETTINGS_PREF_KEY = "App settings"

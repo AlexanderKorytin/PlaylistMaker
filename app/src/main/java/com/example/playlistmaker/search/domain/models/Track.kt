@@ -1,5 +1,7 @@
 package com.example.playlistmaker.search.domain.models
 
+import com.example.playlistmaker.search.ui.models.TrackUI
+
 
 data class Track(
     val trackId: Long,
@@ -13,4 +15,20 @@ data class Track(
     val primaryGenreName: String,
     val previewUrl: String,
     val coverArtWork: String
-)
+){
+    fun toTrackUI(): TrackUI {
+        return TrackUI(
+            trackId,
+            trackName,
+            artistName,
+            trackTime,
+            artworkUrl100,
+            country,
+            collectionName,
+            year,
+            primaryGenreName,
+            previewUrl,
+            coverArtWork
+        )
+    }
+}

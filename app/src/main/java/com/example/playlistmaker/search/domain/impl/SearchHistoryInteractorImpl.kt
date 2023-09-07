@@ -8,9 +8,6 @@ class SearchHistoryInteractorImpl(val searchHistoryRepository: SearchHistoryRepo
     SearchHistoryInteractor {
     override fun getTracksList(): ArrayList<Track> = searchHistoryRepository.getSearchHistoryList()
 
-    override fun setTrackList(list: ArrayList<Track>) {
-        searchHistoryRepository.setSearchHistoryList(list)
-    }
 
     override fun clear() {
         searchHistoryRepository.clearHistory()
