@@ -2,8 +2,6 @@ package com.example.playlistmaker.settings.data.impl
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.playlistmaker.Util.APP_SETTINGS_PREF_KEY
 import com.example.playlistmaker.Util.App
 import com.example.playlistmaker.Util.DARK_THEME
@@ -17,7 +15,7 @@ class SettingsRepositoryImpl(private val context: Context) : SettingsRepository 
     )
 
     override fun getThemeSettings(): ThemeSettings {
-      return ThemeSettings(switchPreference.getBoolean(DARK_THEME, false))
+        return ThemeSettings(switchPreference.getBoolean(DARK_THEME, false))
     }
 
     override fun updateThemeSetting(settings: ThemeSettings) {

@@ -31,18 +31,28 @@ class MediaPlayerViewModel(
     private var currentTrack = MutableLiveData<ClickedTrack>(clickedTrack)
     fun getCurrentTrack(): LiveData<ClickedTrack> = currentTrack
 
-    private var playerScreenState = MutableLiveData<MediaPlayerScreenState>(MediaPlayerScreenState(mediaPlayerCurrentTimePlaying, mediaPlayerInteractor.getPlayerState()))
+    private var playerScreenState = MutableLiveData<MediaPlayerScreenState>(
+        MediaPlayerScreenState(
+            mediaPlayerCurrentTimePlaying,
+            mediaPlayerInteractor.getPlayerState()
+        )
+    )
+
     fun getPlayerScreenState(): LiveData<MediaPlayerScreenState> = playerScreenState
 
     init {
-        playerScreenState.value = MediaPlayerScreenState(mediaPlayerCurrentTimePlaying, mediaPlayerInteractor.getPlayerState())
+        playerScreenState.value = MediaPlayerScreenState(
+            mediaPlayerCurrentTimePlaying,
+            mediaPlayerInteractor.getPlayerState()
+        )
     }
 
     private fun startPlayer() {
         val currentPlayerStateState = getPlayerScreenState()
         mediaPlayerInteractor.play()
         handlerMain.post(updateTimerMedia())
-        playerScreenState.value = currentPlayerStateState.value?.copy(playerState = mediaPlayerInteractor.getPlayerState())
+        playerScreenState.value =
+            currentPlayerStateState.value?.copy(playerState = mediaPlayerInteractor.getPlayerState())
 
     }
 
@@ -50,7 +60,8 @@ class MediaPlayerViewModel(
         val currentPlayerStateState = getPlayerScreenState()
         mediaPlayerInteractor.pause()
         handlerMain.removeCallbacks(updateTimerMedia())
-        playerScreenState.value= currentPlayerStateState.value?.copy(playerState = mediaPlayerInteractor.getPlayerState())
+        playerScreenState.value =
+            currentPlayerStateState.value?.copy(playerState = mediaPlayerInteractor.getPlayerState())
     }
 
     override fun onCleared() {
@@ -61,20 +72,22 @@ class MediaPlayerViewModel(
     private fun updateTimerMedia(): Runnable {
         return object : Runnable {
             override fun run() {
-                if (mediaPlayerInteractor.getPlayerState() == PlayerState.STATE_PLAYING){
+                if (mediaPlayerInteractor.getPlayerState() == PlayerState.STATE_PLAYING) {
                     val currentTime = SimpleDateFormat(
                         "mm:ss", Locale.getDefault()
                     ).format(mediaPlayerInteractor.getCurrentPosition())
-                    playerScreenState.value = MediaPlayerScreenState(currentTime, mediaPlayerInteractor.getPlayerState())
+                    playerScreenState.value =
+                        MediaPlayerScreenState(currentTime, mediaPlayerInteractor.getPlayerState())
                     handlerMain.postDelayed(this, UPDATE_TIMER_TRACK)
                 }
-               if (mediaPlayerInteractor.getPlayerState() == PlayerState.STATE_PREPARED){
-                   val currentTime = SimpleDateFormat(
-                       "mm:ss", Locale.getDefault()
-                   ).format(mediaPlayerInteractor.getTimerStart())
-                   playerScreenState.value = MediaPlayerScreenState(currentTime, mediaPlayerInteractor.getPlayerState())
-                   handlerMain.post(this)
-               }
+                if (mediaPlayerInteractor.getPlayerState() == PlayerState.STATE_PREPARED) {
+                    val currentTime = SimpleDateFormat(
+                        "mm:ss", Locale.getDefault()
+                    ).format(mediaPlayerInteractor.getTimerStart())
+                    playerScreenState.value =
+                        MediaPlayerScreenState(currentTime, mediaPlayerInteractor.getPlayerState())
+                    handlerMain.post(this)
+                }
             }
         }
     }

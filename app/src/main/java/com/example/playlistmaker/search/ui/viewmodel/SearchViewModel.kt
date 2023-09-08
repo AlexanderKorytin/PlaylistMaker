@@ -14,6 +14,7 @@ import com.example.playlistmaker.search.domain.consumer.Consumer
 import com.example.playlistmaker.search.domain.consumer.ConsumerData
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.models.SearchScreenState
+import com.example.playlistmaker.search.ui.models.mappers.TrackToTrackUI
 
 class SearchViewModel(
     private val searchHistoryInteractor: SearchHistoryInteractor,
@@ -40,7 +41,7 @@ class SearchViewModel(
         if (flag && currentList.isNotEmpty()) {
             currentSearchViewScreenState.postValue(
                 SearchScreenState.Hictory(
-                    currentList.map { it -> it.toTrackUI() }, false
+                    currentList.map { it -> TrackToTrackUI.fromTrack(it) }, false
                 )
             )
         } else {

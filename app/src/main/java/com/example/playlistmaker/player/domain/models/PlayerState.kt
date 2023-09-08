@@ -1,6 +1,6 @@
 package com.example.playlistmaker.player.domain.models
 
-enum class PlayerState() {
+enum class PlayerState {
 
     STATE_DEFAULT,
     STATE_PREPARED,

@@ -17,7 +17,7 @@ class SettingsViewModel(
     fun getCurrentTheme(): LiveData<ThemeSettings> = darkThemeChecked
 
     fun updateNightTheme(checked: Boolean) {
-            settingsInteractor.updateThemeSetting(ThemeSettings(checked))
+        settingsInteractor.updateThemeSetting(ThemeSettings(checked))
     }
 
     fun shareApp() {

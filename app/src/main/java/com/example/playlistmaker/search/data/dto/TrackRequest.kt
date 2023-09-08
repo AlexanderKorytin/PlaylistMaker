@@ -1,4 +1,3 @@
 package com.example.playlistmaker.search.data.dto
 
-class TrackRequest(val term: String) {
-}
+class TrackRequest(val term: String)

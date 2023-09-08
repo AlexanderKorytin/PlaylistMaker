@@ -22,9 +22,10 @@ data class TrackDto(
         else ""
     }
 
-    fun getCoverArtwork() = if(artworkUrl100!=null) artworkUrl100.replaceAfterLast('/', "512x512bb.jpg") else ""
+    fun getCoverArtwork() =
+        if (artworkUrl100 != null) artworkUrl100.replaceAfterLast('/', "512x512bb.jpg") else ""
 
     fun getYear() = if (releaseDate != null) releaseDate.substring(0, 4) else ""
 
-    fun getParam(param: String?) = if(param!=null) param else ""
+    fun getParam(param: String?) = if (param != null) param else ""
 }

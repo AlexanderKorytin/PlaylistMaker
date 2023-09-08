@@ -6,6 +6,7 @@ import com.example.playlistmaker.Util.getTrackListFromJson
 import com.example.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
+
 const val SEARCH_HISTORY_TRACK_LIST = "Search history list"
 private const val TRACK_HISTORY_SHAREDPREFERENCES = "Track history"
 

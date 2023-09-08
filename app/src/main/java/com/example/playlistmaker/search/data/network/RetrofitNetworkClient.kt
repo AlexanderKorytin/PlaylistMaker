@@ -1,6 +1,5 @@
 package com.example.playlistmaker.search.data.network
 
-import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -19,7 +18,7 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
         .build()
     private val iTunesService = retrofit.create(ITunesApi::class.java)
     override fun searchTracks(request: TrackRequest): Response {
-        if (isConnected() == false){
+        if (isConnected() == false) {
             return Response().apply { resultCode = -1 }
         }
         val response = iTunesService.searchTracks(request.term).execute()
@@ -28,10 +27,13 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
             resultCode = response.code()
         }
     }
+
     private fun isConnected(): Boolean {
         val connectivityManager = context.getSystemService(
-            Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+            Context.CONNECTIVITY_SERVICE
+        ) as ConnectivityManager
+        val capabilities =
+            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
         if (capabilities != null) {
             when {
                 capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> return true

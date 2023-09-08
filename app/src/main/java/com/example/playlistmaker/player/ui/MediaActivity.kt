@@ -85,7 +85,7 @@ class MediaActivity : AppCompatActivity() {
                     binding.timerMedia.text = currentPlayerState.currentTime
                 }
 
-                else ->{
+                else -> {
                     binding.timerMedia.text = currentPlayerState.currentTime
                     binding.playPause.setImageDrawable(getDrawable(R.drawable.play_button))
                 }
