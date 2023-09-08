@@ -13,7 +13,7 @@ class App : Application() {
 
     val creator = Creator
 
-    var darkTheme = false
+    private var darkTheme: Boolean = false
 
     override fun onCreate() {
         super.onCreate()

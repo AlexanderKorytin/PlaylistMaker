@@ -2,20 +2,13 @@ package com.example.playlistmaker.settings.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SwitchCompat
 import androidx.lifecycle.ViewModelProvider
-import com.example.playlistmaker.R
-import com.example.playlistmaker.Util.APP_SETTINGS_PREF_KEY
-import com.example.playlistmaker.Util.App
-import com.example.playlistmaker.Util.DARK_THEME
 import com.example.playlistmaker.Util.setOnClickListenerWithViber
 import com.example.playlistmaker.Util.setVibe
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
-import com.example.playlistmaker.settings.ui.viewmodel.SettingsViewModelFactory
 import com.example.playlistmaker.settings.ui.viewmodel.SettingsViewModel
+import com.example.playlistmaker.settings.ui.viewmodel.SettingsViewModelFactory
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var SettinsVM: SettingsViewModel
@@ -26,12 +19,12 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         bindingSettings = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(bindingSettings.root)
-
-        val switchPreference = getSharedPreferences(APP_SETTINGS_PREF_KEY, MODE_PRIVATE)
-        bindingSettings.themeSwitch.isChecked = (applicationContext as App).darkTheme
-
         SettinsVM =
             ViewModelProvider(this, SettingsViewModelFactory(this))[SettingsViewModel::class.java]
+
+        SettinsVM.getCurrentTheme().observe(this) {
+            bindingSettings.themeSwitch.isChecked = it.isNight
+        }
 
         bindingSettings.backSetting.setOnClickListenerWithViber {
             finish()
@@ -39,10 +32,7 @@ class SettingsActivity : AppCompatActivity() {
 
         bindingSettings.themeSwitch.setOnCheckedChangeListener { switcher, checked ->
             applicationContext.setVibe()
-            (applicationContext as App).switchTheme(checked)
-            switchPreference.edit()
-                .putBoolean(DARK_THEME, checked)
-                .apply()
+            SettinsVM.updateNightTheme(checked)
         }
 
         bindingSettings.shareApp.setOnClickListenerWithViber {

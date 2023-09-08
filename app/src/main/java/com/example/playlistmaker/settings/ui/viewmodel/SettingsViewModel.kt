@@ -1,22 +1,34 @@
 package com.example.playlistmaker.settings.ui.viewmodel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.settings.domain.api.SettingsInteractor
+import com.example.playlistmaker.settings.domain.model.ThemeSettings
 import com.example.playlistmaker.sharing.domain.api.SharingInteractor
-import com.example.playlistmaker.sharing.domain.models.EmailData
 
 class SettingsViewModel(
     private val sharingInteractor: SharingInteractor,
     private val settingsInteractor: SettingsInteractor,
 ) : ViewModel() {
 
-    fun shareApp(){
+    private val darkThemeChecked = MutableLiveData<ThemeSettings>()
+
+    fun getCurrentTheme(): LiveData<ThemeSettings> = darkThemeChecked
+
+    fun updateNightTheme(checked: Boolean) {
+            settingsInteractor.updateThemeSetting(ThemeSettings(checked))
+    }
+
+    fun shareApp() {
         sharingInteractor.shareApp()
     }
-    fun writeToSupport(){
+
+    fun writeToSupport() {
         sharingInteractor.openSupport()
     }
-    fun seeUserAgreement(){
+
+    fun seeUserAgreement() {
         sharingInteractor.openTerms()
     }
 }
