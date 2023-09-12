@@ -16,7 +16,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.Util.setOnClickListenerWithViber
 import com.example.playlistmaker.databinding.ActivityFindBinding
 import com.example.playlistmaker.player.ui.mappers.MapToTrackUI
-import com.example.playlistmaker.presentation.ui.mediaPlayer.MediaActivity
+import com.example.playlistmaker.player.ui.MediaActivity
 import com.example.playlistmaker.search.ui.models.SearchScreenState
 import com.example.playlistmaker.search.ui.models.TrackUI
 import com.example.playlistmaker.search.ui.viewmodel.SearchViewModel

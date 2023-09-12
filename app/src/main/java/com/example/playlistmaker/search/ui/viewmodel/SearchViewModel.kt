@@ -14,7 +14,7 @@ import com.example.playlistmaker.search.domain.consumer.Consumer
 import com.example.playlistmaker.search.domain.consumer.ConsumerData
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.models.SearchScreenState
-import com.example.playlistmaker.search.ui.models.mappers.TrackToTrackUI
+import com.example.playlistmaker.search.ui.mappers.TrackToTrackUI
 
 class SearchViewModel(
     private val searchHistoryInteractor: SearchHistoryInteractor,

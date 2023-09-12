@@ -22,7 +22,7 @@
             android:exported="false"
             android:theme="@style/Theme.SettingsActivity" />
         <activity
-            android:name=".presentation.ui.mediaPlayer.MediaActivity"
+            android:name=".player.ui.MediaActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.SettingsActivity" />

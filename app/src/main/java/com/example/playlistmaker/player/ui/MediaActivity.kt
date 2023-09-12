@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation.ui.mediaPlayer
+package com.example.playlistmaker.player.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -19,7 +19,7 @@ import com.example.playlistmaker.Util.setOnClickListenerWithViber
 import com.example.playlistmaker.Util.setVibe
 import com.example.playlistmaker.databinding.ActivityMediaBinding
 import com.example.playlistmaker.player.domain.models.PlayerState
-import com.example.playlistmaker.player.ui.mappers.GetClickedTrackFromGsonUseCase
+import com.example.playlistmaker.player.ui.mappers.MapClickedTrackGsonToClickedTrack
 import com.example.playlistmaker.player.ui.models.ClickedTrackGson
 import com.example.playlistmaker.player.ui.viewmodel.MediaPlayerViewModel
 import com.example.playlistmaker.player.ui.viewmodel.MediaPlayerViewModelFactory
@@ -38,7 +38,7 @@ class MediaActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMediaBinding
     private lateinit var outAnim: Animation
     private lateinit var inAnim: Animation
-    private val getClickedTrack = GetClickedTrackFromGsonUseCase()
+    private val getClickedTrack = MapClickedTrackGsonToClickedTrack()
     private lateinit var playerVM: MediaPlayerViewModel
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -69,7 +69,7 @@ class MediaActivity : AppCompatActivity() {
 
         playerVM = ViewModelProvider(
             this,
-            MediaPlayerViewModelFactory(clickedTrack, binding.trackImageMedia, roundedCorners)
+            MediaPlayerViewModelFactory(clickedTrack)
         ).get(MediaPlayerViewModel::class.java)
 
 
