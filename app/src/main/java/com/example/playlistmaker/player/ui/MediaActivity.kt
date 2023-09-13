@@ -41,6 +41,7 @@ class MediaActivity : AppCompatActivity() {
     private val getClickedTrack = MapClickedTrackGsonToClickedTrack()
     private lateinit var playerVM: MediaPlayerViewModel
 
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(CLICKED_TRACK, receivedTrack)
@@ -52,15 +53,8 @@ class MediaActivity : AppCompatActivity() {
         binding = ActivityMediaBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-
-        // вычисляем радиус углов от реального размера картинки исходя из параметров верстки радиус 8
-        // при высоте дисплея 832 из которых обложка - 312
-        // коэффициент примерно - 1/120
-        val displayMetrics = DisplayMetrics()
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
-        widthDisplay = displayMetrics.widthPixels
-
-        roundedCorners = (dpToPx(widthDisplay.toFloat(), this)) / cornersRatio
+        val radiusIconTrackDp = 8.0f
+        val radiusIconTrackPx = dpToPx(radiusIconTrackDp, this)
 
         receivedTrack = savedInstanceState?.getString(CLICKED_TRACK, "")
             ?: intent.getStringExtra("clickedTrack")
@@ -102,7 +96,7 @@ class MediaActivity : AppCompatActivity() {
                 .load(track.coverArtWork)
                 .placeholder(R.drawable.placeholder_media_image)
                 .centerCrop()
-                .transform(RoundedCorners(roundedCorners))
+                .transform(RoundedCorners(radiusIconTrackPx))
                 .into(binding.trackImageMedia)
             binding.trackNameMedia.text = track.trackName
             binding.trackArtistMedia.text = track.artistName
@@ -181,29 +175,4 @@ class MediaActivity : AppCompatActivity() {
         playerVM.pausePlayer()
     }
 
-//    private fun filledTrackMeans(track: ClickedTrack) {
-//        binding.addFavorite.isClickable = true
-//        binding.addCollection.isClickable = true
-//        imageLoaderUseCase
-//            .execute(
-//                track.coverArtWork,
-//                R.drawable.placeholder_media_image,
-//                binding.trackImageMedia,
-//                roundedCorners
-//            )
-//        binding.trackNameMedia.text = track.trackName
-//        binding.trackArtistMedia.text = track.artistName
-//        binding.yearMediaMean.text = track.year
-//        binding.countryMediaMean.text = track.country
-//        binding.genreMediaMean.text = track.primaryGenreName
-//        binding.timeMediaMean.text = track.trackTime
-//        if (track.collectionName != "") {
-//            binding.albumMediaMean.isVisible = true
-//            binding.albumMedia.isVisible = true
-//            binding.albumMediaMean.text = track.collectionName
-//        } else {
-//            binding.albumMediaMean.isVisible = false
-//            binding.albumMedia.isVisible = false
-//        }
-//    }
 }

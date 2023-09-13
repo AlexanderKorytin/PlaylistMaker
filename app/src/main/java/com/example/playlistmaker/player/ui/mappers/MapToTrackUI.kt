@@ -19,7 +19,7 @@ class MapToTrackUI {
                 it.previewUrl,
                 it.coverArtWork
             )
-        } as ArrayList<TrackUI>
+        }as ArrayList<TrackUI>
     }
 
 }
