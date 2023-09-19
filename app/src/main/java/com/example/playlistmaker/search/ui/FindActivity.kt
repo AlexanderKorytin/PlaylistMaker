@@ -3,25 +3,22 @@ package com.example.playlistmaker.search.ui
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.Util.setOnClickListenerWithViber
 import com.example.playlistmaker.databinding.ActivityFindBinding
-import com.example.playlistmaker.player.ui.mappers.MapToTrackUI
+import com.example.playlistmaker.search.ui.mappers.MapToTrackUI
 import com.example.playlistmaker.player.ui.MediaActivity
 import com.example.playlistmaker.search.ui.models.SearchScreenState
 import com.example.playlistmaker.search.ui.models.TrackUI
 import com.example.playlistmaker.search.ui.viewmodel.SearchViewModel
-import com.example.playlistmaker.search.ui.viewmodel.SearchViewModelFactory
 import com.google.gson.Gson
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class FindActivity : AppCompatActivity() {
@@ -34,8 +31,7 @@ class FindActivity : AppCompatActivity() {
     private var isClickTrackAllowed = true
     private var textSearch: String = ""
     private var trackList: ArrayList<TrackUI>? = ArrayList()
-    private val handlerMain: Handler = Handler(Looper.getMainLooper())
-    private lateinit var searchVM: SearchViewModel
+    private val searchVM: SearchViewModel by viewModel<SearchViewModel>()
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -62,12 +58,10 @@ class FindActivity : AppCompatActivity() {
         bindingFindActivity.historyTracksList.layoutManager = LinearLayoutManager(this)
         bindingFindActivity.historyTracksList.adapter = historyAdapter
         bindingFindActivity.menuFindSearchEditText.setText(textSearch)
-        searchVM =
-            ViewModelProvider(this, SearchViewModelFactory(this))[SearchViewModel::class.java]
 
         findAdapter.trackList = (trackList as ArrayList<TrackUI>)
         historyAdapter.trackList =
-            MapToTrackUI().mapList(searchVM.getSearchHstoryTracks())
+            searchVM.mapToTrackUI.mapList(searchVM.getSearchHstoryTracks())
 // ------------- подписки----------------------------
         searchVM.getcurrentSearchViewScreenState().observe(this) {
             when (it) {
@@ -237,7 +231,7 @@ class FindActivity : AppCompatActivity() {
         val current = isClickTrackAllowed
         if (isClickTrackAllowed) {
             isClickTrackAllowed = false
-            handlerMain.postDelayed({ isClickTrackAllowed = true }, CLICED_TRACK_DELAY)
+            searchVM.handlerMain.postDelayed({ isClickTrackAllowed = true }, CLICED_TRACK_DELAY)
         }
         return current
     }

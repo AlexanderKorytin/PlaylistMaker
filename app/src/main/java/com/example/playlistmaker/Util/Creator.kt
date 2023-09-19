@@ -37,29 +37,29 @@ object Creator {
         return MediaPlayerRepositoryImpl(url)
     }
 
-    fun provideGetTrackInteractor(context: Context): SearchTracksInteractor {
-        return SearchTracksInteractorImpl(provideGetTracksRepository(context = context))
-    }
-
-    private fun provideGetTracksRepository(context: Context): TracksRepository {
-        return TracksRepositoryImpl(provideGetNetworkClient(context = context))
-    }
-
-    private fun provideGetNetworkClient(context: Context): NetworkClient {
-        return RetrofitNetworkClient(context = context)
-    }
-
-    fun provideGetSetViewVisibilityUseCase(): SetViewVisibilityUseCase {
-        return ClearButtonSetViewVisibilityUseCase()
-    }
-
-    fun provideGetSearchHistoryInteractor(context: Context): SearchHistoryInteractor {
-        return SearchHistoryInteractorImpl(provideGetSearchHistoryRepository(context))
-    }
-
-    private fun provideGetSearchHistoryRepository(context: Context): SearchHistoryRepository {
-        return SearchHistoryRepositoryImpl(context)
-    }
+//    fun provideGetTrackInteractor(context: Context): SearchTracksInteractor {
+//        return SearchTracksInteractorImpl(provideGetTracksRepository(context = context))
+//    }
+//
+//    private fun provideGetTracksRepository(context: Context): TracksRepository {
+//        return TracksRepositoryImpl(provideGetNetworkClient(context = context))
+//    }
+//
+//    private fun provideGetNetworkClient(context: Context): NetworkClient {
+//        return RetrofitNetworkClient(context = context)
+//    }
+//
+//    fun provideGetSetViewVisibilityUseCase(): SetViewVisibilityUseCase {
+//        return ClearButtonSetViewVisibilityUseCase()
+//    }
+//
+//    fun provideGetSearchHistoryInteractor(context: Context): SearchHistoryInteractor {
+//        return SearchHistoryInteractorImpl(provideGetSearchHistoryRepository(context))
+//    }
+//
+//    private fun provideGetSearchHistoryRepository(context: Context): SearchHistoryRepository {
+//        return SearchHistoryRepositoryImpl(context)
+//    }
 
     fun provideGetSharingInteractor(context: Context): SharingInteractor {
         return SharingInteractorImpl(provideGetExternalNavigation(context))

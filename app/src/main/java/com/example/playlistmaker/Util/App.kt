@@ -2,6 +2,11 @@ package com.example.playlistmaker.Util
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.search.di.searchDataModule
+import com.example.playlistmaker.search.di.searchDomainModule
+import com.example.playlistmaker.search.di.searchViewModelModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 const val APP_SETTINGS_PREF_KEY = "App settings"
 const val DARK_THEME = "dark_theme"
@@ -14,6 +19,11 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        startKoin {
+            androidContext(this@App)
+            modules(searchViewModelModule, searchDomainModule, searchDataModule)
+        }
         val switchPreference = getSharedPreferences(APP_SETTINGS_PREF_KEY, MODE_PRIVATE)
         val darkThemeEnabled = switchPreference.getBoolean(DARK_THEME, darkTheme)
         switchTheme(darkThemeEnabled)
