@@ -6,17 +6,12 @@ import com.example.playlistmaker.player.domain.api.MediaPlayerRepository
 import com.example.playlistmaker.player.domain.models.PlayerState
 
 class MediaPlayerRepositoryImpl(
-    private val urlTrack: TrackUrl
+    private val mediaPlayer: MediaPlayer,
 ) : MediaPlayerRepository {
-    private var mediaPlayer = MediaPlayer()
     override var playerState = PlayerState.STATE_DEFAULT
     private val timerStart = 0L
 
-    init {
-        preparePlayer()
-    }
-
-    private fun preparePlayer() {
+    override fun preparePlayer(urlTrack: TrackUrl) {
         mediaPlayer.setDataSource(urlTrack.url)
         mediaPlayer.prepareAsync()
 

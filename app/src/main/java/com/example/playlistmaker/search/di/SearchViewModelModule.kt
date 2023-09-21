@@ -11,7 +11,7 @@ import org.koin.dsl.module
 
 val searchViewModelModule = module {
 
-    single<Handler> {
+    factory<Handler> {
         Handler(Looper.getMainLooper())
     }
 

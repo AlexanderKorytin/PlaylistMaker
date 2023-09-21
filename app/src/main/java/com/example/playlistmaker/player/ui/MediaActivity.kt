@@ -2,44 +2,40 @@ package com.example.playlistmaker.player.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.view.MotionEvent
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.Util.App
 import com.example.playlistmaker.Util.dpToPx
 import com.example.playlistmaker.Util.setOnClickListenerWithViber
 import com.example.playlistmaker.Util.setVibe
 import com.example.playlistmaker.databinding.ActivityMediaBinding
 import com.example.playlistmaker.player.domain.models.PlayerState
-import com.example.playlistmaker.player.ui.mappers.MapClickedTrackGsonToClickedTrack
 import com.example.playlistmaker.player.ui.models.ClickedTrackGson
 import com.example.playlistmaker.player.ui.viewmodel.MediaPlayerViewModel
-import com.example.playlistmaker.player.ui.viewmodel.MediaPlayerViewModelFactory
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 
 class MediaActivity : AppCompatActivity() {
 
     companion object {
         private const val CLICKED_TRACK = "CLICKED_TRACK"
-        private const val cornersRatio = 120
     }
 
     private var receivedTrack: String? = null
-    private var widthDisplay = 0
-    private var roundedCorners = 0
     private lateinit var binding: ActivityMediaBinding
     private lateinit var outAnim: Animation
     private lateinit var inAnim: Animation
-    private val getClickedTrack = MapClickedTrackGsonToClickedTrack()
-    private lateinit var playerVM: MediaPlayerViewModel
+
+    private val playerVM: MediaPlayerViewModel by viewModel<MediaPlayerViewModel> {
+        parametersOf(ClickedTrackGson(intent.getStringExtra("clickedTrack")))
+    }
 
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -58,14 +54,6 @@ class MediaActivity : AppCompatActivity() {
 
         receivedTrack = savedInstanceState?.getString(CLICKED_TRACK, "")
             ?: intent.getStringExtra("clickedTrack")
-        val clickedTrack = getClickedTrack.map(ClickedTrackGson(receivedTrack))
-        App().creator.url = clickedTrack.toMediaPlayer()
-
-        playerVM = ViewModelProvider(
-            this,
-            MediaPlayerViewModelFactory(clickedTrack)
-        ).get(MediaPlayerViewModel::class.java)
-
 
         playerVM.getPlayerScreenState().observe(this) { currentPlayerState ->
             when (currentPlayerState.playerState) {

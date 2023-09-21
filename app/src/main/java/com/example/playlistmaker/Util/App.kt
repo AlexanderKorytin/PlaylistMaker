@@ -2,6 +2,8 @@ package com.example.playlistmaker.Util
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.player.di.playerDomainModule
+import com.example.playlistmaker.player.di.playerViewModelModule
 import com.example.playlistmaker.search.di.searchDataModule
 import com.example.playlistmaker.search.di.searchDomainModule
 import com.example.playlistmaker.search.di.searchViewModelModule
@@ -22,7 +24,13 @@ class App : Application() {
 
         startKoin {
             androidContext(this@App)
-            modules(searchViewModelModule, searchDomainModule, searchDataModule)
+            modules(
+                searchViewModelModule,
+                searchDomainModule,
+                searchDataModule,
+                playerViewModelModule,
+                playerDomainModule
+            )
         }
         val switchPreference = getSharedPreferences(APP_SETTINGS_PREF_KEY, MODE_PRIVATE)
         val darkThemeEnabled = switchPreference.getBoolean(DARK_THEME, darkTheme)
