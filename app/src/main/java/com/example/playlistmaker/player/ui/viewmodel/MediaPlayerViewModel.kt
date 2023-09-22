@@ -17,7 +17,7 @@ class MediaPlayerViewModel(
     val clickedTrack: ClickedTrackGson,
     private val mediaPlayerInteractor: MediaPlayerInteractor,
     val handlerMain: Handler,
-    private val getClicketTrack: MapClickedTrackGsonToClickedTrack
+    getClicketTrack: MapClickedTrackGsonToClickedTrack
 ) : ViewModel() {
     companion object {
         private const val UPDATE_TIMER_TRACK = 300L

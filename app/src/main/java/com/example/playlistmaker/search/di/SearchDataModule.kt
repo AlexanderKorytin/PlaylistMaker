@@ -1,7 +1,6 @@
 package com.example.playlistmaker.search.di
 
 import android.content.SharedPreferences
-import android.net.Network
 import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.search.data.NetworkClient
 import com.example.playlistmaker.search.data.network.ITunesApi
@@ -24,7 +23,7 @@ val searchDataModule = module {
             .create(ITunesApi::class.java)
     }
 
-    single<NetworkClient>{
+    single<NetworkClient> {
         RetrofitNetworkClient(androidContext(), iTunesService = get())
     }
 

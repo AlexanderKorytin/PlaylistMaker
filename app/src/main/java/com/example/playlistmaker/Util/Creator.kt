@@ -11,20 +11,5 @@ import com.example.playlistmaker.sharing.domain.api.SharingInteractor
 import com.example.playlistmaker.sharing.domain.impl.SharingInteractorImpl
 
 object Creator {
-
-    fun provideGetSharingInteractor(context: Context): SharingInteractor {
-        return SharingInteractorImpl(provideGetExternalNavigation(context))
-    }
-
-    private fun provideGetExternalNavigation(context: Context): ExternalNavigator {
-        return ExternalNavigatorImpl(context)
-    }
-
-    fun provideGetSettingsInteractor(context: Context): SettingsInteractor {
-        return SettingsInteractorImpl(provideGetSettingsRepository(context))
-    }
-
-    private fun provideGetSettingsRepository(context: Context): SettingsRepository {
-        return SettingsRepositoryImpl(context)
-    }
+    // для опробывания кода
 }

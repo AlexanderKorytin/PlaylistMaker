@@ -7,6 +7,10 @@ import com.example.playlistmaker.player.di.playerViewModelModule
 import com.example.playlistmaker.search.di.searchDataModule
 import com.example.playlistmaker.search.di.searchDomainModule
 import com.example.playlistmaker.search.di.searchViewModelModule
+import com.example.playlistmaker.settings.di.settingsDataModule
+import com.example.playlistmaker.settings.di.settingsDomainModule
+import com.example.playlistmaker.settings.di.settingsViewModelModule
+import com.example.playlistmaker.sharing.di.sharingDomainModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -15,7 +19,6 @@ const val DARK_THEME = "dark_theme"
 
 class App : Application() {
 
-    val creator = Creator
 
     private var darkTheme: Boolean = false
 
@@ -28,8 +31,14 @@ class App : Application() {
                 searchViewModelModule,
                 searchDomainModule,
                 searchDataModule,
+
                 playerViewModelModule,
-                playerDomainModule
+                playerDomainModule,
+
+                settingsDataModule,
+                settingsDomainModule,
+                sharingDomainModule,
+                settingsViewModelModule,
             )
         }
         val switchPreference = getSharedPreferences(APP_SETTINGS_PREF_KEY, MODE_PRIVATE)

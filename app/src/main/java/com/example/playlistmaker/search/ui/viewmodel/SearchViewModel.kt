@@ -5,13 +5,13 @@ import android.os.SystemClock
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.playlistmaker.search.ui.mappers.MapToTrackUI
 import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.SearchTracksInteractor
 import com.example.playlistmaker.search.domain.api.SetViewVisibilityUseCase
 import com.example.playlistmaker.search.domain.consumer.Consumer
 import com.example.playlistmaker.search.domain.consumer.ConsumerData
 import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.search.ui.mappers.MapToTrackUI
 import com.example.playlistmaker.search.ui.mappers.TrackToTrackUI
 import com.example.playlistmaker.search.ui.models.SearchScreenState
 

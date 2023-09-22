@@ -8,10 +8,10 @@ import com.example.playlistmaker.Util.setOnClickListenerWithViber
 import com.example.playlistmaker.Util.setVibe
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 import com.example.playlistmaker.settings.ui.viewmodel.SettingsViewModel
-import com.example.playlistmaker.settings.ui.viewmodel.SettingsViewModelFactory
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
-    private lateinit var SettinsVM: SettingsViewModel
+    private val SettinsVM: SettingsViewModel by viewModel<SettingsViewModel>()
     private lateinit var bindingSettings: ActivitySettingsBinding
 
     @SuppressLint("MissingInflatedId", "UseSwitchCompatOrMaterialCode")
@@ -19,8 +19,6 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         bindingSettings = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(bindingSettings.root)
-        SettinsVM =
-            ViewModelProvider(this, SettingsViewModelFactory(this))[SettingsViewModel::class.java]
 
         SettinsVM.getCurrentTheme().observe(this) {
             bindingSettings.themeSwitch.isChecked = it.isNight

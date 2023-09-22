@@ -1,8 +1,10 @@
 package com.example.playlistmaker.sharing.domain.api
 
+import android.content.Context
 import com.example.playlistmaker.sharing.domain.models.EmailData
 
 interface ExternalNavigator {
+
     val emailData: EmailData
 
     val Applink: String
