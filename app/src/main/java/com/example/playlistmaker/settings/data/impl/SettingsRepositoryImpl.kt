@@ -7,7 +7,8 @@ import com.example.playlistmaker.settings.domain.api.SettingsRepository
 import com.example.playlistmaker.settings.domain.model.ThemeSettings
 
 class SettingsRepositoryImpl(
-    private val switchPreferences: SharedPreferences
+    private val switchPreferences: SharedPreferences,
+    private val app: App
 ) : SettingsRepository {
 
     override fun getThemeSettings(): ThemeSettings {
@@ -15,7 +16,7 @@ class SettingsRepositoryImpl(
     }
 
     override fun updateThemeSetting(settings: ThemeSettings) {
-        App().switchTheme(settings.isNight)
+        app.switchTheme(settings.isNight)
         switchPreferences.edit()
             .putBoolean(DARK_THEME, settings.isNight)
             .apply()

@@ -24,7 +24,7 @@
         <activity
             android:name=".player.ui.MediaActivity"
             android:exported="false"
-            android:screenOrientation="fullSensor"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.SettingsActivity" />
         <activity
             android:name=".settings.ui.SettingsActivity"
