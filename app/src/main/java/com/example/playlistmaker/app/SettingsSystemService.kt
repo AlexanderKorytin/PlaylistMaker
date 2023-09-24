@@ -1,4 +1,4 @@
-package com.example.playlistmaker.util
+package com.example.playlistmaker.app
 
 import android.content.Context
 import android.os.VibrationEffect

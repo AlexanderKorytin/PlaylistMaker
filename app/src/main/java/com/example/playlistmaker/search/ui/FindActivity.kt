@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
-import com.example.playlistmaker.util.setOnClickListenerWithViber
+import com.example.playlistmaker.app.setOnClickListenerWithViber
 import com.example.playlistmaker.databinding.ActivityFindBinding
 import com.example.playlistmaker.player.ui.MediaActivity
 import com.example.playlistmaker.search.ui.models.SearchScreenState

@@ -25,7 +25,11 @@ class MediaPlayerViewModel(
 
     val playedTrack = getClicketTrack.map(clickedTrack)
 
-    fun preparePlayer(){
+    init {
+        preparePlayer()
+    }
+
+   private fun preparePlayer(){
         mediaPlayerInteractor.prepare(playedTrack)
     }
 

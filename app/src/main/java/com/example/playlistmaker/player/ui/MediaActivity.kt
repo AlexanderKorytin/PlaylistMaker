@@ -12,9 +12,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.util.dpToPx
-import com.example.playlistmaker.util.setOnClickListenerWithViber
-import com.example.playlistmaker.util.setVibe
+import com.example.playlistmaker.app.dpToPx
+import com.example.playlistmaker.app.setOnClickListenerWithViber
+import com.example.playlistmaker.app.setVibe
 import com.example.playlistmaker.databinding.ActivityMediaBinding
 import com.example.playlistmaker.player.domain.models.PlayerState
 import com.example.playlistmaker.player.ui.models.ClickedTrackGson
@@ -47,7 +47,6 @@ class MediaActivity : AppCompatActivity() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        playerVM.preparePlayer()
         binding = ActivityMediaBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)

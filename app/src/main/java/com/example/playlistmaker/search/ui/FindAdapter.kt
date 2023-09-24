@@ -3,7 +3,7 @@ package com.example.playlistmaker.search.ui
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.util.setOnClickListenerWithViber
+import com.example.playlistmaker.app.setOnClickListenerWithViber
 import com.example.playlistmaker.databinding.TrackViewBinding
 import com.example.playlistmaker.search.ui.models.TrackUI
 

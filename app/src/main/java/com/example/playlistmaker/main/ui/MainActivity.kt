@@ -3,7 +3,7 @@ package com.example.playlistmaker.main.ui
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.playlistmaker.util.setOnClickListenerWithViber
+import com.example.playlistmaker.app.setOnClickListenerWithViber
 import com.example.playlistmaker.databinding.ActivityMainBinding
 import com.example.playlistmaker.library.ui.MediaLibraryActivity
 import com.example.playlistmaker.search.ui.FindActivity

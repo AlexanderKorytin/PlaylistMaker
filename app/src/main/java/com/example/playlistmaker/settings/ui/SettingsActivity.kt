@@ -3,8 +3,8 @@ package com.example.playlistmaker.settings.ui
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.playlistmaker.util.setOnClickListenerWithViber
-import com.example.playlistmaker.util.setVibe
+import com.example.playlistmaker.app.setOnClickListenerWithViber
+import com.example.playlistmaker.app.setVibe
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 import com.example.playlistmaker.settings.ui.viewmodel.SettingsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
