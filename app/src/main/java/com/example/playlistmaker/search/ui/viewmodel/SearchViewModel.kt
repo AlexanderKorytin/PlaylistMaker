@@ -81,7 +81,7 @@ class SearchViewModel(
         if (text.isNotEmpty()) {
             currentSearchViewScreenState.value =
                 SearchScreenState.IsLoading(setVisibilityClearButton.execute(text))
-            val result = trackInteractor.getMusic(text, object : Consumer<List<Track>> {
+            trackInteractor.getMusic(text, object : Consumer<List<Track>> {
                 override fun consume(data: ConsumerData<List<Track>>) {
                     when (data) {
                         is ConsumerData.Data -> {

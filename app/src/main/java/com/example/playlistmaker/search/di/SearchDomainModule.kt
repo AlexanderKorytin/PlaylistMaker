@@ -10,13 +10,12 @@ import com.example.playlistmaker.search.domain.api.TracksRepository
 import com.example.playlistmaker.search.domain.impl.ClearButtonSetViewVisibilityUseCase
 import com.example.playlistmaker.search.domain.impl.SearchHistoryInteractorImpl
 import com.example.playlistmaker.search.domain.impl.SearchTracksInteractorImpl
-import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val searchDomainModule = module {
 
     single<SearchHistoryRepository> {
-        SearchHistoryRepositoryImpl(androidContext(), sharedPreferences = get(), json = get())
+        SearchHistoryRepositoryImpl(sharedPreferences = get(), json = get())
     }
 
     single<TracksRepository> {
@@ -32,6 +31,6 @@ val searchDomainModule = module {
     }
 
     factory<SearchTracksInteractor> {
-        SearchTracksInteractorImpl(trackRepositiry = get())
+        SearchTracksInteractorImpl(trackRepository = get())
     }
 }

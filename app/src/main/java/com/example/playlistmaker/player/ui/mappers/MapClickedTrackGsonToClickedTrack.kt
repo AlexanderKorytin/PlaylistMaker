@@ -1,6 +1,6 @@
 package com.example.playlistmaker.player.ui.mappers
 
-import com.example.playlistmaker.player.ui.models.ClickedTrack
+import com.example.playlistmaker.player.domain.models.ClickedTrack
 import com.example.playlistmaker.player.ui.models.ClickedTrackGson
 import com.google.gson.Gson
 

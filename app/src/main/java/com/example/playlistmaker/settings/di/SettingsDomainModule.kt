@@ -1,6 +1,6 @@
 package com.example.playlistmaker.settings.di
 
-import com.example.playlistmaker.Util.App
+import com.example.playlistmaker.util.App
 import com.example.playlistmaker.settings.data.impl.SettingsRepositoryImpl
 import com.example.playlistmaker.settings.domain.api.SettingsInteractor
 import com.example.playlistmaker.settings.domain.api.SettingsRepository

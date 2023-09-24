@@ -5,11 +5,11 @@ import com.example.playlistmaker.search.domain.api.TracksRepository
 import com.example.playlistmaker.search.domain.consumer.Consumer
 import com.example.playlistmaker.search.domain.models.Track
 
-class SearchTracksInteractorImpl(private val trackRepositiry: TracksRepository) :
+class SearchTracksInteractorImpl(private val trackRepository: TracksRepository) :
     SearchTracksInteractor {
 
     override fun getMusic(term: String, consumer: Consumer<List<Track>>) {
-        trackRepositiry.getMusic(term, consumer)
+        trackRepository.getMusic(term, consumer)
     }
 
 }

@@ -1,8 +1,7 @@
 package com.example.playlistmaker.search.data.network
 
-import android.content.Context
 import android.content.SharedPreferences
-import com.example.playlistmaker.Util.getTrackListFromJson
+import com.example.playlistmaker.util.getTrackListFromJson
 import com.example.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
@@ -10,7 +9,6 @@ import com.google.gson.Gson
 const val SEARCH_HISTORY_TRACK_LIST = "Search history list"
 
 class SearchHistoryRepositoryImpl(
-    private val context: Context,
     private val sharedPreferences: SharedPreferences,
     private val json: Gson
 ) :

@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
 import com.example.playlistmaker.player.domain.models.PlayerState
 import com.example.playlistmaker.player.ui.mappers.MapClickedTrackGsonToClickedTrack
-import com.example.playlistmaker.player.ui.models.ClickedTrack
+import com.example.playlistmaker.player.domain.models.ClickedTrack
 import com.example.playlistmaker.player.ui.models.ClickedTrackGson
 import com.example.playlistmaker.player.ui.models.MediaPlayerScreenState
 import java.util.Locale
@@ -23,11 +23,12 @@ class MediaPlayerViewModel(
         private const val UPDATE_TIMER_TRACK = 300L
     }
 
-    val playedTrack = getClicketTrack.map(clickedTrack).toMediaPlayer()
+    val playedTrack = getClicketTrack.map(clickedTrack)
 
-    init {
+    fun preparePlayer(){
         mediaPlayerInteractor.prepare(playedTrack)
     }
+
 
 
     private var mediaPlayerCurrentTimePlaying =

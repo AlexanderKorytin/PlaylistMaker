@@ -9,11 +9,12 @@ import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.Util.dpToPx
-import com.example.playlistmaker.Util.setOnClickListenerWithViber
-import com.example.playlistmaker.Util.setVibe
+import com.example.playlistmaker.util.dpToPx
+import com.example.playlistmaker.util.setOnClickListenerWithViber
+import com.example.playlistmaker.util.setVibe
 import com.example.playlistmaker.databinding.ActivityMediaBinding
 import com.example.playlistmaker.player.domain.models.PlayerState
 import com.example.playlistmaker.player.ui.models.ClickedTrackGson
@@ -46,6 +47,7 @@ class MediaActivity : AppCompatActivity() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        playerVM.preparePlayer()
         binding = ActivityMediaBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
@@ -54,7 +56,6 @@ class MediaActivity : AppCompatActivity() {
 
         receivedTrack = savedInstanceState?.getString(CLICKED_TRACK, "")
             ?: intent.getStringExtra("clickedTrack")
-
         playerVM.getPlayerScreenState().observe(this) { currentPlayerState ->
             when (currentPlayerState.playerState) {
                 PlayerState.STATE_PREPARED, PlayerState.STATE_DEFAULT -> {
@@ -83,8 +84,7 @@ class MediaActivity : AppCompatActivity() {
                 .with(this)
                 .load(track.coverArtWork)
                 .placeholder(R.drawable.placeholder_media_image)
-                .centerCrop()
-                .transform(RoundedCorners(radiusIconTrackPx))
+                .transform(CenterCrop(), RoundedCorners(radiusIconTrackPx))
                 .into(binding.trackImageMedia)
             binding.trackNameMedia.text = track.trackName
             binding.trackArtistMedia.text = track.artistName
