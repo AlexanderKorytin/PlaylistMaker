@@ -30,7 +30,8 @@ val searchViewModelModule = module {
             setVisibilityClearButton = get(),
             handlerMain = get(),
             trackToTrackUI = get(),
-            mapToTrackUI = get()
+            mapToTrackUI = get(),
+            json = get()
         )
     }
 

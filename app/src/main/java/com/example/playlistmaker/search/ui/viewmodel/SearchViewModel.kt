@@ -14,6 +14,7 @@ import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.mappers.MapToTrackUI
 import com.example.playlistmaker.search.ui.mappers.TrackToTrackUI
 import com.example.playlistmaker.search.ui.models.SearchScreenState
+import com.google.gson.Gson
 
 class SearchViewModel(
     private val searchHistoryInteractor: SearchHistoryInteractor,
@@ -21,7 +22,8 @@ class SearchViewModel(
     private val setVisibilityClearButton: SetViewVisibilityUseCase,
     val handlerMain: Handler,
     private val trackToTrackUI: TrackToTrackUI,
-    val mapToTrackUI: MapToTrackUI
+    val mapToTrackUI: MapToTrackUI,
+    val json: Gson
 ) : ViewModel() {
     companion object {
         private val SEARCH_REQUEST_TOKEN = Any()

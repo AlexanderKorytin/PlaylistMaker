@@ -16,7 +16,6 @@ import com.example.playlistmaker.player.ui.MediaActivity
 import com.example.playlistmaker.search.ui.models.SearchScreenState
 import com.example.playlistmaker.search.ui.models.TrackUI
 import com.example.playlistmaker.search.ui.viewmodel.SearchViewModel
-import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -221,7 +220,7 @@ class FindActivity : AppCompatActivity() {
         if (trackClickedDebounce()) {
             searchVM.savedTrack(track.toTrack())
             val mediaIntent = Intent(this, MediaActivity::class.java)
-            mediaIntent.putExtra("clickedTrack", Gson().toJson(track))
+            mediaIntent.putExtra("clickedTrack", searchVM.json.toJson(track))
             startActivity(mediaIntent)
         }
     }
