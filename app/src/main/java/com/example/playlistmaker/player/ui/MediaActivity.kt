@@ -137,7 +137,7 @@ class MediaActivity : AppCompatActivity() {
             finish()
         }
 
-        binding.playPause.setOnTouchListener { v, event ->
+        binding.playPause.setOnTouchListener { _, event ->
             when (event.action) {
 
                 MotionEvent.ACTION_DOWN -> {

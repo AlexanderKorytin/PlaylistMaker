@@ -6,9 +6,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
+import com.example.playlistmaker.player.domain.models.ClickedTrack
 import com.example.playlistmaker.player.domain.models.PlayerState
 import com.example.playlistmaker.player.ui.mappers.MapClickedTrackGsonToClickedTrack
-import com.example.playlistmaker.player.domain.models.ClickedTrack
 import com.example.playlistmaker.player.ui.models.ClickedTrackGson
 import com.example.playlistmaker.player.ui.models.MediaPlayerScreenState
 import java.util.Locale
@@ -29,10 +29,9 @@ class MediaPlayerViewModel(
         preparePlayer()
     }
 
-   private fun preparePlayer(){
+    private fun preparePlayer() {
         mediaPlayerInteractor.prepare(playedTrack)
     }
-
 
 
     private var mediaPlayerCurrentTimePlaying =

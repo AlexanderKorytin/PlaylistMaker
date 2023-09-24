@@ -1,7 +1,5 @@
 package com.example.playlistmaker.player.domain.models
 
-import com.example.playlistmaker.player.data.dto.TrackUrl
-
 data class ClickedTrack(
     val trackName: String,
     val artistName: String,
@@ -12,5 +10,4 @@ data class ClickedTrack(
     val primaryGenreName: String,
     val previewUrl: String,
     val coverArtWork: String
-) {
-}
+)
