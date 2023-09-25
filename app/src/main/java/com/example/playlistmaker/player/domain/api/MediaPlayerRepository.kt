@@ -6,7 +6,6 @@ import com.example.playlistmaker.player.domain.models.PlayerState
 
 interface MediaPlayerRepository {
 
-    val playerState: PlayerState
 
     fun preparePlayer(clickedTrack: ClickedTrack)
 
@@ -19,4 +18,5 @@ interface MediaPlayerRepository {
     fun getTimerStart(): Long
 
     fun getCurrentPosition(): Int
+    fun gerMediaPlayerState(): PlayerState
 }

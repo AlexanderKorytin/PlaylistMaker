@@ -9,7 +9,7 @@ import com.example.playlistmaker.player.domain.models.PlayerState
 class MediaPlayerRepositoryImpl(
     private val mediaPlayer: MediaPlayer,
 ) : MediaPlayerRepository {
-    override var playerState = PlayerState.STATE_DEFAULT
+    private var playerState = PlayerState.STATE_DEFAULT
     private val timerStart = 0L
 
     override fun preparePlayer(clickedTrack: ClickedTrack) {
@@ -46,5 +46,7 @@ class MediaPlayerRepositoryImpl(
     override fun getCurrentPosition(): Int {
         return mediaPlayer.currentPosition
     }
+
+    override fun gerMediaPlayerState(): PlayerState = playerState
 
 }

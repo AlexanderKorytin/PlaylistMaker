@@ -35,6 +35,6 @@ class MediaPlayerInteractorImpl(private val mediaPlayerRepository: MediaPlayerRe
     }
 
     override fun getPlayerState(): PlayerState {
-        return mediaPlayerRepository.playerState
+        return mediaPlayerRepository.gerMediaPlayerState()
     }
 }
