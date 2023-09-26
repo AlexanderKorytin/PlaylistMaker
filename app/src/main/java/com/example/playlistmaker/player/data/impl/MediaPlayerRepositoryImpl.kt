@@ -1,23 +1,19 @@
 package com.example.playlistmaker.player.data.impl
 
 import android.media.MediaPlayer
-import com.example.playlistmaker.player.data.dto.TrackUrl
+import com.example.playlistmaker.player.data.dto.toMediaPlayer
 import com.example.playlistmaker.player.domain.api.MediaPlayerRepository
+import com.example.playlistmaker.player.domain.models.ClickedTrack
 import com.example.playlistmaker.player.domain.models.PlayerState
 
 class MediaPlayerRepositoryImpl(
-    private val urlTrack: TrackUrl
+    private val mediaPlayer: MediaPlayer,
 ) : MediaPlayerRepository {
-    private var mediaPlayer = MediaPlayer()
-    override var playerState = PlayerState.STATE_DEFAULT
+    private var playerState = PlayerState.STATE_DEFAULT
     private val timerStart = 0L
 
-    init {
-        preparePlayer()
-    }
-
-    private fun preparePlayer() {
-        mediaPlayer.setDataSource(urlTrack.url)
+    override fun preparePlayer(clickedTrack: ClickedTrack) {
+        mediaPlayer.setDataSource(clickedTrack.toMediaPlayer().url)
         mediaPlayer.prepareAsync()
 
         mediaPlayer.setOnPreparedListener {
@@ -50,5 +46,7 @@ class MediaPlayerRepositoryImpl(
     override fun getCurrentPosition(): Int {
         return mediaPlayer.currentPosition
     }
+
+    override fun gerMediaPlayerState(): PlayerState = playerState
 
 }

@@ -10,6 +10,7 @@ import com.example.playlistmaker.sharing.domain.api.ExternalNavigator
 import com.example.playlistmaker.sharing.domain.models.EmailData
 
 class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
+
     override val emailData = EmailData(
         adressEmail = context.getString(R.string.my_email_adress),
         themeEmail = context.getString(R.string.mail_support_subject),
@@ -23,6 +24,7 @@ class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
         val shareAppIntent = Intent(Intent.ACTION_SEND)
         shareAppIntent.putExtra(Intent.EXTRA_TEXT, appLink)
         shareAppIntent.type = "text/plain"
+        shareAppIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         try {
             context.startActivity(shareAppIntent)
         } catch (activityNotFound: ActivityNotFoundException) {
@@ -34,6 +36,7 @@ class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
     override fun openLink(link: String) {
         val userAgreementIntent =
             Intent(Intent.ACTION_VIEW, Uri.parse(link))
+        userAgreementIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         try {
             context.startActivity(userAgreementIntent)
         } catch (activityNotFound: ActivityNotFoundException) {
@@ -55,6 +58,7 @@ class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
             emailData.themeEmail
         )
         writeSupportIntent.putExtra(Intent.EXTRA_TEXT, message)
+        writeSupportIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         try {
             context.startActivity(writeSupportIntent)
         } catch (activityNotFound: ActivityNotFoundException) {

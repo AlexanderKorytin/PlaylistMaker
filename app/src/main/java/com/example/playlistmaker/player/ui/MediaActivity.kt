@@ -2,44 +2,42 @@ package com.example.playlistmaker.player.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.view.MotionEvent
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.Util.App
-import com.example.playlistmaker.Util.dpToPx
-import com.example.playlistmaker.Util.setOnClickListenerWithViber
-import com.example.playlistmaker.Util.setVibe
+import com.example.playlistmaker.app.dpToPx
+import com.example.playlistmaker.app.setOnClickListenerWithViber
+import com.example.playlistmaker.app.setVibe
 import com.example.playlistmaker.databinding.ActivityMediaBinding
 import com.example.playlistmaker.player.domain.models.PlayerState
-import com.example.playlistmaker.player.ui.mappers.MapClickedTrackGsonToClickedTrack
 import com.example.playlistmaker.player.ui.models.ClickedTrackGson
 import com.example.playlistmaker.player.ui.viewmodel.MediaPlayerViewModel
-import com.example.playlistmaker.player.ui.viewmodel.MediaPlayerViewModelFactory
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 
 class MediaActivity : AppCompatActivity() {
 
     companion object {
         private const val CLICKED_TRACK = "CLICKED_TRACK"
-        private const val cornersRatio = 120
     }
 
     private var receivedTrack: String? = null
-    private var widthDisplay = 0
-    private var roundedCorners = 0
     private lateinit var binding: ActivityMediaBinding
     private lateinit var outAnim: Animation
     private lateinit var inAnim: Animation
-    private val getClickedTrack = MapClickedTrackGsonToClickedTrack()
-    private lateinit var playerVM: MediaPlayerViewModel
+
+    private val playerVM: MediaPlayerViewModel by viewModel<MediaPlayerViewModel> {
+        parametersOf(ClickedTrackGson(intent.getStringExtra("clickedTrack")))
+    }
+
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -52,27 +50,11 @@ class MediaActivity : AppCompatActivity() {
         binding = ActivityMediaBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-
-        // вычисляем радиус углов от реального размера картинки исходя из параметров верстки радиус 8
-        // при высоте дисплея 832 из которых обложка - 312
-        // коэффициент примерно - 1/120
-        val displayMetrics = DisplayMetrics()
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
-        widthDisplay = displayMetrics.widthPixels
-
-        roundedCorners = (dpToPx(widthDisplay.toFloat(), this)) / cornersRatio
+        val radiusIconTrackDp = 8.0f
+        val radiusIconTrackPx = dpToPx(radiusIconTrackDp, this)
 
         receivedTrack = savedInstanceState?.getString(CLICKED_TRACK, "")
             ?: intent.getStringExtra("clickedTrack")
-        val clickedTrack = getClickedTrack.map(ClickedTrackGson(receivedTrack))
-        App().creator.url = clickedTrack.toMediaPlayer()
-
-        playerVM = ViewModelProvider(
-            this,
-            MediaPlayerViewModelFactory(clickedTrack)
-        ).get(MediaPlayerViewModel::class.java)
-
-
         playerVM.getPlayerScreenState().observe(this) { currentPlayerState ->
             when (currentPlayerState.playerState) {
                 PlayerState.STATE_PREPARED, PlayerState.STATE_DEFAULT -> {
@@ -101,8 +83,7 @@ class MediaActivity : AppCompatActivity() {
                 .with(this)
                 .load(track.coverArtWork)
                 .placeholder(R.drawable.placeholder_media_image)
-                .centerCrop()
-                .transform(RoundedCorners(roundedCorners))
+                .transform(CenterCrop(), RoundedCorners(radiusIconTrackPx))
                 .into(binding.trackImageMedia)
             binding.trackNameMedia.text = track.trackName
             binding.trackArtistMedia.text = track.artistName
@@ -156,7 +137,7 @@ class MediaActivity : AppCompatActivity() {
             finish()
         }
 
-        binding.playPause.setOnTouchListener { v, event ->
+        binding.playPause.setOnTouchListener { _, event ->
             when (event.action) {
 
                 MotionEvent.ACTION_DOWN -> {
@@ -181,29 +162,4 @@ class MediaActivity : AppCompatActivity() {
         playerVM.pausePlayer()
     }
 
-//    private fun filledTrackMeans(track: ClickedTrack) {
-//        binding.addFavorite.isClickable = true
-//        binding.addCollection.isClickable = true
-//        imageLoaderUseCase
-//            .execute(
-//                track.coverArtWork,
-//                R.drawable.placeholder_media_image,
-//                binding.trackImageMedia,
-//                roundedCorners
-//            )
-//        binding.trackNameMedia.text = track.trackName
-//        binding.trackArtistMedia.text = track.artistName
-//        binding.yearMediaMean.text = track.year
-//        binding.countryMediaMean.text = track.country
-//        binding.genreMediaMean.text = track.primaryGenreName
-//        binding.timeMediaMean.text = track.trackTime
-//        if (track.collectionName != "") {
-//            binding.albumMediaMean.isVisible = true
-//            binding.albumMedia.isVisible = true
-//            binding.albumMediaMean.text = track.collectionName
-//        } else {
-//            binding.albumMediaMean.isVisible = false
-//            binding.albumMedia.isVisible = false
-//        }
-//    }
 }

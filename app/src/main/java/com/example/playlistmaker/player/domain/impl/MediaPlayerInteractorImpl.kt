@@ -1,12 +1,19 @@
 package com.example.playlistmaker.player.domain.impl
 
+
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
 import com.example.playlistmaker.player.domain.api.MediaPlayerRepository
+import com.example.playlistmaker.player.domain.models.ClickedTrack
 import com.example.playlistmaker.player.domain.models.PlayerState
 
 
 class MediaPlayerInteractorImpl(private val mediaPlayerRepository: MediaPlayerRepository) :
     MediaPlayerInteractor {
+
+    override fun prepare(track: ClickedTrack) {
+        mediaPlayerRepository.preparePlayer(track)
+    }
+
     override fun play() {
         mediaPlayerRepository.play()
     }
@@ -28,6 +35,6 @@ class MediaPlayerInteractorImpl(private val mediaPlayerRepository: MediaPlayerRe
     }
 
     override fun getPlayerState(): PlayerState {
-        return mediaPlayerRepository.playerState
+        return mediaPlayerRepository.gerMediaPlayerState()
     }
 }
