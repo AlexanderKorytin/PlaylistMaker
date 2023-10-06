@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <!-- кнопка назад -->
+    <ImageView
+        android:id="@+id/backMedia"
+        style="@style/appImageBack"
+        android:layout_marginStart="@dimen/padding_12"
+        android:layout_marginVertical="@dimen/padding_12"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -13,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_begin="56dp" />
+            app:layout_constraintGuide_begin="26dp" />
         <!-- левое поле -->
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/left_guideline"
@@ -43,15 +58,6 @@
             android:orientation="vertical"
             app:layout_constraintGuide_end="@dimen/padding_16" />
 
-        <!-- кнопка назад -->
-        <ImageView
-            android:id="@+id/backMedia"
-            style="@style/appImageBack"
-            android:layout_marginStart="@dimen/padding_12"
-            android:layout_marginTop="@dimen/padding_12"
-            android:scaleType="centerCrop"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
         <!-- обложка альбома -->
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/track_image_media"
@@ -250,3 +256,4 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
+</LinearLayout>
