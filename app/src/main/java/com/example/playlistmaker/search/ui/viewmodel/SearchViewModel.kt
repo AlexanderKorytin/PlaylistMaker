@@ -55,16 +55,16 @@ class SearchViewModel(
 
     private var latestSearchText: String? = null
 
-    fun searchDebounce(changedText: String) {
-        if (latestSearchText == changedText) {
+    fun searchDebounce(textSearch: String) {
+        if (latestSearchText == textSearch) {
             return
         }
         currentSearchViewScreenState.value =
-            SearchScreenState.Start(setVisibilityClearButton.execute(changedText))
-        this.latestSearchText = changedText
+            SearchScreenState.Start(setVisibilityClearButton.execute(textSearch))
+        this.latestSearchText = textSearch
         handlerMain.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
 
-        val searchRunnable = Runnable { getMusic(changedText) }
+        val searchRunnable = Runnable { getMusic(textSearch) }
 
         val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
         handlerMain.postAtTime(
@@ -79,11 +79,11 @@ class SearchViewModel(
         searchHistoryInteractor.saved(track)
     }
 
-    fun getMusic(text: String) {
-        if (text.isNotEmpty()) {
+    fun getMusic(textSearch: String) {
+        if (textSearch.isNotEmpty()) {
             currentSearchViewScreenState.value =
-                SearchScreenState.IsLoading(setVisibilityClearButton.execute(text))
-            trackInteractor.getMusic(text, object : Consumer<List<Track>> {
+                SearchScreenState.IsLoading(setVisibilityClearButton.execute(textSearch))
+            trackInteractor.getMusic(textSearch, object : Consumer<List<Track>> {
                 override fun consume(data: ConsumerData<List<Track>>) {
                     when (data) {
                         is ConsumerData.Data -> {
@@ -91,13 +91,13 @@ class SearchViewModel(
                                 currentSearchViewScreenState.postValue(
                                     SearchScreenState.Content(
                                         mapToTrackUI.mapList(data.value),
-                                        setVisibilityClearButton.execute(text)
+                                        setVisibilityClearButton.execute(textSearch)
                                     )
                                 )
                             } else {
                                 currentSearchViewScreenState.postValue(
                                     SearchScreenState.Empty(
-                                        setVisibilityClearButton.execute(text)
+                                        setVisibilityClearButton.execute(textSearch)
                                     )
                                 )
                             }
@@ -107,7 +107,7 @@ class SearchViewModel(
                             currentSearchViewScreenState.postValue(
                                 SearchScreenState.Error(
                                     "",
-                                    setVisibilityClearButton.execute(text)
+                                    setVisibilityClearButton.execute(textSearch)
                                 )
                             )
                         }

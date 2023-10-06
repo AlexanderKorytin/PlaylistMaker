@@ -25,4 +25,8 @@
     <string name="country">Страна</string>
     <string name="noData" translatable="true">"нет данных"</string>
     <string name="App_not_found" translatable="true">Приложение не найдено</string>
+    <string name="nameMediaLibrary">Медиатека</string>
+    <string name="empty_list_fav_tracks">Ваша медиатека пуста</string>
+    <string name="empty_list_albums">Вы не создали\nни одного плейлиста</string>
+    <string name="newPlaylist">Новый плейлист</string>
 </resources>
