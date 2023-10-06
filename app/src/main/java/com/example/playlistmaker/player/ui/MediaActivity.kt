@@ -134,7 +134,7 @@ class MediaActivity : AppCompatActivity() {
 
         })
         binding.backMedia.setOnClickListenerWithViber {
-            finish()
+            this.onBackPressedDispatcher.onBackPressed()
         }
 
         binding.playPause.setOnTouchListener { _, event ->

@@ -24,7 +24,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         bindingSettings.backSetting.setOnClickListenerWithViber {
-            finish()
+            this.onBackPressedDispatcher.onBackPressed()
         }
 
         bindingSettings.themeSwitch.setOnCheckedChangeListener { switcher, checked ->

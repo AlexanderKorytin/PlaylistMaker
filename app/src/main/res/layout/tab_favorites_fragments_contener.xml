@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/tabAlbumsFragmentsContener"
+        android:id="@+id/tabFavoriteTracksFragmentsContener"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

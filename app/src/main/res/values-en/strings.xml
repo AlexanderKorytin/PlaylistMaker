@@ -24,6 +24,8 @@
     <string name="App_not_found">App not found</string>
     <string name="nameMediaLibrary">Media library</string>
     <string name="empty_list_fav_tracks">Your media library is empty</string>
-    <string name="empty_list_albums">You haven\'t created\\na single playlist</string>
+    <string name="empty_list_albums">You haven\'t created a single playlist</string>
     <string name="newPlaylist">New paylist</string>
+    <string name="favorite_tracks">Favorite tracks</string>
+    <string name="Albums">Albums</string>
 </resources>
