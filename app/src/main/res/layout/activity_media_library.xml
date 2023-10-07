@@ -21,21 +21,21 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayoutMediaLibrary"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
         app:tabTextColor="@color/tabtextcolor"
         app:tabIndicatorColor="@color/tabtextcolor"
         app:tabTextAppearance="@style/TabTextStyle"
+        android:background="?attr/colorPrimary"
 
+        app:tabIndicator="@drawable/my_tab_indicator"
         app:tabIndicatorAnimationMode="elastic"
         app:tabPaddingTop="@dimen/padding_16"
-        app:tabPaddingBottom="14dp"
-        app:tabIndicatorHeight="2dp"
-        app:tabGravity="fill"
-        app:tabMaxWidth="0dp"
+        app:tabPaddingBottom="@dimen/padding_16"
         app:tabMode="fixed"
-        app:tabIndicatorFullWidth="false"
+        app:tabPaddingStart="@dimen/padding_16"
+        app:tabPaddingEnd="@dimen/padding_16"
 
         android:layout_marginTop="@dimen/padding_16"
 

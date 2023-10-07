@@ -8,6 +8,7 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/createAlbum"
         style="@style/findUpdateButtonStyle"
+
         android:layout_marginTop="@dimen/padding_24"
         android:text="@string/newPlaylist"
         app:layout_constraintTop_toTopOf="parent"
