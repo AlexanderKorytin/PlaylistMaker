@@ -1,4 +1,4 @@
-package com.example.playlistmaker.library.ui.fragments
+package com.example.playlistmaker.albumslist.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,16 +9,16 @@ import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.TabAlbumsFragmentContenerBinding
-import com.example.playlistmaker.library.ui.viewmodels.AlbumsListViewModel
+import com.example.playlistmaker.albumslist.ui.viewmodel.AlbumsListViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class AlbumsFragmentContener : Fragment() {
+class AlbumsFragment : Fragment() {
     private var _binding: TabAlbumsFragmentContenerBinding? = null
     private val binding get() = _binding!!
     private val albumListVM: AlbumsListViewModel by viewModel<AlbumsListViewModel>()
 
     companion object{
-        fun newInstance(): AlbumsFragmentContener = AlbumsFragmentContener()
+        fun newInstance(): AlbumsFragment = AlbumsFragment()
     }
 
     override fun onCreateView(

@@ -33,7 +33,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.SettingsActivity" />
         <activity
-            android:name=".library.ui.MediaLibraryActivity"
+            android:name=".albumslist.MediaLibraryActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.SettingsActivity" />

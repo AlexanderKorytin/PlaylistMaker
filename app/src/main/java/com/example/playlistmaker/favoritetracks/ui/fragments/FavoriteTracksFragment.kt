@@ -1,4 +1,4 @@
-package com.example.playlistmaker.library.ui.fragments
+package com.example.playlistmaker.favoritetracks.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,16 +9,16 @@ import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.TabFavoritesFragmentsContenerBinding
-import com.example.playlistmaker.library.ui.viewmodels.FavoriteTracksViewModel
+import com.example.playlistmaker.favoritetracks.ui.viewmodel.FavoriteTracksViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FavoriteTracksFragmentContener : Fragment() {
+class FavoriteTracksFragment : Fragment() {
     private var _binding: TabFavoritesFragmentsContenerBinding? = null
     private val binding get() = _binding!!
     private val favoriteTracksVM: FavoriteTracksViewModel by viewModel<FavoriteTracksViewModel>()
 
     companion object {
-        fun newInstance(): FavoriteTracksFragmentContener = FavoriteTracksFragmentContener()
+        fun newInstance(): FavoriteTracksFragment = FavoriteTracksFragment()
     }
 
     override fun onCreateView(

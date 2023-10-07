@@ -1,14 +1,14 @@
-package com.example.playlistmaker.library.ui.fragments
+package com.example.playlistmaker.favoritetracks.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.playlistmaker.databinding.EmptyListAlbumsBinding
+import com.example.playlistmaker.databinding.EmptyListFavoritTrackBinding
 
-class AlbumsFragmentPlaceholder(): Fragment() {
-    private var _binding: EmptyListAlbumsBinding? = null
+class FavoriteTracksFragmentPlaceholder(): Fragment() {
+    private var _binding: EmptyListFavoritTrackBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -16,7 +16,7 @@ class AlbumsFragmentPlaceholder(): Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = EmptyListAlbumsBinding.inflate(inflater, container, false)
+        _binding = EmptyListFavoritTrackBinding.inflate(inflater, container, false)
         return binding.root
     }
 }
