@@ -31,4 +31,5 @@
     <string name="newPlaylist">Новый плейлист</string>
     <string name="favorite_tracks">Избранные треки</string>
     <string name="Albums">Плейлисты</string>
+    <string name="No_media_for_playing">Нет отрывка для прослушивания</string>
 </resources>

@@ -3,6 +3,7 @@ package com.example.playlistmaker.player.ui.viewmodel
 import android.icu.text.SimpleDateFormat
 import android.os.Handler
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
@@ -44,10 +45,7 @@ class MediaPlayerViewModel(
     fun getCurrentTrack(): LiveData<ClickedTrack> = currentTrack
 
     private var playerScreenState = MutableLiveData<MediaPlayerScreenState>(
-        MediaPlayerScreenState(
-            mediaPlayerCurrentTimePlaying,
-            mediaPlayerInteractor.getPlayerState()
-        )
+        MediaPlayerScreenState(mediaPlayerCurrentTimePlaying, mediaPlayerInteractor.getPlayerState())
     )
 
     fun getPlayerScreenState(): LiveData<MediaPlayerScreenState> = playerScreenState
