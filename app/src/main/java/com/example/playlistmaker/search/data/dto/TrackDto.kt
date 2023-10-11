@@ -16,8 +16,10 @@ data class TrackDto(
     val previewUrl: String?
 ) {
     fun getTrackTime(): String {
-        return if (trackTimeMillis != null) SimpleDateFormat("mm:ss", Locale.getDefault()).format(
-            trackTimeMillis.toLong()
+        var trackTimeLong: Long? = null
+        try { trackTimeLong = trackTimeMillis?.toLong() } catch (e: NumberFormatException){null}
+        return if (trackTimeLong != null) SimpleDateFormat("mm:ss", Locale.getDefault()).format(
+            trackTimeLong
         )
         else ""
     }

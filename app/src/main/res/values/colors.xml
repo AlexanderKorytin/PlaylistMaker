@@ -16,5 +16,7 @@
     <color name="switchSettingsColor_night">#3772E7</color>
     <color name="switchSettingsColorVariant_night">#3772E7</color>
     <color name="progressBarColor">#3772E7</color>
+    <color name="tabtextcolor">#1A1B22</color>
+    <color name="edit_text_cursor_color">#3772E7</color>
 
 </resources>

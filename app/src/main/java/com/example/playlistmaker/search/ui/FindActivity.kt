@@ -110,7 +110,7 @@ class FindActivity : AppCompatActivity() {
         }
 
         bindingFindActivity.backFind.setOnClickListenerWithViber {
-            finish()
+            this.onBackPressedDispatcher.onBackPressed()
         }
 
         bindingFindActivity.menuFindSearchEditText.setOnFocusChangeListener { _, hasFocus ->

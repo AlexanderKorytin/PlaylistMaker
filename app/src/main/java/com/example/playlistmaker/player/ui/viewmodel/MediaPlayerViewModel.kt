@@ -3,6 +3,7 @@ package com.example.playlistmaker.player.ui.viewmodel
 import android.icu.text.SimpleDateFormat
 import android.os.Handler
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
@@ -25,12 +26,9 @@ class MediaPlayerViewModel(
 
     val playedTrack = getClicketTrack.map(clickedTrack)
 
-    init {
-        preparePlayer()
-    }
-
     private fun preparePlayer() {
         mediaPlayerInteractor.prepare(playedTrack)
+       handlerMain.post (checkedPreparePlayer() )
     }
 
 
@@ -44,10 +42,7 @@ class MediaPlayerViewModel(
     fun getCurrentTrack(): LiveData<ClickedTrack> = currentTrack
 
     private var playerScreenState = MutableLiveData<MediaPlayerScreenState>(
-        MediaPlayerScreenState(
-            mediaPlayerCurrentTimePlaying,
-            mediaPlayerInteractor.getPlayerState()
-        )
+        MediaPlayerScreenState(mediaPlayerCurrentTimePlaying, mediaPlayerInteractor.getPlayerState())
     )
 
     fun getPlayerScreenState(): LiveData<MediaPlayerScreenState> = playerScreenState
@@ -55,8 +50,8 @@ class MediaPlayerViewModel(
     init {
         playerScreenState.value = MediaPlayerScreenState(
             mediaPlayerCurrentTimePlaying,
-            mediaPlayerInteractor.getPlayerState()
-        )
+            mediaPlayerInteractor.getPlayerState())
+        preparePlayer()
     }
 
     private fun startPlayer() {
@@ -104,6 +99,20 @@ class MediaPlayerViewModel(
         }
     }
 
+    private fun checkedPreparePlayer() : Runnable{
+       return object: Runnable{
+           override fun run() {
+               if (mediaPlayerInteractor.getPlayerState() != PlayerState.STATE_PREPARED){
+                   handlerMain.postDelayed(this, UPDATE_TIMER_TRACK)
+               } else {
+                   handlerMain.removeCallbacks(this)
+                   playerScreenState.value =  MediaPlayerScreenState(mediaPlayerCurrentTimePlaying, mediaPlayerInteractor.getPlayerState())
+               }
+
+           }
+
+       }
+    }
 
     fun playbackControl() {
         when (mediaPlayerInteractor.getPlayerState()) {

@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.app.setOnClickListenerWithViber
 import com.example.playlistmaker.databinding.ActivityMainBinding
-import com.example.playlistmaker.library.ui.MediaLibraryActivity
+import com.example.playlistmaker.albumslist.MediaLibraryActivity
 import com.example.playlistmaker.search.ui.FindActivity
 import com.example.playlistmaker.settings.ui.SettingsActivity
 

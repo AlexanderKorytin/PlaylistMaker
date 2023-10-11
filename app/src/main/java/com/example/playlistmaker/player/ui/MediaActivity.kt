@@ -6,6 +6,7 @@ import android.view.MotionEvent
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
@@ -57,7 +58,12 @@ class MediaActivity : AppCompatActivity() {
             ?: intent.getStringExtra("clickedTrack")
         playerVM.getPlayerScreenState().observe(this) { currentPlayerState ->
             when (currentPlayerState.playerState) {
-                PlayerState.STATE_PREPARED, PlayerState.STATE_DEFAULT -> {
+                PlayerState.STATE_DEFAULT -> {
+                    binding.playPause.isEnabled = false
+                    binding.timerMedia.text = currentPlayerState.currentTime
+                }
+                PlayerState.STATE_PREPARED -> {
+                    binding.playPause.isEnabled = true
                     binding.playPause.setImageDrawable(getDrawable(R.drawable.play_button))
                     binding.timerMedia.text = currentPlayerState.currentTime
                 }
@@ -76,6 +82,11 @@ class MediaActivity : AppCompatActivity() {
         }
 
         playerVM.getCurrentTrack().observe(this) { track ->
+
+            if(track.previewUrl == ""){
+                binding.playPause.isEnabled = false
+                Toast.makeText(this, getString(R.string.No_media_for_playing), Toast.LENGTH_LONG).show()
+            } else binding.playPause.isEnabled = true
 
             binding.addFavorite.isClickable = true
             binding.addCollection.isClickable = true
@@ -134,7 +145,7 @@ class MediaActivity : AppCompatActivity() {
 
         })
         binding.backMedia.setOnClickListenerWithViber {
-            finish()
+            this.onBackPressedDispatcher.onBackPressed()
         }
 
         binding.playPause.setOnTouchListener { _, event ->
