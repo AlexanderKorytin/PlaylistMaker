@@ -63,6 +63,7 @@ class MediaActivity : AppCompatActivity() {
                     binding.timerMedia.text = currentPlayerState.currentTime
                 }
                 PlayerState.STATE_PREPARED -> {
+                    binding.playPause.isEnabled = true
                     binding.playPause.setImageDrawable(getDrawable(R.drawable.play_button))
                     binding.timerMedia.text = currentPlayerState.currentTime
                 }

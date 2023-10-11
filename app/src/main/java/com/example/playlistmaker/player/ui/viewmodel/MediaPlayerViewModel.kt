@@ -26,12 +26,9 @@ class MediaPlayerViewModel(
 
     val playedTrack = getClicketTrack.map(clickedTrack)
 
-    init {
-        preparePlayer()
-    }
-
     private fun preparePlayer() {
         mediaPlayerInteractor.prepare(playedTrack)
+       handlerMain.post (checkedPreparePlayer() )
     }
 
 
@@ -53,8 +50,8 @@ class MediaPlayerViewModel(
     init {
         playerScreenState.value = MediaPlayerScreenState(
             mediaPlayerCurrentTimePlaying,
-            mediaPlayerInteractor.getPlayerState()
-        )
+            mediaPlayerInteractor.getPlayerState())
+        preparePlayer()
     }
 
     private fun startPlayer() {
@@ -102,6 +99,20 @@ class MediaPlayerViewModel(
         }
     }
 
+    private fun checkedPreparePlayer() : Runnable{
+       return object: Runnable{
+           override fun run() {
+               if (mediaPlayerInteractor.getPlayerState() != PlayerState.STATE_PREPARED){
+                   handlerMain.postDelayed(this, UPDATE_TIMER_TRACK)
+               } else {
+                   handlerMain.removeCallbacks(this)
+                   playerScreenState.value =  MediaPlayerScreenState(mediaPlayerCurrentTimePlaying, mediaPlayerInteractor.getPlayerState())
+               }
+
+           }
+
+       }
+    }
 
     fun playbackControl() {
         when (mediaPlayerInteractor.getPlayerState()) {
