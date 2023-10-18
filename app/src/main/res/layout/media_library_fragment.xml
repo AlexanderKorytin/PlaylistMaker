@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/LinearLayoutStyle">
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/LinearLayoutStyle"
+    tools:context="com.example.playlistmaker.albumslist.ui.fragments.MediaLibraryFragment">
 
     <ImageView
         android:id="@+id/backMediaLibray"
@@ -16,41 +18,41 @@
         android:id="@+id/textNameActivity"
         style="@style/appTextMenuName"
         android:text="@string/nameMediaLibrary"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/backMediaLibray"/>
+        app:layout_constraintStart_toEndOf="@id/backMediaLibray"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayoutMediaLibrary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        app:tabTextColor="@color/tabtextcolor"
-        app:tabIndicatorColor="@color/tabtextcolor"
-        app:tabTextAppearance="@style/TabTextStyle"
-        android:background="?attr/colorPrimary"
-
-        app:tabIndicator="@drawable/my_tab_indicator"
-        app:tabIndicatorAnimationMode="elastic"
-        app:tabPaddingTop="@dimen/padding_16"
-        app:tabPaddingBottom="@dimen/padding_16"
-        app:tabMode="fixed"
-        app:tabPaddingStart="@dimen/padding_16"
-        app:tabPaddingEnd="@dimen/padding_16"
-
         android:layout_marginTop="@dimen/padding_16"
+        android:background="?attr/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
 
         app:layout_constraintTop_toBottomOf="@id/textNameActivity"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:tabIndicator="@drawable/my_tab_indicator"
+        app:tabIndicatorAnimationMode="elastic"
+        app:tabIndicatorColor="@color/tabtextcolor"
+        app:tabMode="fixed"
+        app:tabPaddingBottom="@dimen/padding_16"
+        app:tabPaddingEnd="@dimen/padding_16"
+
+        app:tabPaddingStart="@dimen/padding_16"
+
+        app:tabPaddingTop="@dimen/padding_16"
+        app:tabTextAppearance="@style/TabTextStyle"
+        app:tabTextColor="@color/tabtextcolor" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPagerMediaLibrary"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/tabLayoutMediaLibrary"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tabLayoutMediaLibrary" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

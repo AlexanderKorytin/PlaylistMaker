@@ -1,4 +1,4 @@
-package com.example.playlistmaker.albumslist
+package com.example.playlistmaker.albumslist.ui
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

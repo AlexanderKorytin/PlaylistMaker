@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace 'com.example.playlistmaker'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.example.playlistmaker"
         minSdk 29
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -41,6 +41,9 @@ dependencies {
 
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
     implementation "androidx.viewpager2:viewpager2:1.0.0"
+
+    implementation "androidx.navigation:navigation-fragment-ktx:2.7.4"
+    implementation "androidx.navigation:navigation-ui-ktx:2.7.4"
 
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'

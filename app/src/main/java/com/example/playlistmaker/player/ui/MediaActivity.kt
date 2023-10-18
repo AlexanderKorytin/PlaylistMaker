@@ -1,6 +1,8 @@
 package com.example.playlistmaker.player.ui
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.animation.Animation
@@ -8,6 +10,7 @@ import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -24,10 +27,12 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
 
-class MediaActivity : AppCompatActivity() {
+class MediaActivity : AppCompatActivity(R.layout.activity_media) {
 
     companion object {
         private const val CLICKED_TRACK = "CLICKED_TRACK"
+        private const val CURRENTTRACK = "clickedTrack"
+        fun createArgs(clickedTrack: String?): Bundle = bundleOf(CURRENTTRACK to clickedTrack)
     }
 
     private var receivedTrack: String? = null
@@ -40,10 +45,10 @@ class MediaActivity : AppCompatActivity() {
     }
 
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(CLICKED_TRACK, receivedTrack)
-    }
+//    override fun onSaveInstanceState(outState: Bundle) {
+//        super.onSaveInstanceState(outState)
+//        outState.putString(CLICKED_TRACK, receivedTrack)
+//    }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,6 +67,7 @@ class MediaActivity : AppCompatActivity() {
                     binding.playPause.isEnabled = false
                     binding.timerMedia.text = currentPlayerState.currentTime
                 }
+
                 PlayerState.STATE_PREPARED -> {
                     binding.playPause.isEnabled = true
                     binding.playPause.setImageDrawable(getDrawable(R.drawable.play_button))
@@ -83,9 +89,10 @@ class MediaActivity : AppCompatActivity() {
 
         playerVM.getCurrentTrack().observe(this) { track ->
 
-            if(track.previewUrl == ""){
+            if (track.previewUrl == "") {
                 binding.playPause.isEnabled = false
-                Toast.makeText(this, getString(R.string.No_media_for_playing), Toast.LENGTH_LONG).show()
+                Toast.makeText(this, getString(R.string.No_media_for_playing), Toast.LENGTH_LONG)
+                    .show()
             } else binding.playPause.isEnabled = true
 
             binding.addFavorite.isClickable = true

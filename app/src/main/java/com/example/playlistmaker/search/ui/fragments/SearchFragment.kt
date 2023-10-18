@@ -1,67 +1,75 @@
-package com.example.playlistmaker.search.ui
+package com.example.playlistmaker.search.ui.fragments
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.app.setOnClickListenerWithViber
-import com.example.playlistmaker.databinding.ActivityFindBinding
+import com.example.playlistmaker.databinding.SearchFragmentBinding
 import com.example.playlistmaker.player.ui.MediaActivity
+import com.example.playlistmaker.search.ui.FindAdapter
 import com.example.playlistmaker.search.ui.models.SearchScreenState
 import com.example.playlistmaker.search.ui.models.TrackUI
 import com.example.playlistmaker.search.ui.viewmodel.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class FindActivity : AppCompatActivity() {
+class SearchFragment : Fragment() {
     companion object {
         private const val SEARCH_QUERY = "SEARCH_QUERY"
         private const val CLICED_TRACK_DELAY = 1000L
     }
 
-    private lateinit var bindingFindActivity: ActivityFindBinding
+    private var _binding: SearchFragmentBinding? = null
+    private val binding get() = _binding!!
     private var isClickTrackAllowed = true
     private var textSearch: String = ""
     private var trackList: ArrayList<TrackUI>? = ArrayList()
     private val searchVM: SearchViewModel by viewModel<SearchViewModel>()
+    private  lateinit var navHostFragment:NavHostFragment
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(SEARCH_QUERY, textSearch)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = SearchFragmentBinding.inflate(inflater, container, false)
+        return this.binding.root
     }
 
     @SuppressLint("MissingInflatedId")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        textSearch = savedInstanceState?.getString(SEARCH_QUERY, "") ?: ""
-        bindingFindActivity = ActivityFindBinding.inflate(layoutInflater)
-        val viewFind = bindingFindActivity.root
-        setContentView(viewFind)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+//        textSearch = savedInstanceState?.getString(SEARCH_QUERY, "") ?: ""
         // Задаем адаптеры
+        navHostFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.root_container) as NavHostFragment
         val findAdapter = FindAdapter {
             clickedTrack(it)
         }
         val historyAdapter = FindAdapter {
             clickedTrack(it)
         }
-        bindingFindActivity.tracksList.layoutManager = LinearLayoutManager(this)
-        bindingFindActivity.tracksList.adapter = findAdapter
+        this.binding.tracksList.layoutManager = LinearLayoutManager(requireContext())
+        this.binding.tracksList.adapter = findAdapter
 
-        bindingFindActivity.historyTracksList.layoutManager = LinearLayoutManager(this)
-        bindingFindActivity.historyTracksList.adapter = historyAdapter
-        bindingFindActivity.menuFindSearchEditText.setText(textSearch)
+        this.binding.historyTracksList.layoutManager = LinearLayoutManager(requireContext())
+        this.binding.historyTracksList.adapter = historyAdapter
+        this.binding.menuFindSearchEditText.setText(textSearch)
 
         findAdapter.trackList = (trackList as ArrayList<TrackUI>)
         historyAdapter.trackList =
             searchVM.mapToTrackUI.mapList(searchVM.getSearchHstoryTracks())
 // ------------- подписки----------------------------
-        searchVM.getcurrentSearchViewScreenState().observe(this) {
+        searchVM.getcurrentSearchViewScreenState().observe(viewLifecycleOwner) {
             when (it) {
                 is SearchScreenState.Start -> {
                     showStart(findAdapter)
@@ -101,23 +109,23 @@ class FindActivity : AppCompatActivity() {
         }
 
 
-        bindingFindActivity.placeholderButton.setOnClickListenerWithViber {
+        this.binding.placeholderButton.setOnClickListenerWithViber {
             searchVM.getMusic(textSearch)
         }
 
-        bindingFindActivity.clearIcon.setOnClickListener {
-            bindingFindActivity.menuFindSearchEditText.setText("")
+        this.binding.clearIcon.setOnClickListener {
+            this.binding.menuFindSearchEditText.setText("")
         }
 
-        bindingFindActivity.backFind.setOnClickListenerWithViber {
-            this.onBackPressedDispatcher.onBackPressed()
+        this.binding.backFind.setOnClickListenerWithViber {
+            findNavController().navigateUp()
         }
 
-        bindingFindActivity.menuFindSearchEditText.setOnFocusChangeListener { _, hasFocus ->
+        this.binding.menuFindSearchEditText.setOnFocusChangeListener { _, hasFocus ->
             if (textSearch.isNullOrEmpty()) searchVM.showSearchHistory(hasFocus)
         }
 
-        bindingFindActivity.clearSearchHistory.setOnClickListenerWithViber {
+        this.binding.clearSearchHistory.setOnClickListenerWithViber {
             searchVM.clearSearchHistory()
         }
 
@@ -127,7 +135,7 @@ class FindActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 var flag =
-                    (bindingFindActivity.menuFindSearchEditText.hasFocus() && s?.isEmpty() == true)
+                    (this@SearchFragment.binding.menuFindSearchEditText.hasFocus() && s?.isEmpty() == true)
                 textSearch = s.toString()
                 if (s?.isEmpty() == true) {
                     searchVM.showSearchHistory(flag)
@@ -138,17 +146,22 @@ class FindActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
             }
         }
-        bindingFindActivity.menuFindSearchEditText.addTextChangedListener(simpleTextWatcher)
+        this.binding.menuFindSearchEditText.addTextChangedListener(simpleTextWatcher)
     }
 
+//    override fun onSaveInstanceState(outState: Bundle) {
+//        super.onSaveInstanceState(outState)
+//        outState.putString(SEARCH_QUERY, textSearch)
+//    }
+
     private fun showStart(adapter: FindAdapter) {
-        bindingFindActivity.clearIcon.isClickable = false
-        bindingFindActivity.searchHistoryListView.isVisible = false
-        bindingFindActivity.progressBar.isVisible = false
-        bindingFindActivity.clearIcon.isClickable = false
-        bindingFindActivity.placeholderFindViewGroup.isVisible = false
-        bindingFindActivity.placeholderButton.isVisible = false
-        bindingFindActivity.tracksList.isVisible = true
+        this.binding.clearIcon.isClickable = false
+        this.binding.searchHistoryListView.isVisible = false
+        this.binding.progressBar.isVisible = false
+        this.binding.clearIcon.isClickable = false
+        this.binding.placeholderFindViewGroup.isVisible = false
+        this.binding.placeholderButton.isVisible = false
+        this.binding.tracksList.isVisible = true
         adapter.trackList.clear()
         adapter.notifyDataSetChanged()
 
@@ -156,40 +169,40 @@ class FindActivity : AppCompatActivity() {
 
     private fun showContent(adapter: FindAdapter, tracks: ArrayList<TrackUI>) {
         if (textSearch.isNotEmpty()) {
-            bindingFindActivity.searchHistoryListView.isVisible = false
-            bindingFindActivity.clearIcon.isClickable = true
-            bindingFindActivity.progressBar.visibility = View.GONE
-            bindingFindActivity.placeholderFindViewGroup.visibility = View.GONE
-            bindingFindActivity.placeholderButton.visibility = View.GONE
-            bindingFindActivity.tracksList.visibility = View.VISIBLE
+            this.binding.searchHistoryListView.isVisible = false
+            this.binding.clearIcon.isClickable = true
+            this.binding.progressBar.visibility = View.GONE
+            this.binding.placeholderFindViewGroup.visibility = View.GONE
+            this.binding.placeholderButton.visibility = View.GONE
+            this.binding.tracksList.visibility = View.VISIBLE
             adapter.trackList = tracks
             adapter.notifyDataSetChanged()
         }
     }
 
     private fun showLoading(adapter: FindAdapter) {
-        bindingFindActivity.clearIcon.isClickable = false
-        bindingFindActivity.searchHistoryListView.isVisible = false
-        bindingFindActivity.progressBar.isVisible = true
-        bindingFindActivity.clearIcon.isClickable = false
-        bindingFindActivity.placeholderFindViewGroup.isVisible = false
-        bindingFindActivity.placeholderButton.isVisible = false
-        bindingFindActivity.tracksList.isVisible = true
+        this.binding.clearIcon.isClickable = false
+        this.binding.searchHistoryListView.isVisible = false
+        this.binding.progressBar.isVisible = true
+        this.binding.clearIcon.isClickable = false
+        this.binding.placeholderFindViewGroup.isVisible = false
+        this.binding.placeholderButton.isVisible = false
+        this.binding.tracksList.isVisible = true
         adapter.trackList.clear()
         adapter.notifyDataSetChanged()
     }
 
     private fun showEmpty(adapter: FindAdapter) {
         if (textSearch.isNotEmpty()) {
-            bindingFindActivity.searchHistoryListView.isVisible = false
-            bindingFindActivity.clearIcon.isClickable = true
-            bindingFindActivity.progressBar.visibility = View.GONE
-            bindingFindActivity.placeholderFindViewGroup.visibility = View.VISIBLE
-            bindingFindActivity.placeholderButton.visibility = View.GONE
-            bindingFindActivity.tracksList.visibility = View.GONE
-            bindingFindActivity.placeholderFindText.text =
+            this.binding.searchHistoryListView.isVisible = false
+            this.binding.clearIcon.isClickable = true
+            this.binding.progressBar.visibility = View.GONE
+            this.binding.placeholderFindViewGroup.visibility = View.VISIBLE
+            this.binding.placeholderButton.visibility = View.GONE
+            this.binding.tracksList.visibility = View.GONE
+            this.binding.placeholderFindText.text =
                 getString(R.string.placeholder_nothing_found_text)
-            bindingFindActivity.placeholderFindTint.setImageDrawable(getDrawable(R.drawable.nothing_found))
+            this.binding.placeholderFindTint.setImageDrawable(requireContext().getDrawable(R.drawable.nothing_found))
             adapter.trackList.clear()
             adapter.notifyDataSetChanged()
         }
@@ -197,31 +210,33 @@ class FindActivity : AppCompatActivity() {
 
     private fun showError(adapter: FindAdapter) {
         if (textSearch.isNotEmpty()) {
-            bindingFindActivity.searchHistoryListView.isVisible = false
-            bindingFindActivity.clearIcon.isClickable = true
-            bindingFindActivity.progressBar.visibility = View.GONE
-            bindingFindActivity.placeholderFindViewGroup.visibility = View.VISIBLE
-            bindingFindActivity.placeholderButton.visibility = View.VISIBLE
-            bindingFindActivity.tracksList.visibility = View.GONE
-            bindingFindActivity.placeholderFindText.text =
+            this.binding.searchHistoryListView.isVisible = false
+            this.binding.clearIcon.isClickable = true
+            this.binding.progressBar.visibility = View.GONE
+            this.binding.placeholderFindViewGroup.visibility = View.VISIBLE
+            this.binding.placeholderButton.visibility = View.VISIBLE
+            this.binding.tracksList.visibility = View.GONE
+            this.binding.placeholderFindText.text =
                 getString(R.string.placeholder_communication_problems_text)
-            bindingFindActivity.placeholderFindTint.setImageDrawable(getDrawable(R.drawable.communication_problem))
+            this.binding.placeholderFindTint.setImageDrawable(requireContext().getDrawable(R.drawable.communication_problem))
             adapter.trackList.clear()
             adapter.notifyDataSetChanged()
         }
     }
 
     private fun showClearIcon(value: Boolean) {
-        bindingFindActivity.clearIcon.isVisible = value
+        this.binding.clearIcon.isVisible = value
     }
 
 
     private fun clickedTrack(track: TrackUI) {
         if (trackClickedDebounce()) {
             searchVM.savedTrack(track.toTrack())
-            val mediaIntent = Intent(this, MediaActivity::class.java)
-            mediaIntent.putExtra("clickedTrack", searchVM.json.toJson(track))
-            startActivity(mediaIntent)
+            val navController = navHostFragment.navController
+            navController.navigate(
+                R.id.action_searchFragment_to_mediaActivity,
+                MediaActivity.createArgs(searchVM.json.toJson(track))
+            )
         }
     }
 
@@ -241,20 +256,20 @@ class FindActivity : AppCompatActivity() {
         list: List<TrackUI>
     ) {
         if (flag) {
-            bindingFindActivity.progressBar.visibility = View.GONE
-            bindingFindActivity.searchHistoryListView.visibility = View.VISIBLE
-            bindingFindActivity.tracksList.visibility = View.GONE
-            bindingFindActivity.placeholderFindViewGroup.visibility = View.GONE
-            bindingFindActivity.placeholderButton.visibility = View.GONE
+            this.binding.progressBar.visibility = View.GONE
+            this.binding.searchHistoryListView.visibility = View.VISIBLE
+            this.binding.tracksList.visibility = View.GONE
+            this.binding.placeholderFindViewGroup.visibility = View.GONE
+            this.binding.placeholderButton.visibility = View.GONE
             findAdapter.trackList.clear()
             findAdapter.notifyDataSetChanged()
             historyAdapter.trackList = list as ArrayList<TrackUI>
             historyAdapter.notifyDataSetChanged()
         } else {
-            bindingFindActivity.progressBar.visibility = View.GONE
-            bindingFindActivity.searchHistoryListView.visibility = View.GONE
-            bindingFindActivity.tracksList.visibility = View.GONE
-            bindingFindActivity.placeholderFindViewGroup.visibility = View.GONE
+            this.binding.progressBar.visibility = View.GONE
+            this.binding.searchHistoryListView.visibility = View.GONE
+            this.binding.tracksList.visibility = View.GONE
+            this.binding.placeholderFindViewGroup.visibility = View.GONE
         }
     }
 }

@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.playlistmaker.albumslist.ui.fragments.AlbumsFragment">
+    tools:context=".core.ui.StartActivity">
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/tabAlbumsFragmentsContener"
-        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:id="@+id/root_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:defaultNavHost="true"
-        app:navGraph="@navigation/albums_graph" />
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        app:navGraph="@navigation/root_navigation_graph"
+        app:defaultNavHost="true"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

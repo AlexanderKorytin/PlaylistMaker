@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/albums_graph"
+    app:startDestination="@id/albumsFragmentPlaceholder">
+    <fragment
+        android:id="@+id/albumsFragmentPlaceholder"
+        android:name="com.example.playlistmaker.albumslist.ui.fragments.AlbumsFragmentPlaceholder"
+        android:label="empty_list_albums"
+        tools:layout="@layout/empty_list_albums" />
+</navigation>
