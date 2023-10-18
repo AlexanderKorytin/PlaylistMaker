@@ -12,6 +12,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -19,6 +21,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.app.dpToPx
 import com.example.playlistmaker.app.setOnClickListenerWithViber
 import com.example.playlistmaker.app.setVibe
+import com.example.playlistmaker.core.ui.StartActivity
 import com.example.playlistmaker.databinding.ActivityMediaBinding
 import com.example.playlistmaker.player.domain.models.PlayerState
 import com.example.playlistmaker.player.ui.models.ClickedTrackGson
@@ -152,7 +155,7 @@ class MediaActivity : AppCompatActivity(R.layout.activity_media) {
 
         })
         binding.backMedia.setOnClickListenerWithViber {
-            this.onBackPressedDispatcher.onBackPressed()
+           this.onBackPressedDispatcher.onBackPressed()
         }
 
         binding.playPause.setOnTouchListener { _, event ->
