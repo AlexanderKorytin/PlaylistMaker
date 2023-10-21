@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.TabAlbumsFragmentContenerBinding
 import com.example.playlistmaker.albumslist.ui.viewmodel.AlbumsListViewModel
+import com.example.playlistmaker.databinding.TabAlbumsFragmentContenerBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AlbumsFragment : Fragment() {
@@ -17,7 +17,7 @@ class AlbumsFragment : Fragment() {
     private val binding get() = _binding!!
     private val albumListVM: AlbumsListViewModel by viewModel<AlbumsListViewModel>()
 
-    companion object{
+    companion object {
         fun newInstance(): AlbumsFragment = AlbumsFragment()
     }
 
@@ -25,7 +25,7 @@ class AlbumsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = TabAlbumsFragmentContenerBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -35,7 +35,7 @@ class AlbumsFragment : Fragment() {
         showPlaceholder()
     }
 
-    private fun showPlaceholder(){
+    private fun showPlaceholder() {
         childFragmentManager.commit {
             add<AlbumsFragmentPlaceholder>(R.id.tabAlbumsFragmentsContener)
         }

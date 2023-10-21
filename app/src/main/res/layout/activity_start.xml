@@ -4,14 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".core.ui.StartActivity">
+    tools:context=".core.ui.StartActivity"
+    android:theme="@style/Theme.SettingsActivity">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/root_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:name="androidx.navigation.fragment.NavHostFragment"
-        app:navGraph="@navigation/root_navigation_graph"
-        app:defaultNavHost="true"/>
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:defaultNavHost="true"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navGraph="@navigation/root_navigation_graph" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        app:itemTextColor="@color/bottom_nav_selector"
+        app:itemIconTint="@color/bottom_nav_selector"
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/root_menu"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

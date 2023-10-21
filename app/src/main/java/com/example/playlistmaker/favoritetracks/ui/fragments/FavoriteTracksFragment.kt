@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
-import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.TabFavoritesFragmentsContenerBinding
 import com.example.playlistmaker.favoritetracks.ui.viewmodel.FavoriteTracksViewModel

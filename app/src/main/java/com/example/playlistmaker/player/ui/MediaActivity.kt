@@ -1,8 +1,6 @@
 package com.example.playlistmaker.player.ui
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.animation.Animation
@@ -12,8 +10,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -46,12 +44,6 @@ class MediaActivity : AppCompatActivity(R.layout.activity_media) {
     private val playerVM: MediaPlayerViewModel by viewModel<MediaPlayerViewModel> {
         parametersOf(ClickedTrackGson(intent.getStringExtra("clickedTrack")))
     }
-
-
-//    override fun onSaveInstanceState(outState: Bundle) {
-//        super.onSaveInstanceState(outState)
-//        outState.putString(CLICKED_TRACK, receivedTrack)
-//    }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -155,7 +147,7 @@ class MediaActivity : AppCompatActivity(R.layout.activity_media) {
 
         })
         binding.backMedia.setOnClickListenerWithViber {
-           this.onBackPressedDispatcher.onBackPressed()
+             this.onBackPressedDispatcher.onBackPressed()
         }
 
         binding.playPause.setOnTouchListener { _, event ->

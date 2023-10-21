@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
@@ -25,7 +24,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
     companion object {
-        private const val SEARCH_QUERY = "SEARCH_QUERY"
         private const val CLICED_TRACK_DELAY = 1000L
     }
 
@@ -35,7 +33,6 @@ class SearchFragment : Fragment() {
     private var textSearch: String = ""
     private var trackList: ArrayList<TrackUI>? = ArrayList()
     private val searchVM: SearchViewModel by viewModel<SearchViewModel>()
-    private  lateinit var navHostFragment:NavHostFragment
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,9 +46,7 @@ class SearchFragment : Fragment() {
     @SuppressLint("MissingInflatedId")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        textSearch = savedInstanceState?.getString(SEARCH_QUERY, "") ?: ""
         // Задаем адаптеры
-        navHostFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.root_container) as NavHostFragment
         val findAdapter = FindAdapter {
             clickedTrack(it)
         }
@@ -149,11 +144,6 @@ class SearchFragment : Fragment() {
         this.binding.menuFindSearchEditText.addTextChangedListener(simpleTextWatcher)
     }
 
-//    override fun onSaveInstanceState(outState: Bundle) {
-//        super.onSaveInstanceState(outState)
-//        outState.putString(SEARCH_QUERY, textSearch)
-//    }
-
     private fun showStart(adapter: FindAdapter) {
         this.binding.clearIcon.isClickable = false
         this.binding.searchHistoryListView.isVisible = false
@@ -232,8 +222,7 @@ class SearchFragment : Fragment() {
     private fun clickedTrack(track: TrackUI) {
         if (trackClickedDebounce()) {
             searchVM.savedTrack(track.toTrack())
-            val navController = navHostFragment.navController
-            navController.navigate(
+            findNavController().navigate(
                 R.id.action_searchFragment_to_mediaActivity,
                 MediaActivity.createArgs(searchVM.json.toJson(track))
             )

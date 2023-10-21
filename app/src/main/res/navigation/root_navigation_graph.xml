@@ -3,40 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_navigation_graph"
-    app:startDestination="@id/mainFragment">
+    app:startDestination="@id/searchFragment">
 
-    <fragment
-        android:id="@+id/mainFragment"
-        android:name="com.example.playlistmaker.main.ui.MainFragment"
-        android:label="main_fragment"
-        tools:layout="@layout/main_fragment" >
-        <action
-            android:id="@+id/action_mainFragment_to_searchFragment"
-            app:destination="@id/searchFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
-        <action
-            android:id="@+id/action_mainFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
-        <action
-            android:id="@+id/action_mainFragment_to_mediaLibraryFragment"
-            app:destination="@id/mediaLibraryFragment2"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
-    </fragment>
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.playlistmaker.search.ui.fragments.SearchFragment"
         android:label="search_fragment"
-        tools:layout="@layout/search_fragment" >
+        tools:layout="@layout/search_fragment">
         <action
             android:id="@+id/action_searchFragment_to_mediaActivity"
             app:destination="@id/mediaActivity"
@@ -56,7 +29,7 @@
         android:label="activity_media"
         tools:layout="@layout/activity_media" />
     <fragment
-        android:id="@+id/mediaLibraryFragment2"
+        android:id="@+id/mediaLibraryFragment"
         android:name="com.example.playlistmaker.albumslist.ui.fragments.MediaLibraryFragment"
         android:label="media_library_fragment"
         tools:layout="@layout/media_library_fragment" />

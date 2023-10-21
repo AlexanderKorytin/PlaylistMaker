@@ -8,10 +8,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/tabFavoriteTracksFragmentsContener"
-        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:defaultNavHost="true"
-        app:navGraph="@navigation/favorite_tracks_graph" />
+        android:layout_height="match_parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
