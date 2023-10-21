@@ -112,10 +112,6 @@ class SearchFragment : Fragment() {
             this.binding.menuFindSearchEditText.setText("")
         }
 
-        this.binding.backFind.setOnClickListenerWithViber {
-            findNavController().navigateUp()
-        }
-
         this.binding.menuFindSearchEditText.setOnFocusChangeListener { _, hasFocus ->
             if (textSearch.isNullOrEmpty()) searchVM.showSearchHistory(hasFocus)
         }

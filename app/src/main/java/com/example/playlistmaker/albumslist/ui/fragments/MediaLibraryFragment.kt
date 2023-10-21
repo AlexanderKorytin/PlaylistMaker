@@ -44,10 +44,6 @@ class MediaLibraryFragment : Fragment() {
             }
         }
         tabMediator.attach()
-
-        binding.backMediaLibray.setOnClickListenerWithViber {
-            findNavController().navigateUp()
-        }
     }
 }
 

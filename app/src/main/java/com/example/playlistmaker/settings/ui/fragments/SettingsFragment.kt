@@ -36,9 +36,6 @@ class SettingsFragment : Fragment() {
             binding.themeSwitch.isChecked = it.isNight
         }
 
-        binding.backSetting.setOnClickListenerWithViber {
-            findNavController().navigateUp()
-        }
 
         binding.themeSwitch.setOnCheckedChangeListener { switcher, checked ->
             requireContext().setVibe()
