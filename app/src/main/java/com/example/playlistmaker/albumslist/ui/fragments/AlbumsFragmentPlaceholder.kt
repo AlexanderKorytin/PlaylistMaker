@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.playlistmaker.databinding.EmptyListAlbumsBinding
 
-class AlbumsFragmentPlaceholder(): Fragment() {
+class AlbumsFragmentPlaceholder : Fragment() {
     private var _binding: EmptyListAlbumsBinding? = null
     private val binding get() = _binding!!
 
@@ -15,7 +15,7 @@ class AlbumsFragmentPlaceholder(): Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = EmptyListAlbumsBinding.inflate(inflater, container, false)
         return binding.root
     }
