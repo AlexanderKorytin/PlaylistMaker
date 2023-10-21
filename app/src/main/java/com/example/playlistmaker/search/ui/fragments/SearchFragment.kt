@@ -140,6 +140,16 @@ class SearchFragment : Fragment() {
         this.binding.menuFindSearchEditText.addTextChangedListener(simpleTextWatcher)
     }
 
+    override fun onPause() {
+        super.onPause()
+        searchVM.stop()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (textSearch != "") searchVM.searchDebounce(textSearch)
+    }
+
     private fun showStart(adapter: FindAdapter) {
         this.binding.clearIcon.isClickable = false
         this.binding.searchHistoryListView.isVisible = false

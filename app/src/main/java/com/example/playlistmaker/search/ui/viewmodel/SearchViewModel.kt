@@ -119,6 +119,10 @@ class SearchViewModel(
         }
     }
 
+    fun stop(){
+        onCleared()
+        latestSearchText = null
+    }
     override fun onCleared() {
         handlerMain.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
     }
