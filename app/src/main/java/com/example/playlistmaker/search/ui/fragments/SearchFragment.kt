@@ -145,11 +145,6 @@ class SearchFragment : Fragment() {
         searchVM.stop()
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (textSearch != "") searchVM.searchDebounce(textSearch)
-    }
-
     private fun showStart(adapter: FindAdapter) {
         this.binding.clearIcon.isClickable = false
         this.binding.searchHistoryListView.isVisible = false
