@@ -14,6 +14,10 @@ class SettingsViewModel(
 
     private val darkThemeChecked = MutableLiveData<ThemeSettings>()
 
+    private val liveDataAgr = MutableLiveData<String>()
+
+    fun getAgreementLink(): LiveData<String> = liveDataAgr
+
     fun getCurrentTheme(): LiveData<ThemeSettings> = darkThemeChecked
 
     fun updateNightTheme(checked: Boolean) {
@@ -29,6 +33,6 @@ class SettingsViewModel(
     }
 
     fun seeUserAgreement() {
-        sharingInteractor.openTerms()
+       liveDataAgr.value = sharingInteractor.openTerms()
     }
 }
