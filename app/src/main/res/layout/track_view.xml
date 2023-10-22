@@ -5,10 +5,10 @@
     android:id="@+id/trackBox"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:theme="@style/Theme.SettingsActivity"
     android:clickable="true"
-    android:foreground="?attr/selectableItemBackground">
+    android:foreground="?attr/selectableItemBackground"
+    android:orientation="horizontal"
+    android:theme="@style/Theme.SettingsActivity">
 
     <ImageView
         android:id="@+id/trackIcon"

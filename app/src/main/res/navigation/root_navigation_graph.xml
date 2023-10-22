@@ -22,7 +22,7 @@
         android:id="@+id/settingsFragment"
         android:name="com.example.playlistmaker.settings.ui.fragments.SettingsFragment"
         android:label="settings_fragment"
-        tools:layout="@layout/settings_fragment" >
+        tools:layout="@layout/settings_fragment">
         <action
             android:id="@+id/action_settingsFragment_to_agreementFragment"
             app:destination="@id/agreementFragment" />

@@ -9,8 +9,8 @@
     <TextView
         android:id="@+id/textNameActivity"
         style="@style/appTextMenuName"
-        android:layout_marginTop="14dp"
         android:layout_marginStart="@dimen/padding_16"
+        android:layout_marginTop="14dp"
         android:text="@string/nameMediaLibrary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

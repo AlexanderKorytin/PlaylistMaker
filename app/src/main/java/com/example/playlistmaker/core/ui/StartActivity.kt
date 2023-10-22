@@ -18,9 +18,11 @@ class StartActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.root_container) as NavHostFragment
         val navController = navHostFragment.navController
         binding.bottomNavigationView.setupWithNavController(navController)
-        navController.addOnDestinationChangedListener{_, destination, _ ->
-            when(destination.id){
-                R.id.mediaActivity, R.id.agreementFragment -> binding.bottomNavigationView.isVisible = false
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.mediaActivity, R.id.agreementFragment -> binding.bottomNavigationView.isVisible =
+                    false
+
                 else -> binding.bottomNavigationView.isVisible = true
             }
         }

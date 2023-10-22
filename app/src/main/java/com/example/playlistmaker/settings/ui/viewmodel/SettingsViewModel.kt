@@ -33,6 +33,6 @@ class SettingsViewModel(
     }
 
     fun seeUserAgreement() {
-       liveDataAgr.value = sharingInteractor.openTerms()
+        liveDataAgr.value = sharingInteractor.openTerms()
     }
 }
