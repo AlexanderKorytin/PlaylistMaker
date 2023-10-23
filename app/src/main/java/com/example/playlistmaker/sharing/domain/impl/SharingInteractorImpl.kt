@@ -12,7 +12,6 @@ class SharingInteractorImpl(private val externalNavigator: ExternalNavigator) : 
 
     override fun openTerms(): String {
         return getTermsLink()
-//        externalNavigator.openLink(getTermsLink())
     }
 
     override fun openSupport() {
