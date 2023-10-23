@@ -22,7 +22,7 @@
         android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/menuFind_SearchEditText"
+            android:id="@+id/menu_find_search_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/padding_16"
@@ -46,10 +46,10 @@
             android:textSize="@dimen/set_text_size" />
 
         <ImageView
-            android:id="@+id/clearIcon"
+            android:id="@+id/clear_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@id/menuFind_SearchEditText"
+            android:layout_alignEnd="@id/menu_find_search_edit_text"
             android:layout_marginVertical="11dp"
             android:layout_marginEnd="@dimen/padding_12"
             android:src="@drawable/clear_icon"
@@ -58,18 +58,18 @@
     </RelativeLayout>
 
     <FrameLayout
-        android:id="@+id/trackListView"
+        android:id="@+id/track_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/tracksList"
+            android:id="@+id/tracks_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/padding_16" />
 
         <ProgressBar
-            android:id="@+id/progressBar"
+            android:id="@+id/progress_bar"
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_gravity="top|center"
@@ -105,6 +105,7 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/placeholder_button"
                 style="@style/findUpdateButtonStyle"
+                android:hapticFeedbackEnabled="true"
                 android:text="@string/update"
                 android:visibility="gone" />
 
@@ -134,24 +135,24 @@
                 android:layout_height="wrap_content">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/historyTracksList"
+                    android:id="@+id/history_tracks_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/padding_8"
                     app:layout_constrainedHeight="true"
-                    app:layout_constraintBottom_toTopOf="@+id/clearSearchHistory"
+                    app:layout_constraintBottom_toTopOf="@+id/clear_search_history"
                     app:layout_constraintStart_toStartOf="@+id/Id_const_layout"
                     app:layout_constraintTop_toTopOf="@+id/Id_const_layout" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/clearSearchHistory"
+                    android:id="@+id/clear_search_history"
                     style="@style/findUpdateButtonStyle"
                     android:layout_marginBottom="@dimen/padding_16"
                     android:text="@string/clear_history"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@id/Id_const_layout"
                     app:layout_constraintStart_toStartOf="@id/Id_const_layout"
-                    app:layout_constraintTop_toBottomOf="@+id/historyTracksList" />
+                    app:layout_constraintTop_toBottomOf="@+id/history_tracks_list" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

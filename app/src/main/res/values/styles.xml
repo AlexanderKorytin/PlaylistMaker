@@ -99,7 +99,7 @@
         <item name="android:textSize">13sp</item>
         <item name="android:textFontWeight">400</item>
         <item name="android:gravity">end</item>
-        <item name="layout_constraintStart_toStartOf">@id/textsBarrier</item>
+        <item name="layout_constraintStart_toStartOf">@id/texts_barrier</item>
         <item name="layout_constraintEnd_toStartOf">@id/right_guideline_text</item>
     </style>
 

@@ -2,6 +2,7 @@ package com.example.playlistmaker.player.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
@@ -10,16 +11,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.app.dpToPx
-import com.example.playlistmaker.app.setOnClickListenerWithViber
-import com.example.playlistmaker.app.setVibe
-import com.example.playlistmaker.core.ui.StartActivity
 import com.example.playlistmaker.databinding.ActivityMediaBinding
 import com.example.playlistmaker.player.domain.models.PlayerState
 import com.example.playlistmaker.player.ui.models.ClickedTrackGson
@@ -30,11 +26,6 @@ import org.koin.core.parameter.parametersOf
 
 class MediaActivity : AppCompatActivity(R.layout.activity_media) {
 
-    companion object {
-        private const val CLICKED_TRACK = "CLICKED_TRACK"
-        private const val CURRENTTRACK = "clickedTrack"
-        fun createArgs(clickedTrack: String?): Bundle = bundleOf(CURRENTTRACK to clickedTrack)
-    }
 
     private var receivedTrack: String? = null
     private lateinit var binding: ActivityMediaBinding
@@ -124,7 +115,7 @@ class MediaActivity : AppCompatActivity(R.layout.activity_media) {
             }
 
             override fun onAnimationEnd(animation: Animation?) {
-                setVibe()
+
             }
 
             override fun onAnimationRepeat(animation: Animation?) {
@@ -138,7 +129,6 @@ class MediaActivity : AppCompatActivity(R.layout.activity_media) {
             }
 
             override fun onAnimationEnd(animation: Animation?) {
-                setVibe()
             }
 
             override fun onAnimationRepeat(animation: Animation?) {
@@ -146,19 +136,21 @@ class MediaActivity : AppCompatActivity(R.layout.activity_media) {
             }
 
         })
-        binding.backMedia.setOnClickListenerWithViber {
-             this.onBackPressedDispatcher.onBackPressed()
+        binding.backMedia.setOnClickListener {
+            this.onBackPressedDispatcher.onBackPressed()
         }
 
-        binding.playPause.setOnTouchListener { _, event ->
+        binding.playPause.setOnTouchListener { v, event ->
             when (event.action) {
 
                 MotionEvent.ACTION_DOWN -> {
+                    v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_PRESS)
                     binding.playPause.startAnimation(outAnim)
                     return@setOnTouchListener false
                 }
 
                 MotionEvent.ACTION_UP -> {
+                    v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_PRESS)
                     binding.playPause.startAnimation(inAnim)
                     return@setOnTouchListener false
                 }
@@ -175,4 +167,9 @@ class MediaActivity : AppCompatActivity(R.layout.activity_media) {
         playerVM.pausePlayer()
     }
 
+    companion object {
+        private const val CLICKED_TRACK = "CLICKED_TRACK"
+        private const val CURRENTTRACK = "clickedTrack"
+        fun createArgs(clickedTrack: String?): Bundle = bundleOf(CURRENTTRACK to clickedTrack)
+    }
 }

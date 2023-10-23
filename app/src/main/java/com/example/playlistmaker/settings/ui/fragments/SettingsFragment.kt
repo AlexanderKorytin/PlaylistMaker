@@ -2,14 +2,13 @@ package com.example.playlistmaker.settings.ui.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
-import com.example.playlistmaker.app.setOnClickListenerWithViber
-import com.example.playlistmaker.app.setVibe
 import com.example.playlistmaker.databinding.SettingsFragmentBinding
 import com.example.playlistmaker.settings.ui.viewmodel.SettingsViewModel
 import com.example.playlistmaker.sharing.ui.fragments.AgreementFragment
@@ -42,24 +41,30 @@ class SettingsFragment : Fragment() {
             link = it
         }
         binding.themeSwitch.setOnCheckedChangeListener { switcher, checked ->
-            requireContext().setVibe()
             settinsVM.updateNightTheme(checked)
         }
 
-        binding.shareApp.setOnClickListenerWithViber {
+        binding.shareApp.setOnClickListener {
+            it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_PRESS)
             settinsVM.shareApp()
         }
 
-        binding.writeToSupport.setOnClickListenerWithViber {
+        binding.writeToSupport.setOnClickListener {
+            it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_PRESS)
             settinsVM.writeToSupport()
         }
 
-        binding.userAgreement.setOnClickListenerWithViber {
+        binding.userAgreement.setOnClickListener {
+            it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_PRESS)
             findNavController().navigate(
                 R.id.action_settingsFragment_to_agreementFragment,
                 AgreementFragment.createArgs(link)
             )
         }
+    }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

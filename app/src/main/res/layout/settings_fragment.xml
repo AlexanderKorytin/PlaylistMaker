@@ -19,26 +19,26 @@
     </LinearLayout>
 
     <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/themeSwitch"
+        android:id="@+id/theme_switch"
         style="@style/SettingsTextViewSwitchStile"
         android:paddingEnd="6dp"
         android:text="@string/dark_theme" />
 
 
     <TextView
-        android:id="@+id/shareApp"
+        android:id="@+id/share_app"
         style="@style/SettingsTextViewSwitchStile"
         android:text="@string/share_app"
         app:drawableEndCompat="@drawable/share" />
 
     <TextView
-        android:id="@+id/writeToSupport"
+        android:id="@+id/write_to_support"
         style="@style/SettingsTextViewSwitchStile"
         android:text="@string/write_support"
         app:drawableEndCompat="@drawable/support" />
 
     <TextView
-        android:id="@+id/userAgreement"
+        android:id="@+id/user_agreement"
         style="@style/SettingsTextViewSwitchStile"
         android:text="@string/user_agreement"
         app:drawableEndCompat="@drawable/nextpage" />

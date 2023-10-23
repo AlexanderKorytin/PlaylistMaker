@@ -11,7 +11,7 @@
         tools:context="com.example.playlistmaker.albumslist.ui.fragments.AlbumsFragment">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/createAlbum"
+            android:id="@+id/create_album"
             style="@style/findUpdateButtonStyle"
             android:layout_marginTop="@dimen/padding_24"
             android:paddingVertical="10dp"
@@ -32,7 +32,7 @@
             android:src="@drawable/nothing_found"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/createAlbum" />
+            app:layout_constraintTop_toBottomOf="@id/create_album" />
 
         <TextView
             style="@style/textStyleHint"

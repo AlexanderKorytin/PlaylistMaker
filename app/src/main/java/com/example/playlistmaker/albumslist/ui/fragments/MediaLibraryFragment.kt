@@ -43,5 +43,10 @@ class MediaLibraryFragment : Fragment() {
         }
         tabMediator.attach()
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }
 

@@ -14,10 +14,6 @@ class AlbumsFragment : Fragment() {
     private val binding get() = _binding!!
     private val albumListVM: AlbumsListViewModel by viewModel<AlbumsListViewModel>()
 
-    companion object {
-        fun newInstance(): AlbumsFragment = AlbumsFragment()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -27,4 +23,12 @@ class AlbumsFragment : Fragment() {
         return binding.root
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    companion object {
+        fun newInstance(): AlbumsFragment = AlbumsFragment()
+    }
 }

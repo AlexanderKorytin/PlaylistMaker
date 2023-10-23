@@ -14,10 +14,6 @@ class FavoriteTracksFragment : Fragment() {
     private val binding get() = _binding!!
     private val favoriteTracksVM: FavoriteTracksViewModel by viewModel<FavoriteTracksViewModel>()
 
-    companion object {
-        fun newInstance(): FavoriteTracksFragment = FavoriteTracksFragment()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -27,5 +23,12 @@ class FavoriteTracksFragment : Fragment() {
         return binding.root
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
+    companion object {
+        fun newInstance(): FavoriteTracksFragment = FavoriteTracksFragment()
+    }
 }

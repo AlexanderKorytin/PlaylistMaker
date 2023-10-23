@@ -7,7 +7,7 @@
     tools:context=".sharing.ui.fragments.AgreementFragment">
 
     <ImageView
-        android:id="@+id/backAgreement"
+        android:id="@+id/back_agreement"
         style="@style/appImageBack"
         android:layout_marginStart="@dimen/padding_16"
         android:layout_marginTop="@dimen/padding_16"
@@ -15,12 +15,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textNameAgreement"
+        android:id="@+id/text_name_agreement"
         style="@style/appTextMenuName"
         android:layout_marginStart="@dimen/padding_24"
         android:layout_marginTop="14dp"
         android:text="@string/agreement"
-        app:layout_constraintStart_toEndOf="@id/backAgreement"
+        app:layout_constraintStart_toEndOf="@id/back_agreement"
         app:layout_constraintTop_toTopOf="parent" />
 
     <WebView
@@ -33,7 +33,7 @@
         app:layout_constraintEnd_toEndOf="parent"
 
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textNameAgreement" />
+        app:layout_constraintTop_toBottomOf="@id/text_name_agreement" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

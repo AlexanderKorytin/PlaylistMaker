@@ -13,10 +13,6 @@ class AgreementFragment : Fragment() {
     private var _binding: AgreementFragmentBinding? = null
     private val binding get() = _binding!!
 
-    companion object {
-        private const val AGREEMENT = "agreements"
-        fun createArgs(url: String): Bundle = bundleOf(AGREEMENT to url)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,5 +29,15 @@ class AgreementFragment : Fragment() {
         binding.backAgreement.setOnClickListener {
             findNavController().navigateUp()
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    companion object {
+        private const val AGREEMENT = "agreements"
+        fun createArgs(url: String): Bundle = bundleOf(AGREEMENT to url)
     }
 }

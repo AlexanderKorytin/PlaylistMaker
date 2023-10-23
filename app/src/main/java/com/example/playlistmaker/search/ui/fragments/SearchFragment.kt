@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
-import com.example.playlistmaker.app.setOnClickListenerWithViber
 import com.example.playlistmaker.databinding.SearchFragmentBinding
 import com.example.playlistmaker.player.ui.MediaActivity
 import com.example.playlistmaker.search.ui.FindAdapter
@@ -23,9 +23,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SearchFragment : Fragment() {
-    companion object {
-        private const val CLICED_TRACK_DELAY = 1000L
-    }
 
     private var _binding: SearchFragmentBinding? = null
     private val binding get() = _binding!!
@@ -104,7 +101,8 @@ class SearchFragment : Fragment() {
         }
 
 
-        this.binding.placeholderButton.setOnClickListenerWithViber {
+        this.binding.placeholderButton.setOnClickListener {
+            it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_PRESS)
             searchVM.getMusic(textSearch)
         }
 
@@ -116,7 +114,8 @@ class SearchFragment : Fragment() {
             if (textSearch.isNullOrEmpty()) searchVM.showSearchHistory(hasFocus)
         }
 
-        this.binding.clearSearchHistory.setOnClickListenerWithViber {
+        this.binding.clearSearchHistory.setOnClickListener{
+            it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_PRESS)
             searchVM.clearSearchHistory()
         }
 
@@ -261,6 +260,15 @@ class SearchFragment : Fragment() {
             this.binding.tracksList.visibility = View.GONE
             this.binding.placeholderFindViewGroup.visibility = View.GONE
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    companion object {
+        private const val CLICED_TRACK_DELAY = 1000L
     }
 }
 //---------------------------------------------------

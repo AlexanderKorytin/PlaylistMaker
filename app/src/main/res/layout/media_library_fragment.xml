@@ -7,7 +7,7 @@
 
 
     <TextView
-        android:id="@+id/textNameActivity"
+        android:id="@+id/text_name_activity"
         style="@style/appTextMenuName"
         android:layout_marginStart="@dimen/padding_16"
         android:layout_marginTop="14dp"
@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayoutMediaLibrary"
+        android:id="@+id/tab_layout_media_library"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/padding_16"
@@ -24,7 +24,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
 
-        app:layout_constraintTop_toBottomOf="@id/textNameActivity"
+        app:layout_constraintTop_toBottomOf="@id/text_name_activity"
         app:tabIndicator="@drawable/my_tab_indicator"
         app:tabIndicatorAnimationMode="elastic"
         app:tabIndicatorColor="@color/tabtextcolor"
@@ -39,13 +39,13 @@
         app:tabTextColor="@color/tabtextcolor" />
 
     <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewPagerMediaLibrary"
+        android:id="@+id/view_pager_media_library"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tabLayoutMediaLibrary" />
+        app:layout_constraintTop_toBottomOf="@id/tab_layout_media_library" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
