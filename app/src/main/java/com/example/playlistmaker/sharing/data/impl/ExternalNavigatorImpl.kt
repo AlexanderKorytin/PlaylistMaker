@@ -28,7 +28,7 @@ class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
         try {
             context.startActivity(shareAppIntent)
         } catch (activityNotFound: ActivityNotFoundException) {
-            Toast.makeText(context, context.getString(R.string.App_not_found), Toast.LENGTH_SHORT)
+            Toast.makeText(context, context.getString(R.string.app_not_found), Toast.LENGTH_SHORT)
                 .show()
         }
     }
@@ -40,7 +40,7 @@ class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
         try {
             context.startActivity(userAgreementIntent)
         } catch (activityNotFound: ActivityNotFoundException) {
-            Toast.makeText(context, context.getString(R.string.App_not_found), Toast.LENGTH_SHORT)
+            Toast.makeText(context, context.getString(R.string.app_not_found), Toast.LENGTH_SHORT)
                 .show()
         }
     }
@@ -62,7 +62,7 @@ class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
         try {
             context.startActivity(writeSupportIntent)
         } catch (activityNotFound: ActivityNotFoundException) {
-            Toast.makeText(context, context.getString(R.string.App_not_found), Toast.LENGTH_SHORT)
+            Toast.makeText(context, context.getString(R.string.app_not_found), Toast.LENGTH_SHORT)
                 .show()
         }
     }

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context="com.example.playlistmaker.albumslist.ui.fragments.AlbumsFragment">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/create_album"
+            style="@style/findUpdateButtonStyle"
+            android:layout_marginTop="@dimen/padding_24"
+            android:paddingVertical="10dp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:text="@string/newPlaylist"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/placeholder_list_albums"
+            android:layout_width="@dimen/padding_120"
+            android:layout_height="@dimen/padding_120"
+            android:layout_gravity="center"
+            android:layout_marginTop="46dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/nothing_found"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/create_album" />
+
+        <TextView
+            style="@style/textStyleHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_16"
+            android:gravity="center"
+            android:text="@string/empty_list_albums"
+            android:textColor="?attr/colorOnPrimary"
+            android:textFontWeight="500"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/placeholder_list_albums" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

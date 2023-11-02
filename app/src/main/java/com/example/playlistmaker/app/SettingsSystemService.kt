@@ -11,17 +11,6 @@ import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 
 private val correction = 0.5f
-fun Context.setVibe() {
-    val vibe: Vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-    vibe.vibrate(VibrationEffect.createOneShot(5, VibrationEffect.DEFAULT_AMPLITUDE))
-}
-
-fun View.setOnClickListenerWithViber(block: () -> Unit) {
-    setOnClickListener {
-        context.setVibe()
-        block()
-    }
-}
 
 internal fun dpToPx(dp: Float, context: Context): Int {
     return TypedValue.applyDimension(

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/LinearLayoutStyle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".player.ui.MediaActivity">
     <!-- кнопка назад -->
     <ImageView
-        android:id="@+id/backMedia"
+        android:id="@+id/back_media"
         style="@style/appImageBack"
         android:layout_marginVertical="@dimen/padding_12"
         android:layout_marginStart="@dimen/padding_12"
@@ -15,15 +17,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <ScrollView
         style="@style/LinearLayoutStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            style="@style/LinearLayoutStyle">
+        <androidx.constraintlayout.widget.ConstraintLayout style="@style/LinearLayoutStyle">
             <!-- вернее поле -->
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/top_guideline"
@@ -117,6 +117,7 @@
                 android:id="@+id/play_pause"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:hapticFeedbackEnabled="true"
                 android:layout_marginTop="38.33dp"
                 android:background="?attr/colorPrimary"
                 app:layout_constraintBottom_toTopOf="@id/timer_media"
@@ -169,7 +170,7 @@
                 android:id="@+id/album_media"
                 style="@style/Media_text_name"
                 android:paddingVertical="@dimen/padding_8"
-                android:text="@string/Album"
+                android:text="@string/album"
                 app:layout_constraintBottom_toTopOf="@+id/year_media"
                 app:layout_constraintStart_toStartOf="@id/left_guideline_text"
                 app:layout_constraintTop_toBottomOf="@id/time_media" />
@@ -203,7 +204,7 @@
                 app:layout_constraintTop_toBottomOf="@id/genre_media" />
 
             <androidx.constraintlayout.widget.Barrier
-                android:id="@+id/textsBarrier"
+                android:id="@+id/texts_barrier"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:barrierDirection="end"
@@ -228,7 +229,7 @@
                 android:paddingVertical="@dimen/padding_8"
                 app:layout_constraintBottom_toTopOf="@id/year_media_mean"
                 app:layout_constraintTop_toBottomOf="@id/time_media_mean"
-                tools:text="@string/Album" />
+                tools:text="@string/album" />
             <!-- год -->
             <TextView
                 android:id="@+id/year_media_mean"

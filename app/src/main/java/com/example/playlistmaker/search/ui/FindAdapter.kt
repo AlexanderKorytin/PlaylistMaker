@@ -1,9 +1,9 @@
 package com.example.playlistmaker.search.ui
 
+import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.app.setOnClickListenerWithViber
 import com.example.playlistmaker.databinding.TrackViewBinding
 import com.example.playlistmaker.search.ui.models.TrackUI
 
@@ -21,7 +21,8 @@ class FindAdapter(val trackClickListner: TrackClickListner) :
 
     override fun onBindViewHolder(holder: FindViewHolder, position: Int) {
         holder.bind(trackList[position])
-        holder.itemView.setOnClickListenerWithViber {
+        holder.itemView.setOnClickListener {
+            it.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
             trackClickListner.onTrackClick(trackList.get(position))
         }
     }

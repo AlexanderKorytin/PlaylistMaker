@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/LinearLayoutStyle"
+    tools:context="com.example.playlistmaker.albumslist.ui.fragments.MediaLibraryFragment">
+
+
+    <TextView
+        android:id="@+id/text_name_activity"
+        style="@style/appTextMenuName"
+        android:layout_marginStart="@dimen/padding_16"
+        android:layout_marginTop="14dp"
+        android:text="@string/nameMediaLibrary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout_media_library"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_16"
+        android:background="?attr/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
+        app:layout_constraintTop_toBottomOf="@id/text_name_activity"
+        app:tabIndicator="@drawable/my_tab_indicator"
+        app:tabIndicatorAnimationMode="elastic"
+        app:tabIndicatorColor="@color/tabtextcolor"
+        app:tabMode="fixed"
+        app:tabPaddingBottom="@dimen/padding_16"
+        app:tabPaddingEnd="@dimen/padding_16"
+
+        app:tabPaddingStart="@dimen/padding_16"
+
+        app:tabPaddingTop="@dimen/padding_16"
+        app:tabTextAppearance="@style/TabTextStyle"
+        app:tabTextColor="@color/tabtextcolor" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager_media_library"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tab_layout_media_library" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,20 +2,20 @@ package com.example.playlistmaker.player.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.app.dpToPx
-import com.example.playlistmaker.app.setOnClickListenerWithViber
-import com.example.playlistmaker.app.setVibe
 import com.example.playlistmaker.databinding.ActivityMediaBinding
 import com.example.playlistmaker.player.domain.models.PlayerState
 import com.example.playlistmaker.player.ui.models.ClickedTrackGson
@@ -24,11 +24,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
 
-class MediaActivity : AppCompatActivity() {
+class MediaActivity : AppCompatActivity(R.layout.activity_media) {
 
-    companion object {
-        private const val CLICKED_TRACK = "CLICKED_TRACK"
-    }
 
     private var receivedTrack: String? = null
     private lateinit var binding: ActivityMediaBinding
@@ -37,12 +34,6 @@ class MediaActivity : AppCompatActivity() {
 
     private val playerVM: MediaPlayerViewModel by viewModel<MediaPlayerViewModel> {
         parametersOf(ClickedTrackGson(intent.getStringExtra("clickedTrack")))
-    }
-
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(CLICKED_TRACK, receivedTrack)
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -62,6 +53,7 @@ class MediaActivity : AppCompatActivity() {
                     binding.playPause.isEnabled = false
                     binding.timerMedia.text = currentPlayerState.currentTime
                 }
+
                 PlayerState.STATE_PREPARED -> {
                     binding.playPause.isEnabled = true
                     binding.playPause.setImageDrawable(getDrawable(R.drawable.play_button))
@@ -83,9 +75,10 @@ class MediaActivity : AppCompatActivity() {
 
         playerVM.getCurrentTrack().observe(this) { track ->
 
-            if(track.previewUrl == ""){
+            if (track.previewUrl == "") {
                 binding.playPause.isEnabled = false
-                Toast.makeText(this, getString(R.string.No_media_for_playing), Toast.LENGTH_LONG).show()
+                Toast.makeText(this, getString(R.string.No_media_for_playing), Toast.LENGTH_LONG)
+                    .show()
             } else binding.playPause.isEnabled = true
 
             binding.addFavorite.isClickable = true
@@ -122,7 +115,7 @@ class MediaActivity : AppCompatActivity() {
             }
 
             override fun onAnimationEnd(animation: Animation?) {
-                setVibe()
+
             }
 
             override fun onAnimationRepeat(animation: Animation?) {
@@ -136,7 +129,6 @@ class MediaActivity : AppCompatActivity() {
             }
 
             override fun onAnimationEnd(animation: Animation?) {
-                setVibe()
             }
 
             override fun onAnimationRepeat(animation: Animation?) {
@@ -144,19 +136,21 @@ class MediaActivity : AppCompatActivity() {
             }
 
         })
-        binding.backMedia.setOnClickListenerWithViber {
+        binding.backMedia.setOnClickListener {
             this.onBackPressedDispatcher.onBackPressed()
         }
 
-        binding.playPause.setOnTouchListener { _, event ->
+        binding.playPause.setOnTouchListener { v, event ->
             when (event.action) {
 
                 MotionEvent.ACTION_DOWN -> {
+                    v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_PRESS)
                     binding.playPause.startAnimation(outAnim)
                     return@setOnTouchListener false
                 }
 
                 MotionEvent.ACTION_UP -> {
+                    v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_PRESS)
                     binding.playPause.startAnimation(inAnim)
                     return@setOnTouchListener false
                 }
@@ -173,4 +167,9 @@ class MediaActivity : AppCompatActivity() {
         playerVM.pausePlayer()
     }
 
+    companion object {
+        private const val CLICKED_TRACK = "CLICKED_TRACK"
+        private const val CURRENTTRACK = "clickedTrack"
+        fun createArgs(clickedTrack: String?): Bundle = bundleOf(CURRENTTRACK to clickedTrack)
+    }
 }

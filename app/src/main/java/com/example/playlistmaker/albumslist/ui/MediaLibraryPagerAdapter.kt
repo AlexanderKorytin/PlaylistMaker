@@ -1,4 +1,4 @@
-package com.example.playlistmaker.albumslist
+package com.example.playlistmaker.albumslist.ui
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -12,10 +12,10 @@ class MediaLibraryPagerAdapter(fragmentManager: FragmentManager, lifecycle: Life
     override fun getItemCount(): Int = 2
 
     override fun createFragment(position: Int): Fragment {
-       return when(position){
+        return when (position) {
             0 -> FavoriteTracksFragment.newInstance()
             else -> AlbumsFragment.newInstance()
-       }
+        }
     }
 
 }

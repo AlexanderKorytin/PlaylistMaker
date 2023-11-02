@@ -19,12 +19,12 @@
     <string name="clear_history">Очистить историю</string>
     <string name="duration">Длительность</string>
     <string name="_0_30" translatable="false">0:30</string>
-    <string name="Album">Альбом</string>
+    <string name="album">Альбом</string>
     <string name="year">Год</string>
     <string name="genre">Жанр</string>
     <string name="country">Страна</string>
     <string name="noData" translatable="true">"нет данных"</string>
-    <string name="App_not_found" translatable="true">Приложение не найдено</string>
+    <string name="app_not_found" translatable="true">Приложение не найдено</string>
     <string name="nameMediaLibrary">Медиатека</string>
     <string name="empty_list_fav_tracks">Ваша медиатека пуста</string>
     <string name="empty_list_albums">Вы не создали\nни одного плейлиста</string>
@@ -32,4 +32,5 @@
     <string name="favorite_tracks">Избранные треки</string>
     <string name="Albums">Плейлисты</string>
     <string name="No_media_for_playing">Нет отрывка для прослушивания</string>
+    <string name="agreement">Соглашение</string>
 </resources>
