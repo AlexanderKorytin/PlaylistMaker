@@ -25,11 +25,7 @@ class SearchViewModel(
     val mapToTrackUI: MapToTrackUI,
     val json: Gson
 ) : ViewModel() {
-    companion object {
-        private val SEARCH_REQUEST_TOKEN = Any()
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-    }
-
+    
     private val currentSearchViewScreenState = MutableLiveData<SearchScreenState>()
     fun getcurrentSearchViewScreenState(): LiveData<SearchScreenState> =
         currentSearchViewScreenState
@@ -126,4 +122,9 @@ class SearchViewModel(
         handlerMain.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
     }
 
+
+    companion object {
+        private val SEARCH_REQUEST_TOKEN = Any()
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+    }
 }
