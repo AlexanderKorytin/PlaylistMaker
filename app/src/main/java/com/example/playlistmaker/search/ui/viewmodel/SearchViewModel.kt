@@ -5,6 +5,8 @@ import android.os.SystemClock
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.app.debounce
 import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.SearchTracksInteractor
 import com.example.playlistmaker.search.domain.api.SetViewVisibilityUseCase
@@ -20,12 +22,15 @@ class SearchViewModel(
     private val searchHistoryInteractor: SearchHistoryInteractor,
     private val trackInteractor: SearchTracksInteractor,
     private val setVisibilityClearButton: SetViewVisibilityUseCase,
-    val handlerMain: Handler,
     private val trackToTrackUI: TrackToTrackUI,
     val mapToTrackUI: MapToTrackUI,
     val json: Gson
 ) : ViewModel() {
-    
+
+    private val searchTrackDebounce =
+        debounce<String>(SEARCH_DEBOUNCE_DELAY, viewModelScope, true) {
+            getMusic(it)
+        }
     private val currentSearchViewScreenState = MutableLiveData<SearchScreenState>()
     fun getcurrentSearchViewScreenState(): LiveData<SearchScreenState> =
         currentSearchViewScreenState
@@ -52,22 +57,10 @@ class SearchViewModel(
     private var latestSearchText: String? = null
 
     fun searchDebounce(textSearch: String) {
-        if (latestSearchText == textSearch) {
-            return
+        if (latestSearchText != textSearch) {
+            latestSearchText = textSearch
+            searchTrackDebounce(textSearch)
         }
-        currentSearchViewScreenState.value =
-            SearchScreenState.Start(setVisibilityClearButton.execute(textSearch))
-        this.latestSearchText = textSearch
-        handlerMain.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-
-        val searchRunnable = Runnable { getMusic(textSearch) }
-
-        val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
-        handlerMain.postAtTime(
-            searchRunnable,
-            SEARCH_REQUEST_TOKEN,
-            postTime,
-        )
     }
 
     fun getSearchHstoryTracks() = searchHistoryInteractor.getTracksList()
@@ -115,13 +108,9 @@ class SearchViewModel(
         }
     }
 
-    fun stop(){
+    fun stop() {
         onCleared()
     }
-    override fun onCleared() {
-        handlerMain.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-    }
-
 
     companion object {
         private val SEARCH_REQUEST_TOKEN = Any()
