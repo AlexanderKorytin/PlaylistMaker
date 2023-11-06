@@ -7,14 +7,15 @@ import com.example.playlistmaker.search.domain.api.TracksRepository
 import com.example.playlistmaker.search.domain.consumer.Consumer
 import com.example.playlistmaker.search.domain.consumer.ConsumerData
 import com.example.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
-    override fun getMusic(term: String, consumer: Consumer<List<Track>>) {
-        val t = Thread {
+    override fun getMusic(term: String):Flow<ConsumerData<List<Track>>>  = flow{
             val response = networkClient.searchTracks(TrackRequest(term))
             when (response?.resultCode) {
                 -1 -> {
-                    consumer.consume(ConsumerData.Error("No Internet"))
+                    emit(ConsumerData.Error("No Internet"))
                 }
 
                 200 -> {
@@ -34,18 +35,17 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
                                 it.getCoverArtwork()
                             )
                         }
-                        consumer.consume(ConsumerData.Data(resultSearch))
+                        emit(ConsumerData.Data(resultSearch))
                     } else {
                         val resultSearch = emptyList<Track>()
-                        consumer.consume(ConsumerData.Data(resultSearch))
+                        emit(ConsumerData.Data(resultSearch))
                     }
                 }
 
                 else -> {
-                    consumer.consume(ConsumerData.Error("Server Error"))
+                    emit(ConsumerData.Error("Server Error"))
                 }
 
             }
-        }.start()
     }
 }

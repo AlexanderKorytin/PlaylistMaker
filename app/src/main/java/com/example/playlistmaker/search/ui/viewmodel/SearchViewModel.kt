@@ -1,7 +1,5 @@
 package com.example.playlistmaker.search.ui.viewmodel
 
-import android.os.Handler
-import android.os.SystemClock
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,13 +8,12 @@ import com.example.playlistmaker.app.debounce
 import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.SearchTracksInteractor
 import com.example.playlistmaker.search.domain.api.SetViewVisibilityUseCase
-import com.example.playlistmaker.search.domain.consumer.Consumer
-import com.example.playlistmaker.search.domain.consumer.ConsumerData
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.mappers.MapToTrackUI
 import com.example.playlistmaker.search.ui.mappers.TrackToTrackUI
 import com.example.playlistmaker.search.ui.models.SearchScreenState
 import com.google.gson.Gson
+import kotlinx.coroutines.launch
 
 class SearchViewModel(
     private val searchHistoryInteractor: SearchHistoryInteractor,
@@ -72,45 +69,49 @@ class SearchViewModel(
         if (textSearch.isNotEmpty()) {
             currentSearchViewScreenState.value =
                 SearchScreenState.IsLoading(setVisibilityClearButton.execute(textSearch))
-            trackInteractor.getMusic(textSearch, object : Consumer<List<Track>> {
-                override fun consume(data: ConsumerData<List<Track>>) {
-                    when (data) {
-                        is ConsumerData.Data -> {
-                            if (data.value.isNotEmpty()) {
-                                currentSearchViewScreenState.postValue(
-                                    SearchScreenState.Content(
-                                        mapToTrackUI.mapList(data.value),
-                                        setVisibilityClearButton.execute(textSearch)
-                                    )
-                                )
-                            } else {
-                                currentSearchViewScreenState.postValue(
-                                    SearchScreenState.Empty(
-                                        setVisibilityClearButton.execute(textSearch)
-                                    )
-                                )
-                            }
-                        }
 
-                        is ConsumerData.Error -> {
-                            currentSearchViewScreenState.postValue(
-                                SearchScreenState.Error(
-                                    "",
-                                    setVisibilityClearButton.execute(textSearch)
-                                )
-                            )
-                        }
-
+            viewModelScope.launch {
+                trackInteractor.getMusic(textSearch)
+                    .collect { pair ->
+                        processResult(pair.first, pair.second)
                     }
-                }
-
-            })
+            }
         }
     }
 
     fun stop() {
         onCleared()
     }
+
+    private fun processResult(data: List<Track>?, error: String?) {
+        if (data != null) {
+            if (data.isNotEmpty()) {
+                currentSearchViewScreenState.postValue(
+                    SearchScreenState.Content(
+                        mapToTrackUI.mapList(data),
+                        setVisibilityClearButton.execute(error)
+                    )
+                )
+            } else {
+                currentSearchViewScreenState.postValue(
+                    SearchScreenState.Empty(
+                        setVisibilityClearButton.execute(error)
+                    )
+                )
+            }
+        }
+
+        if (error != null) {
+            currentSearchViewScreenState.postValue(
+                SearchScreenState.Error(
+                    "",
+                    setVisibilityClearButton.execute(error)
+                )
+            )
+        }
+
+    }
+
 
     companion object {
         private val SEARCH_REQUEST_TOKEN = Any()
