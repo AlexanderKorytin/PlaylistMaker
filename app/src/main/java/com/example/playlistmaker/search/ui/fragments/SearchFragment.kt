@@ -28,7 +28,6 @@ class SearchFragment : Fragment() {
 
     private var _binding: SearchFragmentBinding? = null
     private val binding get() = _binding!!
-    private var isClickTrackAllowed = true
     private var textSearch: String = ""
     private var trackList: ArrayList<TrackUI>? = ArrayList()
     private val searchVM: SearchViewModel by viewModel<SearchViewModel>()
@@ -52,7 +51,7 @@ class SearchFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope,
             false
         ) { track ->
-            searchVM.savedTrack(track.toTrack())
+            searchVM.savedTrack(track)
             findNavController().navigate(
                 R.id.action_searchFragment_to_mediaActivity,
                 MediaActivity.createArgs(searchVM.json.toJson(track))

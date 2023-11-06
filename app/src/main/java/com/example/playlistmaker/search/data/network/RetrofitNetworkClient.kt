@@ -16,11 +16,11 @@ class RetrofitNetworkClient(private val context: Context, private val iTunesServ
         if (isConnected() == false) {
             return Response().apply { resultCode = -1 }
         }
-        return withContext(Dispatchers.IO){
+        return withContext(Dispatchers.IO) {
             try {
                 val response = iTunesService.searchTracks(request.term)
                 response.apply { resultCode = 200 }
-            } catch (e: Throwable){
+            } catch (e: Throwable) {
                 Response().apply { resultCode = 500 }
             }
         }

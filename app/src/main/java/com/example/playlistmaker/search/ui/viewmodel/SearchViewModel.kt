@@ -8,10 +8,10 @@ import com.example.playlistmaker.app.debounce
 import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.SearchTracksInteractor
 import com.example.playlistmaker.search.domain.api.SetViewVisibilityUseCase
-import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.mappers.MapToTrackUI
 import com.example.playlistmaker.search.ui.mappers.TrackToTrackUI
 import com.example.playlistmaker.search.ui.models.SearchScreenState
+import com.example.playlistmaker.search.ui.models.TrackUI
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
@@ -61,8 +61,8 @@ class SearchViewModel(
     }
 
     fun getSearchHstoryTracks() = searchHistoryInteractor.getTracksList()
-    fun savedTrack(track: Track) {
-        searchHistoryInteractor.saved(track)
+    fun savedTrack(track: TrackUI) {
+        searchHistoryInteractor.saved(track.toTrack())
     }
 
     fun getMusic(textSearch: String) {
@@ -73,7 +73,7 @@ class SearchViewModel(
             viewModelScope.launch {
                 trackInteractor.getMusic(textSearch)
                     .collect { pair ->
-                        processResult(pair.first, pair.second)
+                        processResult(mapToTrackUI.mapList(pair.first), pair.second)
                     }
             }
         }
@@ -83,12 +83,12 @@ class SearchViewModel(
         onCleared()
     }
 
-    private fun processResult(data: List<Track>?, error: String?) {
+    private fun processResult(data: List<TrackUI>?, error: String?) {
         if (data != null) {
             if (data.isNotEmpty()) {
                 currentSearchViewScreenState.postValue(
                     SearchScreenState.Content(
-                        mapToTrackUI.mapList(data),
+                        data,
                         setVisibilityClearButton.execute(error)
                     )
                 )
@@ -114,7 +114,6 @@ class SearchViewModel(
 
 
     companion object {
-        private val SEARCH_REQUEST_TOKEN = Any()
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 }
