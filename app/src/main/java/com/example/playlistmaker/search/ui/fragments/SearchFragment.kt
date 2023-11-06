@@ -159,10 +159,9 @@ class SearchFragment : Fragment() {
     }
 
     private fun showStart(adapter: FindAdapter) {
-        this.binding.clearIcon.isClickable = false
+        this.binding.clearIcon.isClickable = true
         this.binding.searchHistoryListView.isVisible = false
         this.binding.progressBar.isVisible = false
-        this.binding.clearIcon.isClickable = false
         this.binding.placeholderFindViewGroup.isVisible = false
         this.binding.placeholderButton.isVisible = false
         this.binding.tracksList.isVisible = true
