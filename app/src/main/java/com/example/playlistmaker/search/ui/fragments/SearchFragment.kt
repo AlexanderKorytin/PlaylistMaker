@@ -188,7 +188,6 @@ class SearchFragment : Fragment() {
         this.binding.clearIcon.isClickable = false
         this.binding.searchHistoryListView.isVisible = false
         this.binding.progressBar.isVisible = true
-        this.binding.clearIcon.isClickable = false
         this.binding.placeholderFindViewGroup.isVisible = false
         this.binding.placeholderButton.isVisible = false
         this.binding.tracksList.isVisible = true

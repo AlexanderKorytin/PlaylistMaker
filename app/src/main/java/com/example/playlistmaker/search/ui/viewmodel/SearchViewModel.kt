@@ -52,8 +52,9 @@ class SearchViewModel(
     }
 
     private var latestSearchText: String? = null
-
     fun searchDebounce(textSearch: String) {
+        currentSearchViewScreenState.value =
+            SearchScreenState.Start(setVisibilityClearButton.execute(textSearch))
         if (latestSearchText != textSearch) {
             latestSearchText = textSearch
             searchTrackDebounce(textSearch)
@@ -73,7 +74,7 @@ class SearchViewModel(
             viewModelScope.launch {
                 trackInteractor.getMusic(textSearch)
                     .collect { pair ->
-                        processResult(mapToTrackUI.mapList(pair.first), pair.second)
+                        processResult(mapToTrackUI.mapList(pair.first), pair.second, textSearch)
                     }
             }
         }
@@ -83,19 +84,19 @@ class SearchViewModel(
         onCleared()
     }
 
-    private fun processResult(data: List<TrackUI>?, error: String?) {
+    private fun processResult(data: List<TrackUI>?, error: String?, textSearch: String) {
         if (data != null) {
             if (data.isNotEmpty()) {
                 currentSearchViewScreenState.postValue(
                     SearchScreenState.Content(
                         data,
-                        setVisibilityClearButton.execute(error)
+                        setVisibilityClearButton.execute(textSearch)
                     )
                 )
             } else {
                 currentSearchViewScreenState.postValue(
                     SearchScreenState.Empty(
-                        setVisibilityClearButton.execute(error)
+                        setVisibilityClearButton.execute(textSearch)
                     )
                 )
             }
@@ -105,7 +106,7 @@ class SearchViewModel(
             currentSearchViewScreenState.postValue(
                 SearchScreenState.Error(
                     "",
-                    setVisibilityClearButton.execute(error)
+                    setVisibilityClearButton.execute(textSearch)
                 )
             )
         }
