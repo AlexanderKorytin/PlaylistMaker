@@ -11,7 +11,7 @@
     <string name="mail_support_subject">Message to the developers and developers of the Playlist Maker app</string>
     <string name="mail_support_massege">Thanks to the developers and developers for the cool app!</string>
     <string name="placeholder_nothing_found_text">Nothing found</string>
-    <string name="placeholder_communication_problems_text">Communication problems\\n\\nThe download failed. Check\\nyour internet connection</string>
+    <string name="placeholder_communication_problems_text">Communication problems The download failed. Check your internet connection</string>
     <string name="update">Update</string>
     <string name="you_find">Search history</string>
     <string name="clear_history">Очистить историю</string>

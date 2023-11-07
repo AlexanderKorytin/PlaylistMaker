@@ -51,7 +51,7 @@ class SearchFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope,
             false
         ) { track ->
-            searchVM.savedTrack(track)
+            searchVM.savedTrack(track.toTrack())
             findNavController().navigate(
                 R.id.action_searchFragment_to_mediaActivity,
                 MediaActivity.createArgs(searchVM.json.toJson(track))
