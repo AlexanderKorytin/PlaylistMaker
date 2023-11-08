@@ -10,9 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
+import com.example.playlistmaker.util.debounce
 import com.example.playlistmaker.databinding.SearchFragmentBinding
 import com.example.playlistmaker.player.ui.MediaActivity
 import com.example.playlistmaker.search.ui.FindAdapter
@@ -26,10 +28,10 @@ class SearchFragment : Fragment() {
 
     private var _binding: SearchFragmentBinding? = null
     private val binding get() = _binding!!
-    private var isClickTrackAllowed = true
     private var textSearch: String = ""
     private var trackList: ArrayList<TrackUI>? = ArrayList()
     private val searchVM: SearchViewModel by viewModel<SearchViewModel>()
+    private lateinit var clickedTrackDebounce: (TrackUI) -> Unit
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,12 +45,24 @@ class SearchFragment : Fragment() {
     @SuppressLint("MissingInflatedId")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        clickedTrackDebounce = debounce<TrackUI>(
+            CLICED_TRACK_DELAY,
+            viewLifecycleOwner.lifecycleScope,
+            false
+        ) { track ->
+            searchVM.savedTrack(track.toTrack())
+            findNavController().navigate(
+                R.id.action_searchFragment_to_mediaActivity,
+                MediaActivity.createArgs(searchVM.json.toJson(track))
+            )
+        }
         // Задаем адаптеры
         val findAdapter = FindAdapter {
-            clickedTrack(it)
+            clickedTrackDebounce(it)
         }
         val historyAdapter = FindAdapter {
-            clickedTrack(it)
+            clickedTrackDebounce(it)
         }
         this.binding.tracksList.layoutManager = LinearLayoutManager(requireContext())
         this.binding.tracksList.adapter = findAdapter
@@ -114,7 +128,7 @@ class SearchFragment : Fragment() {
             if (textSearch.isNullOrEmpty()) searchVM.showSearchHistory(hasFocus)
         }
 
-        this.binding.clearSearchHistory.setOnClickListener{
+        this.binding.clearSearchHistory.setOnClickListener {
             it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_PRESS)
             searchVM.clearSearchHistory()
         }
@@ -145,10 +159,9 @@ class SearchFragment : Fragment() {
     }
 
     private fun showStart(adapter: FindAdapter) {
-        this.binding.clearIcon.isClickable = false
+        this.binding.clearIcon.isClickable = true
         this.binding.searchHistoryListView.isVisible = false
         this.binding.progressBar.isVisible = false
-        this.binding.clearIcon.isClickable = false
         this.binding.placeholderFindViewGroup.isVisible = false
         this.binding.placeholderButton.isVisible = false
         this.binding.tracksList.isVisible = true
@@ -174,7 +187,6 @@ class SearchFragment : Fragment() {
         this.binding.clearIcon.isClickable = false
         this.binding.searchHistoryListView.isVisible = false
         this.binding.progressBar.isVisible = true
-        this.binding.clearIcon.isClickable = false
         this.binding.placeholderFindViewGroup.isVisible = false
         this.binding.placeholderButton.isVisible = false
         this.binding.tracksList.isVisible = true
@@ -218,26 +230,6 @@ class SearchFragment : Fragment() {
         this.binding.clearIcon.isVisible = value
     }
 
-
-    private fun clickedTrack(track: TrackUI) {
-        if (trackClickedDebounce()) {
-            searchVM.savedTrack(track.toTrack())
-            findNavController().navigate(
-                R.id.action_searchFragment_to_mediaActivity,
-                MediaActivity.createArgs(searchVM.json.toJson(track))
-            )
-        }
-    }
-
-    private fun trackClickedDebounce(): Boolean {
-        val current = isClickTrackAllowed
-        if (isClickTrackAllowed) {
-            isClickTrackAllowed = false
-            searchVM.handlerMain.postDelayed({ isClickTrackAllowed = true }, CLICED_TRACK_DELAY)
-        }
-        return current
-    }
-
     fun showSearchHistory(
         flag: Boolean,
         findAdapter: FindAdapter,
@@ -268,7 +260,7 @@ class SearchFragment : Fragment() {
     }
 
     companion object {
-        private const val CLICED_TRACK_DELAY = 1000L
+        private const val CLICED_TRACK_DELAY = 300L
     }
 }
 //---------------------------------------------------
