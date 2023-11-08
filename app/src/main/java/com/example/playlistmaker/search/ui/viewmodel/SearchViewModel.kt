@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.app.debounce
+import com.example.playlistmaker.util.debounce
 import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.SearchTracksInteractor
 import com.example.playlistmaker.search.domain.api.SetViewVisibilityUseCase
@@ -73,8 +73,8 @@ class SearchViewModel(
 
             viewModelScope.launch {
                 trackInteractor.getMusic(textSearch)
-                    .collect { pair ->
-                        processResult(pair.first, pair.second, textSearch)
+                    .collect { result ->
+                        processResult(result.tracks, result.errorMessage, textSearch)
                     }
             }
         }

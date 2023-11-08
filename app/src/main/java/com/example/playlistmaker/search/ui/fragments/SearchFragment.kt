@@ -14,7 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
-import com.example.playlistmaker.app.debounce
+import com.example.playlistmaker.util.debounce
 import com.example.playlistmaker.databinding.SearchFragmentBinding
 import com.example.playlistmaker.player.ui.MediaActivity
 import com.example.playlistmaker.search.ui.FindAdapter

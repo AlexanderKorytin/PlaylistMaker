@@ -18,27 +18,22 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
             }
 
             200 -> {
-                if ((response as TracksResponse).results.isNotEmpty()) {
-                    val resultSearch = response.results.map {
-                        Track(
-                            it.trackId,
-                            it.getParam(it.trackName),
-                            it.getParam(it.artistName),
-                            it.getTrackTime(),
-                            it.getParam(it.artworkUrl100),
-                            it.getParam(it.country),
-                            it.getParam(it.collectionName),
-                            it.getYear(),
-                            it.getParam(it.primaryGenreName),
-                            it.getParam(it.previewUrl),
-                            it.getCoverArtwork()
-                        )
-                    }
-                    emit(SearchResultData.Data(resultSearch))
-                } else {
-                    val resultSearch = emptyList<Track>()
-                    emit(SearchResultData.Data(resultSearch))
+                val resultSearch = (response as TracksResponse).results.map {
+                    Track(
+                        it.trackId,
+                        it.getParam(it.trackName),
+                        it.getParam(it.artistName),
+                        it.getTrackTime(),
+                        it.getParam(it.artworkUrl100),
+                        it.getParam(it.country),
+                        it.getParam(it.collectionName),
+                        it.getYear(),
+                        it.getParam(it.primaryGenreName),
+                        it.getParam(it.previewUrl),
+                        it.getCoverArtwork()
+                    )
                 }
+                emit(SearchResultData.Data(resultSearch))
             }
 
             else -> {
