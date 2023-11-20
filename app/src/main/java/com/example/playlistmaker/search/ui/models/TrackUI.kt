@@ -14,21 +14,23 @@ data class TrackUI
     val year: String,
     val primaryGenreName: String,
     val previewUrl: String,
-    val coverArtWork: String
+    val coverArtWork: String,
+    var inFavorite: Boolean
 ) {
     fun toTrack(): Track {
         return Track(
-            trackId,
-            trackName,
-            artistName,
-            trackTime,
-            artworkUrl100,
-            country,
-            collectionName,
-            year,
-            primaryGenreName,
-            previewUrl,
-            coverArtWork
+            trackId = trackId,
+            trackName = trackName,
+            artistName = artistName,
+            trackTime = trackTime,
+            artworkUrl100 = artworkUrl100,
+            country = country,
+            collectionName = collectionName,
+            year = year,
+            primaryGenreName = primaryGenreName,
+            previewUrl = previewUrl,
+            coverArtWork = coverArtWork,
+            inFavorite = inFavorite
         )
     }
 }

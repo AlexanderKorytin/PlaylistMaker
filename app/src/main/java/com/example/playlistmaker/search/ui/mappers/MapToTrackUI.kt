@@ -17,7 +17,8 @@ class MapToTrackUI {
                 it.year,
                 it.primaryGenreName,
                 it.previewUrl,
-                it.coverArtWork
+                it.coverArtWork,
+                it.inFavorite
             )
         } as ArrayList<TrackUI>
     }

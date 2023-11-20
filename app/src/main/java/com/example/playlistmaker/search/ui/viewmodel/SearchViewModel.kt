@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.util.debounce
 import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.SearchTracksInteractor
 import com.example.playlistmaker.search.domain.api.SetViewVisibilityUseCase
@@ -12,8 +11,11 @@ import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.mappers.MapToTrackUI
 import com.example.playlistmaker.search.ui.mappers.TrackToTrackUI
 import com.example.playlistmaker.search.ui.models.SearchScreenState
+import com.example.playlistmaker.util.debounce
 import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SearchViewModel(
     private val searchHistoryInteractor: SearchHistoryInteractor,
@@ -23,6 +25,8 @@ class SearchViewModel(
     val mapToTrackUI: MapToTrackUI,
     val json: Gson
 ) : ViewModel() {
+
+    var listHistory = ArrayList<Track>()
 
     private val searchTrackDebounce =
         debounce<String>(SEARCH_DEBOUNCE_DELAY, viewModelScope, true) {
@@ -38,16 +42,23 @@ class SearchViewModel(
     }
 
     fun showSearchHistory(flag: Boolean) {
-        val currentList = searchHistoryInteractor.getTracksList()
-        if (flag && currentList.isNotEmpty()) {
-            currentSearchViewScreenState.postValue(
-                SearchScreenState.Hictory(
-                    currentList.map { it -> trackToTrackUI.fromTrack(it) }, false
-                )
-            )
-        } else {
-            currentSearchViewScreenState.value =
-                (SearchScreenState.EmptyHistory(emptyList(), false))
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                searchHistoryInteractor.getTracksList().collect { listFavorite ->
+                    if (flag && listFavorite.isNotEmpty()) {
+                        currentSearchViewScreenState.postValue(
+                            SearchScreenState.Hictory(
+                                listFavorite.map { it -> trackToTrackUI.map(it) }, false
+                            )
+                        )
+                    } else {
+                        currentSearchViewScreenState.postValue(
+                            (SearchScreenState.EmptyHistory(emptyList(), false))
+                        )
+                    }
+                }
+
+            }
         }
     }
 
@@ -61,7 +72,15 @@ class SearchViewModel(
         }
     }
 
-    fun getSearchHstoryTracks() = searchHistoryInteractor.getTracksList()
+    fun getSearchHstoryTracks(): ArrayList<Track> {
+        viewModelScope.launch {
+            searchHistoryInteractor.getTracksList().collect {
+                listHistory = it
+            }
+        }
+        return listHistory
+    }
+
     fun savedTrack(track: Track) {
         searchHistoryInteractor.saved(track)
     }

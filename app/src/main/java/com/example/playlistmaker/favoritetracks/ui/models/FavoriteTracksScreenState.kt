@@ -4,8 +4,6 @@ import com.example.playlistmaker.search.domain.models.Track
 
 sealed interface FavoriteTracksScreenState{
 
-    object FavoriteTracksLoadind: FavoriteTracksScreenState
-
     data class FavoriteTracksContent(val data: List<Track>): FavoriteTracksScreenState
 
     class FavoriteTracksEmpty(): FavoriteTracksScreenState

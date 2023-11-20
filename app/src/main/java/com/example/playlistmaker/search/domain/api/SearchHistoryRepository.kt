@@ -1,11 +1,12 @@
 package com.example.playlistmaker.search.domain.api
 
 import com.example.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.flow.Flow
 
 interface SearchHistoryRepository {
 
 
-    fun getSearchHistoryList(): ArrayList<Track>
+    fun getSearchHistoryList(): Flow<ArrayList<Track>>
 
     fun savedTrack(track: Track)
 

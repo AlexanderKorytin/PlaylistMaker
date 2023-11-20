@@ -15,7 +15,7 @@ import org.koin.dsl.module
 val searchDomainModule = module {
 
     single<SearchHistoryRepository> {
-        SearchHistoryRepositoryImpl(sharedPreferences = get(), json = get())
+        SearchHistoryRepositoryImpl(sharedPreferences = get(), json = get(), appDataBase = get())
     }
 
     single<TracksRepository> {

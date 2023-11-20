@@ -14,13 +14,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
-import com.example.playlistmaker.util.debounce
 import com.example.playlistmaker.databinding.SearchFragmentBinding
 import com.example.playlistmaker.player.ui.MediaActivity
 import com.example.playlistmaker.search.ui.FindAdapter
 import com.example.playlistmaker.search.ui.models.SearchScreenState
 import com.example.playlistmaker.search.ui.models.TrackUI
 import com.example.playlistmaker.search.ui.viewmodel.SearchViewModel
+import com.example.playlistmaker.util.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -29,9 +29,11 @@ class SearchFragment : Fragment() {
     private var _binding: SearchFragmentBinding? = null
     private val binding get() = _binding!!
     private var textSearch: String = ""
-    private var trackList: ArrayList<TrackUI>? = ArrayList()
+    //private var trackList: ArrayList<TrackUI>? = ArrayList()
     private val searchVM: SearchViewModel by viewModel<SearchViewModel>()
     private lateinit var clickedTrackDebounce: (TrackUI) -> Unit
+    private var findAdapter: FindAdapter? = null
+    private var historyAdapter: FindAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,18 +54,22 @@ class SearchFragment : Fragment() {
             false
         ) { track ->
             searchVM.savedTrack(track.toTrack())
+            val clickedTrack = searchVM.json.toJson(track)
             findNavController().navigate(
                 R.id.action_searchFragment_to_mediaActivity,
-                MediaActivity.createArgs(searchVM.json.toJson(track))
+                MediaActivity.createArgs(clickedTrack)
             )
         }
         // Задаем адаптеры
-        val findAdapter = FindAdapter {
+        findAdapter = FindAdapter {
             clickedTrackDebounce(it)
         }
-        val historyAdapter = FindAdapter {
+        historyAdapter = FindAdapter {
             clickedTrackDebounce(it)
         }
+     //   findAdapter?.trackList = (trackList as ArrayList<TrackUI>)
+        historyAdapter?.trackList =
+            searchVM.mapToTrackUI.mapList(searchVM.getSearchHstoryTracks())
         this.binding.tracksList.layoutManager = LinearLayoutManager(requireContext())
         this.binding.tracksList.adapter = findAdapter
 
@@ -71,44 +77,41 @@ class SearchFragment : Fragment() {
         this.binding.historyTracksList.adapter = historyAdapter
         this.binding.menuFindSearchEditText.setText(textSearch)
 
-        findAdapter.trackList = (trackList as ArrayList<TrackUI>)
-        historyAdapter.trackList =
-            searchVM.mapToTrackUI.mapList(searchVM.getSearchHstoryTracks())
 // ------------- подписки----------------------------
         searchVM.getcurrentSearchViewScreenState().observe(viewLifecycleOwner) {
             when (it) {
                 is SearchScreenState.Start -> {
-                    showStart(findAdapter)
+                    showStart(findAdapter!!)
                     showClearIcon(it.isVisibility)
                 }
 
                 is SearchScreenState.Hictory -> {
-                    showSearchHistory(true, findAdapter, historyAdapter, it.tracks)
+                    showSearchHistory(true, findAdapter!!, historyAdapter!!, it.tracks)
                     showClearIcon(it.isVisibility)
                 }
 
                 is SearchScreenState.EmptyHistory -> {
-                    showSearchHistory(false, findAdapter, historyAdapter, it.tracks)
+                    showSearchHistory(false, findAdapter!!, historyAdapter!!, it.tracks)
                     showClearIcon(it.isVisibility)
                 }
 
                 is SearchScreenState.Empty -> {
-                    showEmpty(findAdapter)
+                    showEmpty(findAdapter!!)
                     showClearIcon(it.isVisibility)
                 }
 
                 is SearchScreenState.IsLoading -> {
-                    showLoading(findAdapter)
+                    showLoading(findAdapter!!)
                     showClearIcon(it.isVisibility)
                 }
 
                 is SearchScreenState.Error -> {
-                    showError(findAdapter)
+                    showError(findAdapter!!)
                     showClearIcon(it.isVisibility)
                 }
 
                 is SearchScreenState.Content -> {
-                    showContent(findAdapter, it.tracks as ArrayList<TrackUI>)
+                    showContent(findAdapter!!, it.tracks as ArrayList<TrackUI>)
                     showClearIcon(it.isVisibility)
                 }
             }
@@ -256,7 +259,12 @@ class SearchFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.tracksList.adapter = null
+        binding.historyTracksList.adapter = null
+        findAdapter = null
+        historyAdapter = null
         _binding = null
+
     }
 
     companion object {

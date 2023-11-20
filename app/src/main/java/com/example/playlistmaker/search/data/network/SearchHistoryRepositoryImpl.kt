@@ -2,29 +2,36 @@ package com.example.playlistmaker.search.data.network
 
 import android.content.SharedPreferences
 import com.example.playlistmaker.app.getTrackListFromJson
+import com.example.playlistmaker.favoritetracks.data.db.AppDataBase
 import com.example.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 const val SEARCH_HISTORY_TRACK_LIST = "Search history list"
 
 class SearchHistoryRepositoryImpl(
     private val sharedPreferences: SharedPreferences,
-    private val json: Gson
+    private val json: Gson,
+    private val appDataBase: AppDataBase,
 ) :
     SearchHistoryRepository {
 
-
     private var searchHistoryList = ArrayList<Track>()
 
-    override fun getSearchHistoryList(): ArrayList<Track> {
+    override fun getSearchHistoryList(): Flow<ArrayList<Track>> = flow {
+        val listId = appDataBase.getFavoriteTrackDao().getIdFavoriteTracks()
         searchHistoryList = getTrackListFromJson(
             sharedPreferences.getString(
                 SEARCH_HISTORY_TRACK_LIST,
                 null
             )
         )
-        return searchHistoryList
+        searchHistoryList.forEach {
+            it.inFavorite = listId.contains(it.trackId)
+        }
+        emit(searchHistoryList)
     }
 
     override fun savedTrack(track: Track) {

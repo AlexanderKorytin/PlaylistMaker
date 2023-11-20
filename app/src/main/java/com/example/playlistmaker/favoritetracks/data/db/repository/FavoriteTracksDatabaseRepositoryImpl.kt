@@ -27,6 +27,8 @@ class FavoriteTracksDatabaseRepositoryImpl(
 
     override fun getFavoriteTracks(): Flow<List<Track>> = flow {
         val tracks = appDatabase.getFavoriteTrackDao().getFavoriteTracks()
-        emit(tracks.map { track -> converter.map(track) })
+        emit(tracks.map { track ->
+            converter.map(track).apply { inFavorite = true }
+        })
     }
 }

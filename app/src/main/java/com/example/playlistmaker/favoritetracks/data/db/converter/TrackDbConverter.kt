@@ -14,7 +14,7 @@ class TrackDbConverter {
             country = track.country,
             collectionName = track.collectionName,
             year = track.year,
-            previewUrl = track.coverArtWork,
+            previewUrl = track.previewUrl,
             primaryGenreName = track.primaryGenreName,
             coverArtWork = track.coverArtWork
         )
