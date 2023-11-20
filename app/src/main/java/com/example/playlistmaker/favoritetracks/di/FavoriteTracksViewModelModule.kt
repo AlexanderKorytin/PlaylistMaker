@@ -6,6 +6,6 @@ import org.koin.dsl.module
 
 val favoriteTracksViewModelViewModelModule = module {
 
-    viewModel<FavoriteTracksViewModel> { FavoriteTracksViewModel() }
+    viewModel<FavoriteTracksViewModel> { FavoriteTracksViewModel(favoriteTracksInteractor = get()) }
 
 }

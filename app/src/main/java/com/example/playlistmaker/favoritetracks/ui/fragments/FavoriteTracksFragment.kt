@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.playlistmaker.databinding.TabFavoritesFragmentsBinding
+import com.example.playlistmaker.favoritetracks.ui.models.FavoriteTracksScreenState
 import com.example.playlistmaker.favoritetracks.ui.viewmodel.FavoriteTracksViewModel
+import com.example.playlistmaker.search.domain.models.Track
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoriteTracksFragment : Fragment() {
@@ -23,9 +25,32 @@ class FavoriteTracksFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        favoriteTracksVM.getScreenState().observe(viewLifecycleOwner) {
+            when (it) {
+                is FavoriteTracksScreenState.FavoriteTracksLoadind ->{}
+                is FavoriteTracksScreenState.FavoriteTracksEmpty ->{}
+                is FavoriteTracksScreenState.FavoriteTracksContent ->{}
+            }
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun loading(){
+
+    }
+
+    private fun showEmpty(){
+
+    }
+
+    private fun showContent(tracks: List<Track>){
+
     }
 
     companion object {
