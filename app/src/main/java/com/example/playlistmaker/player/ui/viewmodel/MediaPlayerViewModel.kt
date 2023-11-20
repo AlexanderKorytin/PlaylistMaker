@@ -1,7 +1,6 @@
 package com.example.playlistmaker.player.ui.viewmodel
 
 import android.icu.text.SimpleDateFormat
-import android.os.Handler
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -29,7 +28,7 @@ class MediaPlayerViewModel(
 
     private fun preparePlayer() {
         mediaPlayerInteractor.prepare(playedTrack)
-        checkedPreparePlayer()
+        checkingPreparePlayer()
     }
 
 
@@ -101,7 +100,7 @@ class MediaPlayerViewModel(
         }
     }
 
-    private fun checkedPreparePlayer() {
+    private fun checkingPreparePlayer() {
 
         if (mediaPlayerInteractor.getPlayerState() != PlayerState.STATE_PREPARED) {
             viewModelScope.launch {
