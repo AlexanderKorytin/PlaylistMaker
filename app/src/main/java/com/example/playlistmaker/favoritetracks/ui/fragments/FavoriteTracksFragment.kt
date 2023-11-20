@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.example.playlistmaker.databinding.TabFavoritesFragmentsBinding
 import com.example.playlistmaker.favoritetracks.ui.models.FavoriteTracksScreenState
@@ -29,8 +30,8 @@ class FavoriteTracksFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         favoriteTracksVM.getScreenState().observe(viewLifecycleOwner) {
             when (it) {
-                is FavoriteTracksScreenState.FavoriteTracksLoadind ->{}
-                is FavoriteTracksScreenState.FavoriteTracksEmpty ->{}
+                is FavoriteTracksScreenState.FavoriteTracksLoadind ->{loading()}
+                is FavoriteTracksScreenState.FavoriteTracksEmpty ->{showEmpty()}
                 is FavoriteTracksScreenState.FavoriteTracksContent ->{}
             }
         }
@@ -42,11 +43,15 @@ class FavoriteTracksFragment : Fragment() {
     }
 
     private fun loading(){
-
+        binding.favoriteTracksList.isVisible = false
+        binding.favoriteProgressBar.isVisible = true
+        binding.placeholderGroup.isVisible = false
     }
 
     private fun showEmpty(){
-
+        binding.favoriteTracksList.isVisible = false
+        binding.favoriteProgressBar.isVisible = false
+        binding.placeholderGroup.isVisible = true
     }
 
     private fun showContent(tracks: List<Track>){
