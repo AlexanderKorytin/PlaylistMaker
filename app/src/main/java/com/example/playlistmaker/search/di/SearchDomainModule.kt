@@ -19,7 +19,7 @@ val searchDomainModule = module {
     }
 
     single<TracksRepository> {
-        TracksRepositoryImpl(networkClient = get())
+        TracksRepositoryImpl(networkClient = get(), appDataBase = get())
     }
 
     factory<SetViewVisibilityUseCase> {

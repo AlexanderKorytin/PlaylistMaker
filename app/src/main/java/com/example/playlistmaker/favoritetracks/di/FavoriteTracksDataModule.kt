@@ -9,7 +9,7 @@ import org.koin.dsl.module
 val favoriteTracksDataModule = module {
 
     single {
-        Room.databaseBuilder(androidContext(), AppDataBase::class.java, "favorite_tracks.db")
+        Room.databaseBuilder(androidContext(), AppDataBase::class.java, "favorite_tracks.db").build()
     }
 
     factory<TrackDbConverter> {

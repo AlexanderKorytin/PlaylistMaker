@@ -1,4 +1,4 @@
-package com.example.playlistmaker.favoritetracks.domain
+package com.example.playlistmaker.favoritetracks.domain.api
 
 import com.example.playlistmaker.favoritetracks.data.db.entity.TrackEntity
 import com.example.playlistmaker.search.domain.models.Track
@@ -7,11 +7,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface FavoriteTracksDatabaseRepository {
 
-    suspend fun insertNewTrack(trackEntity: TrackEntity)
+    suspend fun insertNewTrack(track: Track)
 
-    suspend fun deleteTrack(trackEntity: TrackEntity)
+    suspend fun deleteTrack(track: Track)
 
-    fun getIdFavoriteTracks(trackId: Long): Flow<List<Long>>
+    fun getIdFavoriteTracks(): Flow<List<Long>>
 
     fun getFavoriteTracks(): Flow<List<Track>>
 }

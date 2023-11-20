@@ -12,5 +12,6 @@ data class Track(
     val year: String,
     val primaryGenreName: String,
     val previewUrl: String,
-    val coverArtWork: String
+    val coverArtWork: String,
+    var inFavorite: Boolean = false
 )

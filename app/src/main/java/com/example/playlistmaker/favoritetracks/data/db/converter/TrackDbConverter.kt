@@ -1,23 +1,22 @@
 package com.example.playlistmaker.favoritetracks.data.db.converter
 
 import com.example.playlistmaker.favoritetracks.data.db.entity.TrackEntity
-import com.example.playlistmaker.search.data.dto.TrackDto
 import com.example.playlistmaker.search.domain.models.Track
 
 class TrackDbConverter {
-    fun map(trackDto: TrackDto): TrackEntity {
+    fun map(track: Track): TrackEntity {
         return TrackEntity(
-            trackId = trackDto.trackId,
-            trackName = trackDto.getParam(trackDto.trackName),
-            artistName = trackDto.getParam(trackDto.artistName),
-            trackTime = trackDto.getTrackTime(),
-            artworkUrl100 = trackDto.getParam(trackDto.artworkUrl100),
-            country = trackDto.getParam(trackDto.country),
-            collectionName = trackDto.getParam(trackDto.collectionName),
-            year = trackDto.getYear(),
-            previewUrl = trackDto.getCoverArtwork(),
-            primaryGenreName = trackDto.getParam(trackDto.primaryGenreName),
-            coverArtWork = trackDto.getCoverArtwork()
+            trackId = track.trackId,
+            trackName = track.trackName,
+            artistName = track.artistName,
+            trackTime = track.trackTime,
+            artworkUrl100 = track.artworkUrl100,
+            country = track.country,
+            collectionName = track.collectionName,
+            year = track.year,
+            previewUrl = track.coverArtWork,
+            primaryGenreName = track.primaryGenreName,
+            coverArtWork = track.coverArtWork
         )
     }
 
