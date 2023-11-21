@@ -256,6 +256,7 @@ class SearchFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         this.binding.menuFindSearchEditText.setText(textSearch)
+        binding.menuFindSearchEditText.selectAll()
         searchVM.searchDebounce(textSearch)
     }
 
