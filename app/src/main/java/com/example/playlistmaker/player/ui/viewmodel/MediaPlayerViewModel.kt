@@ -12,7 +12,6 @@ import com.example.playlistmaker.player.domain.models.PlayerState
 import com.example.playlistmaker.player.ui.mappers.MapClickedTrackGsonToClickedTrack
 import com.example.playlistmaker.player.ui.models.ClickedTrackGson
 import com.example.playlistmaker.player.ui.models.MediaPlayerScreenState
-import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -55,23 +54,17 @@ class MediaPlayerViewModel(
 
     fun getPlayerScreenState(): LiveData<MediaPlayerScreenState> = playerScreenState
 
-    private var currentSingInFavorite: MutableLiveData<Boolean> = MutableLiveData(playedTrack.inFavorite)
+    private var currentSingInFavorite: MutableLiveData<Boolean> =
+        MutableLiveData(playedTrack.inFavorite)
 
     fun getCurrentSingFavorite(): LiveData<Boolean> = currentSingInFavorite
 
-    fun changedSingInFavorite(){
+    fun changedSingInFavorite() {
         viewModelScope.launch {
-            withContext(Dispatchers.IO){
+            withContext(Dispatchers.IO) {
                 favoriteTracksInteractor.changeSignFavorite(playedTrack.mapToTrack())
             }
             currentSingInFavorite.postValue(mediaPlayerInteractor.getSingFavoriteTrack(playedTrack))
-//            if (playedTrack.inFavorite) {
-//                playedTrack.inFavorite = false
-//                currentSingInFavorite.postValue(playedTrack.inFavorite)
-//            } else {
-//                playedTrack.inFavorite = true
-//                currentSingInFavorite.postValue(playedTrack.inFavorite)
-//            }
         }
 
     }

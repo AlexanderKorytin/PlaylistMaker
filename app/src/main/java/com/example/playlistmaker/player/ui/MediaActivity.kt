@@ -106,13 +106,13 @@ class MediaActivity : AppCompatActivity(R.layout.activity_media) {
             }
         }
 
-        binding.addFavorite.setOnClickListener{
+        binding.addFavorite.setOnClickListener {
             playerVM.changedSingInFavorite()
         }
 
-        playerVM.getCurrentSingFavorite().observe(this){sing ->
-            if(sing) binding.addFavorite.setImageDrawable(getDrawable(R.drawable.in_favorite_true))
-            else  binding.addFavorite.setImageDrawable(getDrawable(R.drawable.in_favorite_false))
+        playerVM.getCurrentSingFavorite().observe(this) { sing ->
+            if (sing) binding.addFavorite.setImageDrawable(getDrawable(R.drawable.in_favorite_true))
+            else binding.addFavorite.setImageDrawable(getDrawable(R.drawable.in_favorite_false))
         }
 
         //загружаем анимации

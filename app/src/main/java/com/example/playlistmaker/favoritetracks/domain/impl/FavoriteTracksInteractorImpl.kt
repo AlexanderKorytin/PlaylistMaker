@@ -5,7 +5,6 @@ import com.example.playlistmaker.favoritetracks.domain.api.FavoriteTracksInterac
 import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.withContext
 
 class FavoriteTracksInteractorImpl(
@@ -13,15 +12,14 @@ class FavoriteTracksInteractorImpl(
 ) : FavoriteTracksInteractor {
     override suspend fun changeSignFavorite(track: Track) {
         var listId: List<Long> = emptyList()
-        withContext(Dispatchers.IO){
-            favoriteTracksDatabaseRepository.getIdFavoriteTracks().collect{
+        withContext(Dispatchers.IO) {
+            favoriteTracksDatabaseRepository.getIdFavoriteTracks().collect {
                 listId = it
             }
         }
         if (listId.contains(track.trackId)) {
             favoriteTracksDatabaseRepository.deleteTrack(track = track)
-        }
-        else {
+        } else {
             favoriteTracksDatabaseRepository.insertNewTrack(track = track)
         }
     }
