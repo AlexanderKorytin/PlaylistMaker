@@ -43,11 +43,11 @@ class SearchViewModel(
     fun showSearchHistory(flag: Boolean) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                getSearchHstoryTracks().collect { listFavorite ->
-                    if (flag && listFavorite.isNotEmpty()) {
+                getSearchHstoryTracks().collect { listHistory ->
+                    if (flag && listHistory.isNotEmpty()) {
                         currentSearchViewScreenState.postValue(
                             SearchScreenState.Hictory(
-                                listFavorite.map { it -> trackToTrackUI.map(it) }, false
+                                listHistory.map { it -> trackToTrackUI.map(it) }, false
                             )
                         )
                     } else {
@@ -95,6 +95,7 @@ class SearchViewModel(
 
     fun stop() {
         onCleared()
+        latestSearchText = null
     }
 
     private fun processResult(data: List<Track>?, error: String?, textSearch: String) {

@@ -1,7 +1,6 @@
 package com.example.playlistmaker.player.data.impl
 
 import android.media.MediaPlayer
-import com.example.playlistmaker.favoritetracks.data.db.AppDataBase
 import com.example.playlistmaker.player.data.dto.toMediaPlayer
 import com.example.playlistmaker.player.domain.api.MediaPlayerRepository
 import com.example.playlistmaker.player.domain.models.ClickedTrack
@@ -9,7 +8,6 @@ import com.example.playlistmaker.player.domain.models.PlayerState
 
 class MediaPlayerRepositoryImpl(
     private val mediaPlayer: MediaPlayer,
-    private val appDataBase: AppDataBase,
 ) : MediaPlayerRepository {
     private var playerState = PlayerState.STATE_DEFAULT
     private val timerStart = 0L
@@ -51,11 +49,5 @@ class MediaPlayerRepositoryImpl(
     }
 
     override fun gerMediaPlayerState(): PlayerState = playerState
-    override suspend fun getTrackSingFavorite(clickedTrack: ClickedTrack): Boolean {
-        val listId: List<Long>
-        listId = appDataBase.getFavoriteTrackDao().getIdFavoriteTracks()
-        return listId.contains(clickedTrack.trackId)
-
-    }
 
 }

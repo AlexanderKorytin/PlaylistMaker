@@ -37,8 +37,4 @@ class MediaPlayerInteractorImpl(private val mediaPlayerRepository: MediaPlayerRe
     override fun getPlayerState(): PlayerState {
         return mediaPlayerRepository.gerMediaPlayerState()
     }
-
-    override suspend fun getSingFavoriteTrack(clickedTrack: ClickedTrack): Boolean {
-        return mediaPlayerRepository.getTrackSingFavorite(clickedTrack)
-    }
 }

@@ -26,7 +26,7 @@ class MediaPlayerViewModel(
     getClicketTrack: MapClickedTrackGsonToClickedTrack
 ) : ViewModel() {
 
-    val playedTrack = getClicketTrack.map(clickedTrack)
+    var playedTrack = getClicketTrack.map(clickedTrack)
 
     private var timerJob: Job? = null
 
@@ -64,7 +64,8 @@ class MediaPlayerViewModel(
             withContext(Dispatchers.IO) {
                 favoriteTracksInteractor.changeSignFavorite(playedTrack.mapToTrack())
             }
-            currentSingInFavorite.postValue(mediaPlayerInteractor.getSingFavoriteTrack(playedTrack))
+            playedTrack.inFavorite = !playedTrack.inFavorite
+            currentSingInFavorite.postValue(playedTrack.inFavorite)
         }
 
     }
@@ -76,7 +77,7 @@ class MediaPlayerViewModel(
 
         )
         viewModelScope.launch {
-            currentSingInFavorite.postValue(mediaPlayerInteractor.getSingFavoriteTrack(playedTrack))
+            currentSingInFavorite.postValue(playedTrack.inFavorite)
         }
         preparePlayer()
     }

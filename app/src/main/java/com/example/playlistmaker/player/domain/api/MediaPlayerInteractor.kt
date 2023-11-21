@@ -17,5 +17,4 @@ interface MediaPlayerInteractor {
 
     fun getPlayerState(): PlayerState
 
-    suspend fun getSingFavoriteTrack(clickedTrack: ClickedTrack): Boolean
 }

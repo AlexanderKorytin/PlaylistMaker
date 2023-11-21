@@ -14,5 +14,4 @@ interface MediaPlayerRepository {
     fun getTimerStart(): Long
     fun getCurrentPosition(): Int
     fun gerMediaPlayerState(): PlayerState
-     suspend fun getTrackSingFavorite(clickedTrack: ClickedTrack): Boolean
 }

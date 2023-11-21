@@ -255,7 +255,8 @@ class SearchFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
+        this.binding.menuFindSearchEditText.setText(textSearch)
+        searchVM.searchDebounce(textSearch)
     }
 
     override fun onDestroyView() {

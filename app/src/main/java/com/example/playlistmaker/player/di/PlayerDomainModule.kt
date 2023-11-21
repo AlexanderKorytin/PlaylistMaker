@@ -13,7 +13,7 @@ val playerDomainModule = module {
     }
 
     factory<MediaPlayerRepository> {
-        MediaPlayerRepositoryImpl(mediaPlayer = get(), appDataBase = get())
+        MediaPlayerRepositoryImpl(mediaPlayer = get())
     }
 
     factory<MediaPlayerInteractor> {
