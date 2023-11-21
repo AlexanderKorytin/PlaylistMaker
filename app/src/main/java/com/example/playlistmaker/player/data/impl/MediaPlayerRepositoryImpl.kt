@@ -54,8 +54,8 @@ class MediaPlayerRepositoryImpl(
     override suspend fun getTrackSingFavorite(clickedTrack: ClickedTrack): Boolean {
         val listId: List<Long>
         listId = appDataBase.getFavoriteTrackDao().getIdFavoriteTracks()
-        val flag = listId.contains(clickedTrack.trackId)
-        return flag
+        return listId.contains(clickedTrack.trackId)
+
     }
 
 }
