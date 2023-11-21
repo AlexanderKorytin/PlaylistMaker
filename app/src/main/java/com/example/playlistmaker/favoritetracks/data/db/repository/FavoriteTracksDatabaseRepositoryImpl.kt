@@ -2,11 +2,12 @@ package com.example.playlistmaker.favoritetracks.data.db.repository
 
 import com.example.playlistmaker.favoritetracks.data.db.AppDataBase
 import com.example.playlistmaker.favoritetracks.data.db.converter.TrackDbConverter
-import com.example.playlistmaker.favoritetracks.data.db.entity.TrackEntity
 import com.example.playlistmaker.favoritetracks.domain.api.FavoriteTracksDatabaseRepository
 import com.example.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 
 class FavoriteTracksDatabaseRepositoryImpl(
     private val appDatabase: AppDataBase,
@@ -21,8 +22,10 @@ class FavoriteTracksDatabaseRepositoryImpl(
     }
 
     override fun getIdFavoriteTracks(): Flow<List<Long>> = flow {
-        val ids = appDatabase.getFavoriteTrackDao().getIdFavoriteTracks()
-        emit(ids)
+        withContext(Dispatchers.IO) {
+            val ids = appDatabase.getFavoriteTrackDao().getIdFavoriteTracks()
+            emit(ids)
+        }
     }
 
     override fun getFavoriteTracks(): Flow<List<Track>> = flow {

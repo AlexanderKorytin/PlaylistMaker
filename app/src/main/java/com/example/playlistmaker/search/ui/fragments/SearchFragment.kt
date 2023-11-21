@@ -29,7 +29,6 @@ class SearchFragment : Fragment() {
     private var _binding: SearchFragmentBinding? = null
     private val binding get() = _binding!!
     private var textSearch: String = ""
-    //private var trackList: ArrayList<TrackUI>? = ArrayList()
     private val searchVM: SearchViewModel by viewModel<SearchViewModel>()
     private lateinit var clickedTrackDebounce: (TrackUI) -> Unit
     private var findAdapter: FindAdapter? = null
@@ -67,9 +66,6 @@ class SearchFragment : Fragment() {
         historyAdapter = FindAdapter {
             clickedTrackDebounce(it)
         }
-     //   findAdapter?.trackList = (trackList as ArrayList<TrackUI>)
-        historyAdapter?.trackList =
-            searchVM.mapToTrackUI.mapList(searchVM.getSearchHstoryTracks())
         this.binding.tracksList.layoutManager = LinearLayoutManager(requireContext())
         this.binding.tracksList.adapter = findAdapter
 
@@ -255,6 +251,11 @@ class SearchFragment : Fragment() {
             this.binding.tracksList.visibility = View.GONE
             this.binding.placeholderFindViewGroup.visibility = View.GONE
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
     }
 
     override fun onDestroyView() {

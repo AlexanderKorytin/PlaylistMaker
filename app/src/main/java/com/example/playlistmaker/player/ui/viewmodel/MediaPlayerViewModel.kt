@@ -64,13 +64,14 @@ class MediaPlayerViewModel(
             withContext(Dispatchers.IO){
                 favoriteTracksInteractor.changeSignFavorite(playedTrack.mapToTrack())
             }
-            if (playedTrack.inFavorite) {
-                playedTrack.inFavorite = false
-                currentSingInFavorite.postValue(playedTrack.inFavorite)
-            } else {
-                playedTrack.inFavorite = true
-                currentSingInFavorite.postValue(playedTrack.inFavorite)
-            }
+            currentSingInFavorite.postValue(mediaPlayerInteractor.getSingFavoriteTrack(playedTrack))
+//            if (playedTrack.inFavorite) {
+//                playedTrack.inFavorite = false
+//                currentSingInFavorite.postValue(playedTrack.inFavorite)
+//            } else {
+//                playedTrack.inFavorite = true
+//                currentSingInFavorite.postValue(playedTrack.inFavorite)
+//            }
         }
 
     }
@@ -79,7 +80,11 @@ class MediaPlayerViewModel(
         playerScreenState.value = MediaPlayerScreenState(
             mediaPlayerCurrentTimePlaying,
             mediaPlayerInteractor.getPlayerState()
+
         )
+        viewModelScope.launch {
+            currentSingInFavorite.postValue(mediaPlayerInteractor.getSingFavoriteTrack(playedTrack))
+        }
         preparePlayer()
     }
 

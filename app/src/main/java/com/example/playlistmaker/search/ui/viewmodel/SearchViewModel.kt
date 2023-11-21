@@ -14,6 +14,7 @@ import com.example.playlistmaker.search.ui.models.SearchScreenState
 import com.example.playlistmaker.util.debounce
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -25,8 +26,6 @@ class SearchViewModel(
     val mapToTrackUI: MapToTrackUI,
     val json: Gson
 ) : ViewModel() {
-
-    var listHistory = ArrayList<Track>()
 
     private val searchTrackDebounce =
         debounce<String>(SEARCH_DEBOUNCE_DELAY, viewModelScope, true) {
@@ -44,7 +43,7 @@ class SearchViewModel(
     fun showSearchHistory(flag: Boolean) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                searchHistoryInteractor.getTracksList().collect { listFavorite ->
+                getSearchHstoryTracks().collect { listFavorite ->
                     if (flag && listFavorite.isNotEmpty()) {
                         currentSearchViewScreenState.postValue(
                             SearchScreenState.Hictory(
@@ -72,13 +71,8 @@ class SearchViewModel(
         }
     }
 
-    fun getSearchHstoryTracks(): ArrayList<Track> {
-        viewModelScope.launch {
-            searchHistoryInteractor.getTracksList().collect {
-                listHistory = it
-            }
-        }
-        return listHistory
+    private fun getSearchHstoryTracks(): Flow<ArrayList<Track>> {
+        return searchHistoryInteractor.getTracksList()
     }
 
     fun savedTrack(track: Track) {
