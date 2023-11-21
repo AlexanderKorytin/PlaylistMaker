@@ -2,6 +2,7 @@ package com.example.playlistmaker.favoritetracks.data.db.converter
 
 import com.example.playlistmaker.favoritetracks.data.db.entity.TrackEntity
 import com.example.playlistmaker.search.domain.models.Track
+import java.util.Calendar
 
 class TrackDbConverter {
     fun map(track: Track): TrackEntity {
@@ -16,7 +17,7 @@ class TrackDbConverter {
             year = track.year,
             previewUrl = track.previewUrl,
             primaryGenreName = track.primaryGenreName,
-            coverArtWork = track.coverArtWork
+            coverArtWork = track.coverArtWork,
         )
     }
 

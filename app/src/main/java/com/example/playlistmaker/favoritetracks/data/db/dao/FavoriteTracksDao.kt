@@ -15,9 +15,9 @@ interface FavoriteTracksDao {
     @Delete(entity = TrackEntity::class)
     suspend fun deleteTrackFormFavorites(track: TrackEntity)
 
-    @Query("SELECT trackId FROM 'favorite_tracks.db' ")
+    @Query("SELECT trackId FROM 'favorite_tracks.db'")
     suspend fun getIdFavoriteTracks():List<Long>
 
-    @Query("SELECT * FROM `favorite_tracks.db`")
+    @Query("SELECT * FROM `favorite_tracks.db` ORDER BY insertignTime DESC")
     suspend fun getFavoriteTracks(): List<TrackEntity>
 }

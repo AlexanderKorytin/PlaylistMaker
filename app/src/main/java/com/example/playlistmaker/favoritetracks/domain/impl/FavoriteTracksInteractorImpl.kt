@@ -5,6 +5,7 @@ import com.example.playlistmaker.favoritetracks.domain.api.FavoriteTracksInterac
 import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class FavoriteTracksInteractorImpl(

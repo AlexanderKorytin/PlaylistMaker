@@ -18,8 +18,10 @@ import com.example.playlistmaker.search.ui.models.TrackUI
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.core.definition.indexKey
 
 class FavoriteTracksViewModel(
     private val favoriteTracksInteractor: FavoriteTracksInteractor,
