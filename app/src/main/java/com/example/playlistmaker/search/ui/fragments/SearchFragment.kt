@@ -33,6 +33,7 @@ class SearchFragment : Fragment() {
     private lateinit var clickedTrackDebounce: (TrackUI) -> Unit
     private var findAdapter: FindAdapter? = null
     private var historyAdapter: FindAdapter? = null
+    private var flagNavigateToPlayer = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,9 +62,11 @@ class SearchFragment : Fragment() {
         }
         // Задаем адаптеры
         findAdapter = FindAdapter {
+            flagNavigateToPlayer = true
             clickedTrackDebounce(it)
         }
         historyAdapter = FindAdapter {
+            flagNavigateToPlayer = true
             clickedTrackDebounce(it)
         }
         this.binding.tracksList.layoutManager = LinearLayoutManager(requireContext())
@@ -255,9 +258,11 @@ class SearchFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        this.binding.menuFindSearchEditText.setText(textSearch)
-        binding.menuFindSearchEditText.selectAll()
-        searchVM.searchDebounce(textSearch)
+        if (flagNavigateToPlayer) {
+            this.binding.menuFindSearchEditText.setText(textSearch)
+            binding.menuFindSearchEditText.selectAll()
+            searchVM.searchDebounce(textSearch)
+        }
     }
 
     override fun onDestroyView() {
