@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.Calendar
-import java.util.Date
 
 @Entity(tableName = "favorite_tracks.db")
 data class TrackEntity(
