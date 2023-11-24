@@ -1,7 +1,7 @@
-package com.example.playlistmaker.favoritetracks.domain.impl
+package com.example.playlistmaker.favorite.domain.impl
 
-import com.example.playlistmaker.favoritetracks.domain.api.FavoriteTracksDatabaseRepository
-import com.example.playlistmaker.favoritetracks.domain.api.FavoriteTracksInteractor
+import com.example.playlistmaker.favorite.domain.api.FavoriteTracksDatabaseRepository
+import com.example.playlistmaker.favorite.domain.api.FavoriteTracksInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 

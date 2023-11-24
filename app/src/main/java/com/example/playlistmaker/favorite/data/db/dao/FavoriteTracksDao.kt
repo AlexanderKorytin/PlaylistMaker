@@ -1,11 +1,11 @@
-package com.example.playlistmaker.favoritetracks.data.db.dao
+package com.example.playlistmaker.favorite.data.db.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.playlistmaker.favoritetracks.data.db.entity.TrackEntity
+import com.example.playlistmaker.favorite.data.db.entity.TrackEntity
 
 @Dao
 interface FavoriteTracksDao {
@@ -15,9 +15,9 @@ interface FavoriteTracksDao {
     @Delete(entity = TrackEntity::class)
     suspend fun deleteTrackFormFavorites(track: TrackEntity)
 
-    @Query("SELECT trackId FROM 'favorite_tracks.db'")
+    @Query("SELECT trackId FROM 'favorite_tracks'")
     suspend fun getIdFavoriteTracks(): List<Long>
 
-    @Query("SELECT * FROM `favorite_tracks.db` ORDER BY insertignTime DESC")
+    @Query("SELECT * FROM `favorite_tracks` ORDER BY insertignTime DESC")
     suspend fun getFavoriteTracks(): List<TrackEntity>
 }

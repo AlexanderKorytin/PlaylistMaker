@@ -2,7 +2,7 @@ package com.example.playlistmaker.search.data.network
 
 import android.content.SharedPreferences
 import com.example.playlistmaker.app.getTrackListFromJson
-import com.example.playlistmaker.favoritetracks.data.db.AppDataBase
+import com.example.playlistmaker.favorite.data.db.AppDataBase
 import com.example.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson

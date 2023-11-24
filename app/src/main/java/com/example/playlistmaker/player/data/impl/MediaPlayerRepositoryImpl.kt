@@ -12,7 +12,6 @@ class MediaPlayerRepositoryImpl(
     private var playerState = PlayerState.STATE_DEFAULT
     private val timerStart = 0L
 
-
     override fun preparePlayer(clickedTrack: ClickedTrack) {
         mediaPlayer.setDataSource(clickedTrack.toMediaPlayer().url)
         mediaPlayer.prepareAsync()

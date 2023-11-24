@@ -1,11 +1,11 @@
-package com.example.playlistmaker.favoritetracks.data.db.entity
+package com.example.playlistmaker.favorite.data.db.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.Calendar
 
-@Entity(tableName = "favorite_tracks.db")
+@Entity(tableName = "favorite_tracks")
 data class TrackEntity(
     @PrimaryKey @ColumnInfo(name = "trackId")
     val trackId: Long,

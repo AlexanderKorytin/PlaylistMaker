@@ -93,9 +93,11 @@ class FavoriteTracksFragment : Fragment() {
     private fun showContent(tracks: List<Track>) {
         favoriteAdapter?.trackList?.clear()
         favoriteAdapter?.trackList?.addAll(favoriteTracksVM.mapToTrackUI.mapList(tracks))
-        binding.favoriteTracksList.adapter?.notifyDataSetChanged()
-        binding.favoriteTracksList.isVisible = true
-        binding.placeholderGroup.isVisible = false
+        with(binding){
+            favoriteTracksList.adapter?.notifyDataSetChanged()
+            favoriteTracksList.isVisible = true
+            placeholderGroup.isVisible = false
+        }
     }
 
     companion object {

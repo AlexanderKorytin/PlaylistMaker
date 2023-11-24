@@ -23,7 +23,6 @@
         android:background="?attr/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-
         app:layout_constraintTop_toBottomOf="@id/text_name_activity"
         app:tabIndicator="@drawable/my_tab_indicator"
         app:tabIndicatorAnimationMode="elastic"
@@ -31,9 +30,7 @@
         app:tabMode="fixed"
         app:tabPaddingBottom="@dimen/padding_16"
         app:tabPaddingEnd="@dimen/padding_16"
-
         app:tabPaddingStart="@dimen/padding_16"
-
         app:tabPaddingTop="@dimen/padding_16"
         app:tabTextAppearance="@style/TabTextStyle"
         app:tabTextColor="@color/tabtextcolor" />

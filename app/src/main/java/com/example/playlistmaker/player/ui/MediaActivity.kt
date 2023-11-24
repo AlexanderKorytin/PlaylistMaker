@@ -50,24 +50,33 @@ class MediaActivity : AppCompatActivity(R.layout.activity_media) {
         playerVM.getPlayerScreenState().observe(this) { currentPlayerState ->
             when (currentPlayerState.playerState) {
                 PlayerState.STATE_DEFAULT -> {
-                    binding.playPause.isEnabled = false
-                    binding.timerMedia.text = currentPlayerState.currentTime
+                    with(binding) {
+                        playPause.isEnabled = false
+                        timerMedia.text = currentPlayerState.currentTime
+                    }
                 }
 
                 PlayerState.STATE_PREPARED -> {
-                    binding.playPause.isEnabled = true
-                    binding.playPause.setImageDrawable(getDrawable(R.drawable.play_button))
-                    binding.timerMedia.text = currentPlayerState.currentTime
+                    with(binding) {
+                        playPause.isEnabled = true
+                        playPause.setImageDrawable(getDrawable(R.drawable.play_button))
+                        timerMedia.text = currentPlayerState.currentTime
+                    }
                 }
 
                 PlayerState.STATE_PLAYING -> {
-                    binding.playPause.setImageDrawable(getDrawable(R.drawable.pause_button))
-                    binding.timerMedia.text = currentPlayerState.currentTime
+                    with(binding) {
+                        playPause.setImageDrawable(getDrawable(R.drawable.pause_button))
+                        timerMedia.text = currentPlayerState.currentTime
+                    }
+
                 }
 
                 else -> {
-                    binding.timerMedia.text = currentPlayerState.currentTime
-                    binding.playPause.setImageDrawable(getDrawable(R.drawable.play_button))
+                    with(binding) {
+                        timerMedia.text = currentPlayerState.currentTime
+                        playPause.setImageDrawable(getDrawable(R.drawable.play_button))
+                    }
                 }
 
             }
@@ -81,27 +90,34 @@ class MediaActivity : AppCompatActivity(R.layout.activity_media) {
                     .show()
             } else binding.playPause.isEnabled = true
 
-            binding.addFavorite.isClickable = true
-            binding.addCollection.isClickable = true
             Glide
                 .with(this)
                 .load(track.coverArtWork)
                 .placeholder(R.drawable.placeholder_media_image)
                 .transform(CenterCrop(), RoundedCorners(radiusIconTrackPx))
                 .into(binding.trackImageMedia)
-            binding.trackNameMedia.text = track.trackName
-            binding.trackArtistMedia.text = track.artistName
-            binding.yearMediaMean.text = track.year
-            binding.countryMediaMean.text = track.country
-            binding.genreMediaMean.text = track.primaryGenreName
-            binding.timeMediaMean.text = track.trackTime
+            with(binding) {
+                addFavorite.isClickable = true
+                addCollection.isClickable = true
+                trackNameMedia.text = track.trackName
+                trackArtistMedia.text = track.artistName
+                yearMediaMean.text = track.year
+                countryMediaMean.text = track.country
+                genreMediaMean.text = track.primaryGenreName
+                timeMediaMean.text = track.trackTime
+            }
+
             if (track.collectionName != "") {
-                binding.albumMediaMean.isVisible = true
-                binding.albumMedia.isVisible = true
-                binding.albumMediaMean.text = track.collectionName
+                with(binding) {
+                    albumMediaMean.isVisible = true
+                    albumMedia.isVisible = true
+                    albumMediaMean.text = track.collectionName
+                }
             } else {
-                binding.albumMediaMean.isVisible = false
-                binding.albumMedia.isVisible = false
+                with(binding) {
+                    albumMediaMean.isVisible = false
+                    albumMedia.isVisible = false
+                }
 
             }
         }

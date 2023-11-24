@@ -161,12 +161,14 @@ class SearchFragment : Fragment() {
     }
 
     private fun showStart(adapter: FindAdapter) {
-        this.binding.clearIcon.isClickable = true
-        this.binding.searchHistoryListView.isVisible = false
-        this.binding.progressBar.isVisible = false
-        this.binding.placeholderFindViewGroup.isVisible = false
-        this.binding.placeholderButton.isVisible = false
-        this.binding.tracksList.isVisible = true
+        with(this.binding) {
+            clearIcon.isClickable = true
+            searchHistoryListView.isVisible = false
+            progressBar.isVisible = false
+            placeholderFindViewGroup.isVisible = false
+            placeholderButton.isVisible = false
+            tracksList.isVisible = true
+        }
         adapter.trackList.clear()
         adapter.notifyDataSetChanged()
 
@@ -174,39 +176,45 @@ class SearchFragment : Fragment() {
 
     private fun showContent(adapter: FindAdapter, tracks: ArrayList<TrackUI>) {
         if (textSearch.isNotEmpty()) {
-            this.binding.searchHistoryListView.isVisible = false
-            this.binding.clearIcon.isClickable = true
-            this.binding.progressBar.visibility = View.GONE
-            this.binding.placeholderFindViewGroup.visibility = View.GONE
-            this.binding.placeholderButton.visibility = View.GONE
-            this.binding.tracksList.visibility = View.VISIBLE
+            with(this.binding) {
+                searchHistoryListView.isVisible = false
+                clearIcon.isClickable = true
+                progressBar.visibility = View.GONE
+                placeholderFindViewGroup.visibility = View.GONE
+                placeholderButton.visibility = View.GONE
+                tracksList.visibility = View.VISIBLE
+            }
             adapter.trackList = tracks
             adapter.notifyDataSetChanged()
         }
     }
 
     private fun showLoading(adapter: FindAdapter) {
-        this.binding.clearIcon.isClickable = false
-        this.binding.searchHistoryListView.isVisible = false
-        this.binding.progressBar.isVisible = true
-        this.binding.placeholderFindViewGroup.isVisible = false
-        this.binding.placeholderButton.isVisible = false
-        this.binding.tracksList.isVisible = true
+        with(this.binding) {
+            clearIcon.isClickable = false
+            searchHistoryListView.isVisible = false
+            progressBar.isVisible = true
+            placeholderFindViewGroup.isVisible = false
+            placeholderButton.isVisible = false
+            tracksList.isVisible = true
+        }
+
         adapter.trackList.clear()
         adapter.notifyDataSetChanged()
     }
 
     private fun showEmpty(adapter: FindAdapter) {
         if (textSearch.isNotEmpty()) {
-            this.binding.searchHistoryListView.isVisible = false
-            this.binding.clearIcon.isClickable = true
-            this.binding.progressBar.visibility = View.GONE
-            this.binding.placeholderFindViewGroup.visibility = View.VISIBLE
-            this.binding.placeholderButton.visibility = View.GONE
-            this.binding.tracksList.visibility = View.GONE
-            this.binding.placeholderFindText.text =
-                getString(R.string.placeholder_nothing_found_text)
-            this.binding.placeholderFindTint.setImageDrawable(requireContext().getDrawable(R.drawable.nothing_found))
+            with(this.binding) {
+                searchHistoryListView.isVisible = false
+                clearIcon.isClickable = true
+                progressBar.visibility = View.GONE
+                placeholderFindViewGroup.visibility = View.VISIBLE
+                placeholderButton.visibility = View.GONE
+                tracksList.visibility = View.GONE
+                placeholderFindText.text = getString(R.string.placeholder_nothing_found_text)
+                placeholderFindTint.setImageDrawable(requireContext().getDrawable(R.drawable.nothing_found))
+            }
             adapter.trackList.clear()
             adapter.notifyDataSetChanged()
         }
@@ -214,15 +222,17 @@ class SearchFragment : Fragment() {
 
     private fun showError(adapter: FindAdapter) {
         if (textSearch.isNotEmpty()) {
-            this.binding.searchHistoryListView.isVisible = false
-            this.binding.clearIcon.isClickable = true
-            this.binding.progressBar.visibility = View.GONE
-            this.binding.placeholderFindViewGroup.visibility = View.VISIBLE
-            this.binding.placeholderButton.visibility = View.VISIBLE
-            this.binding.tracksList.visibility = View.GONE
-            this.binding.placeholderFindText.text =
-                getString(R.string.placeholder_communication_problems_text)
-            this.binding.placeholderFindTint.setImageDrawable(requireContext().getDrawable(R.drawable.communication_problem))
+            with(this.binding) {
+                searchHistoryListView.isVisible = false
+                clearIcon.isClickable = true
+                progressBar.visibility = View.GONE
+                placeholderFindViewGroup.visibility = View.VISIBLE
+                placeholderButton.visibility = View.VISIBLE
+                tracksList.visibility = View.GONE
+                placeholderFindText.text =
+                    getString(R.string.placeholder_communication_problems_text)
+                placeholderFindTint.setImageDrawable(requireContext().getDrawable(R.drawable.communication_problem))
+            }
             adapter.trackList.clear()
             adapter.notifyDataSetChanged()
         }
@@ -239,20 +249,24 @@ class SearchFragment : Fragment() {
         list: List<TrackUI>
     ) {
         if (flag) {
-            this.binding.progressBar.visibility = View.GONE
-            this.binding.searchHistoryListView.visibility = View.VISIBLE
-            this.binding.tracksList.visibility = View.GONE
-            this.binding.placeholderFindViewGroup.visibility = View.GONE
-            this.binding.placeholderButton.visibility = View.GONE
+            with(this.binding) {
+                progressBar.visibility = View.GONE
+                searchHistoryListView.visibility = View.VISIBLE
+                tracksList.visibility = View.GONE
+                placeholderFindViewGroup.visibility = View.GONE
+                placeholderButton.visibility = View.GONE
+            }
             findAdapter.trackList.clear()
             findAdapter.notifyDataSetChanged()
             historyAdapter.trackList = list as ArrayList<TrackUI>
             historyAdapter.notifyDataSetChanged()
         } else {
-            this.binding.progressBar.visibility = View.GONE
-            this.binding.searchHistoryListView.visibility = View.GONE
-            this.binding.tracksList.visibility = View.GONE
-            this.binding.placeholderFindViewGroup.visibility = View.GONE
+            with(this.binding) {
+                progressBar.visibility = View.GONE
+                searchHistoryListView.visibility = View.GONE
+                tracksList.visibility = View.GONE
+                placeholderFindViewGroup.visibility = View.GONE
+            }
         }
     }
 
