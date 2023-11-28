@@ -135,7 +135,7 @@
                 app:layout_constraintEnd_toEndOf="@id/right_guideline"
                 app:layout_constraintStart_toEndOf="@id/play_pause"
                 app:layout_constraintTop_toTopOf="@id/play_pause"
-                app:srcCompat="@drawable/add_favourite" />
+                app:srcCompat="@drawable/in_favorite_false" />
             <!-- прогресс произведения -->
             <TextView
                 android:id="@+id/timer_media"

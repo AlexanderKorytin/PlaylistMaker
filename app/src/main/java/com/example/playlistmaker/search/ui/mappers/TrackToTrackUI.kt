@@ -4,7 +4,7 @@ import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.models.TrackUI
 
 object TrackToTrackUI {
-    fun fromTrack(track: Track): TrackUI {
+    fun map(track: Track): TrackUI {
         return TrackUI(
             track.trackId,
             track.trackName,
@@ -16,7 +16,8 @@ object TrackToTrackUI {
             track.year,
             track.primaryGenreName,
             track.previewUrl,
-            track.coverArtWork
+            track.coverArtWork,
+            track.inFavorite
         )
     }
 }

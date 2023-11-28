@@ -5,24 +5,28 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.favorite.domain.api.FavoriteTracksInteractor
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
 import com.example.playlistmaker.player.domain.models.ClickedTrack
 import com.example.playlistmaker.player.domain.models.PlayerState
 import com.example.playlistmaker.player.ui.mappers.MapClickedTrackGsonToClickedTrack
 import com.example.playlistmaker.player.ui.models.ClickedTrackGson
 import com.example.playlistmaker.player.ui.models.MediaPlayerScreenState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Locale
 
 class MediaPlayerViewModel(
     val clickedTrack: ClickedTrackGson,
     private val mediaPlayerInteractor: MediaPlayerInteractor,
+    private val favoriteTracksInteractor: FavoriteTracksInteractor,
     getClicketTrack: MapClickedTrackGsonToClickedTrack
 ) : ViewModel() {
 
-    val playedTrack = getClicketTrack.map(clickedTrack)
+    var playedTrack = getClicketTrack.map(clickedTrack)
 
     private var timerJob: Job? = null
 
@@ -50,11 +54,31 @@ class MediaPlayerViewModel(
 
     fun getPlayerScreenState(): LiveData<MediaPlayerScreenState> = playerScreenState
 
+    private var currentSingInFavorite: MutableLiveData<Boolean> =
+        MutableLiveData(playedTrack.inFavorite)
+
+    fun getCurrentSingFavorite(): LiveData<Boolean> = currentSingInFavorite
+
+    fun changedSingInFavorite() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                favoriteTracksInteractor.changeSignFavorite(playedTrack.mapToTrack())
+            }
+            playedTrack.inFavorite = !playedTrack.inFavorite
+            currentSingInFavorite.postValue(playedTrack.inFavorite)
+        }
+
+    }
+
     init {
         playerScreenState.value = MediaPlayerScreenState(
             mediaPlayerCurrentTimePlaying,
             mediaPlayerInteractor.getPlayerState()
+
         )
+        viewModelScope.launch {
+            currentSingInFavorite.postValue(playedTrack.inFavorite)
+        }
         preparePlayer()
     }
 

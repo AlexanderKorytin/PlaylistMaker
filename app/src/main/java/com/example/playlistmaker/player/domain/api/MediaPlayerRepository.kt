@@ -8,15 +8,10 @@ interface MediaPlayerRepository {
 
 
     fun preparePlayer(clickedTrack: ClickedTrack)
-
     fun play()
-
     fun pause()
-
     fun release()
-
     fun getTimerStart(): Long
-
     fun getCurrentPosition(): Int
     fun gerMediaPlayerState(): PlayerState
 }

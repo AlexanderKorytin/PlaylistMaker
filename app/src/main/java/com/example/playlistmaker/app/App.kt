@@ -3,6 +3,8 @@ package com.example.playlistmaker.app
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.albumslist.di.albumsViewModelModule
+import com.example.playlistmaker.favoritetracks.di.favoriteTracksDataModule
+import com.example.playlistmaker.favoritetracks.di.favoriteTracksDomainModule
 import com.example.playlistmaker.favoritetracks.di.favoriteTracksViewModelViewModelModule
 import com.example.playlistmaker.player.di.playerDomainModule
 import com.example.playlistmaker.player.di.playerViewModelModule
@@ -44,7 +46,9 @@ class App : Application() {
 
                 albumsViewModelModule,
 
-                favoriteTracksViewModelViewModelModule
+                favoriteTracksViewModelViewModelModule,
+                favoriteTracksDataModule,
+                favoriteTracksDomainModule
             )
         }
         val switchPreference = getSharedPreferences(APP_SETTINGS_PREF_KEY, MODE_PRIVATE)

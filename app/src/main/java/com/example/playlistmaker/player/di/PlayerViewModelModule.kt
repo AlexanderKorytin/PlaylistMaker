@@ -16,7 +16,8 @@ val playerViewModelModule = module {
         MediaPlayerViewModel(
             clickedTrack = track,
             mediaPlayerInteractor = get(),
-            getClicketTrack = get()
+            getClicketTrack = get(),
+            favoriteTracksInteractor = get()
         )
     }
 }

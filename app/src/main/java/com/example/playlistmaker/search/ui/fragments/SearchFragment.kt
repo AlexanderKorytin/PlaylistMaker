@@ -14,13 +14,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
-import com.example.playlistmaker.util.debounce
 import com.example.playlistmaker.databinding.SearchFragmentBinding
 import com.example.playlistmaker.player.ui.MediaActivity
 import com.example.playlistmaker.search.ui.FindAdapter
 import com.example.playlistmaker.search.ui.models.SearchScreenState
 import com.example.playlistmaker.search.ui.models.TrackUI
 import com.example.playlistmaker.search.ui.viewmodel.SearchViewModel
+import com.example.playlistmaker.util.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -29,9 +29,11 @@ class SearchFragment : Fragment() {
     private var _binding: SearchFragmentBinding? = null
     private val binding get() = _binding!!
     private var textSearch: String = ""
-    private var trackList: ArrayList<TrackUI>? = ArrayList()
     private val searchVM: SearchViewModel by viewModel<SearchViewModel>()
     private lateinit var clickedTrackDebounce: (TrackUI) -> Unit
+    private var findAdapter: FindAdapter? = null
+    private var historyAdapter: FindAdapter? = null
+    private var flagNavigateToPlayer = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,16 +54,19 @@ class SearchFragment : Fragment() {
             false
         ) { track ->
             searchVM.savedTrack(track.toTrack())
+            val clickedTrack = searchVM.json.toJson(track)
             findNavController().navigate(
                 R.id.action_searchFragment_to_mediaActivity,
-                MediaActivity.createArgs(searchVM.json.toJson(track))
+                MediaActivity.createArgs(clickedTrack)
             )
         }
         // Задаем адаптеры
-        val findAdapter = FindAdapter {
+        findAdapter = FindAdapter {
+            flagNavigateToPlayer = true
             clickedTrackDebounce(it)
         }
-        val historyAdapter = FindAdapter {
+        historyAdapter = FindAdapter {
+            flagNavigateToPlayer = true
             clickedTrackDebounce(it)
         }
         this.binding.tracksList.layoutManager = LinearLayoutManager(requireContext())
@@ -71,44 +76,41 @@ class SearchFragment : Fragment() {
         this.binding.historyTracksList.adapter = historyAdapter
         this.binding.menuFindSearchEditText.setText(textSearch)
 
-        findAdapter.trackList = (trackList as ArrayList<TrackUI>)
-        historyAdapter.trackList =
-            searchVM.mapToTrackUI.mapList(searchVM.getSearchHstoryTracks())
 // ------------- подписки----------------------------
         searchVM.getcurrentSearchViewScreenState().observe(viewLifecycleOwner) {
             when (it) {
                 is SearchScreenState.Start -> {
-                    showStart(findAdapter)
+                    showStart(findAdapter!!)
                     showClearIcon(it.isVisibility)
                 }
 
                 is SearchScreenState.Hictory -> {
-                    showSearchHistory(true, findAdapter, historyAdapter, it.tracks)
+                    showSearchHistory(true, findAdapter!!, historyAdapter!!, it.tracks)
                     showClearIcon(it.isVisibility)
                 }
 
                 is SearchScreenState.EmptyHistory -> {
-                    showSearchHistory(false, findAdapter, historyAdapter, it.tracks)
+                    showSearchHistory(false, findAdapter!!, historyAdapter!!, it.tracks)
                     showClearIcon(it.isVisibility)
                 }
 
                 is SearchScreenState.Empty -> {
-                    showEmpty(findAdapter)
+                    showEmpty(findAdapter!!)
                     showClearIcon(it.isVisibility)
                 }
 
                 is SearchScreenState.IsLoading -> {
-                    showLoading(findAdapter)
+                    showLoading(findAdapter!!)
                     showClearIcon(it.isVisibility)
                 }
 
                 is SearchScreenState.Error -> {
-                    showError(findAdapter)
+                    showError(findAdapter!!)
                     showClearIcon(it.isVisibility)
                 }
 
                 is SearchScreenState.Content -> {
-                    showContent(findAdapter, it.tracks as ArrayList<TrackUI>)
+                    showContent(findAdapter!!, it.tracks as ArrayList<TrackUI>)
                     showClearIcon(it.isVisibility)
                 }
             }
@@ -159,12 +161,14 @@ class SearchFragment : Fragment() {
     }
 
     private fun showStart(adapter: FindAdapter) {
-        this.binding.clearIcon.isClickable = true
-        this.binding.searchHistoryListView.isVisible = false
-        this.binding.progressBar.isVisible = false
-        this.binding.placeholderFindViewGroup.isVisible = false
-        this.binding.placeholderButton.isVisible = false
-        this.binding.tracksList.isVisible = true
+        with(this.binding) {
+            clearIcon.isClickable = true
+            searchHistoryListView.isVisible = false
+            progressBar.isVisible = false
+            placeholderFindViewGroup.isVisible = false
+            placeholderButton.isVisible = false
+            tracksList.isVisible = true
+        }
         adapter.trackList.clear()
         adapter.notifyDataSetChanged()
 
@@ -172,39 +176,45 @@ class SearchFragment : Fragment() {
 
     private fun showContent(adapter: FindAdapter, tracks: ArrayList<TrackUI>) {
         if (textSearch.isNotEmpty()) {
-            this.binding.searchHistoryListView.isVisible = false
-            this.binding.clearIcon.isClickable = true
-            this.binding.progressBar.visibility = View.GONE
-            this.binding.placeholderFindViewGroup.visibility = View.GONE
-            this.binding.placeholderButton.visibility = View.GONE
-            this.binding.tracksList.visibility = View.VISIBLE
+            with(this.binding) {
+                searchHistoryListView.isVisible = false
+                clearIcon.isClickable = true
+                progressBar.visibility = View.GONE
+                placeholderFindViewGroup.visibility = View.GONE
+                placeholderButton.visibility = View.GONE
+                tracksList.visibility = View.VISIBLE
+            }
             adapter.trackList = tracks
             adapter.notifyDataSetChanged()
         }
     }
 
     private fun showLoading(adapter: FindAdapter) {
-        this.binding.clearIcon.isClickable = false
-        this.binding.searchHistoryListView.isVisible = false
-        this.binding.progressBar.isVisible = true
-        this.binding.placeholderFindViewGroup.isVisible = false
-        this.binding.placeholderButton.isVisible = false
-        this.binding.tracksList.isVisible = true
+        with(this.binding) {
+            clearIcon.isClickable = false
+            searchHistoryListView.isVisible = false
+            progressBar.isVisible = true
+            placeholderFindViewGroup.isVisible = false
+            placeholderButton.isVisible = false
+            tracksList.isVisible = true
+        }
+
         adapter.trackList.clear()
         adapter.notifyDataSetChanged()
     }
 
     private fun showEmpty(adapter: FindAdapter) {
         if (textSearch.isNotEmpty()) {
-            this.binding.searchHistoryListView.isVisible = false
-            this.binding.clearIcon.isClickable = true
-            this.binding.progressBar.visibility = View.GONE
-            this.binding.placeholderFindViewGroup.visibility = View.VISIBLE
-            this.binding.placeholderButton.visibility = View.GONE
-            this.binding.tracksList.visibility = View.GONE
-            this.binding.placeholderFindText.text =
-                getString(R.string.placeholder_nothing_found_text)
-            this.binding.placeholderFindTint.setImageDrawable(requireContext().getDrawable(R.drawable.nothing_found))
+            with(this.binding) {
+                searchHistoryListView.isVisible = false
+                clearIcon.isClickable = true
+                progressBar.visibility = View.GONE
+                placeholderFindViewGroup.visibility = View.VISIBLE
+                placeholderButton.visibility = View.GONE
+                tracksList.visibility = View.GONE
+                placeholderFindText.text = getString(R.string.placeholder_nothing_found_text)
+                placeholderFindTint.setImageDrawable(requireContext().getDrawable(R.drawable.nothing_found))
+            }
             adapter.trackList.clear()
             adapter.notifyDataSetChanged()
         }
@@ -212,15 +222,17 @@ class SearchFragment : Fragment() {
 
     private fun showError(adapter: FindAdapter) {
         if (textSearch.isNotEmpty()) {
-            this.binding.searchHistoryListView.isVisible = false
-            this.binding.clearIcon.isClickable = true
-            this.binding.progressBar.visibility = View.GONE
-            this.binding.placeholderFindViewGroup.visibility = View.VISIBLE
-            this.binding.placeholderButton.visibility = View.VISIBLE
-            this.binding.tracksList.visibility = View.GONE
-            this.binding.placeholderFindText.text =
-                getString(R.string.placeholder_communication_problems_text)
-            this.binding.placeholderFindTint.setImageDrawable(requireContext().getDrawable(R.drawable.communication_problem))
+            with(this.binding) {
+                searchHistoryListView.isVisible = false
+                clearIcon.isClickable = true
+                progressBar.visibility = View.GONE
+                placeholderFindViewGroup.visibility = View.VISIBLE
+                placeholderButton.visibility = View.VISIBLE
+                tracksList.visibility = View.GONE
+                placeholderFindText.text =
+                    getString(R.string.placeholder_communication_problems_text)
+                placeholderFindTint.setImageDrawable(requireContext().getDrawable(R.drawable.communication_problem))
+            }
             adapter.trackList.clear()
             adapter.notifyDataSetChanged()
         }
@@ -237,26 +249,44 @@ class SearchFragment : Fragment() {
         list: List<TrackUI>
     ) {
         if (flag) {
-            this.binding.progressBar.visibility = View.GONE
-            this.binding.searchHistoryListView.visibility = View.VISIBLE
-            this.binding.tracksList.visibility = View.GONE
-            this.binding.placeholderFindViewGroup.visibility = View.GONE
-            this.binding.placeholderButton.visibility = View.GONE
+            with(this.binding) {
+                progressBar.visibility = View.GONE
+                searchHistoryListView.visibility = View.VISIBLE
+                tracksList.visibility = View.GONE
+                placeholderFindViewGroup.visibility = View.GONE
+                placeholderButton.visibility = View.GONE
+            }
             findAdapter.trackList.clear()
             findAdapter.notifyDataSetChanged()
             historyAdapter.trackList = list as ArrayList<TrackUI>
             historyAdapter.notifyDataSetChanged()
         } else {
-            this.binding.progressBar.visibility = View.GONE
-            this.binding.searchHistoryListView.visibility = View.GONE
-            this.binding.tracksList.visibility = View.GONE
-            this.binding.placeholderFindViewGroup.visibility = View.GONE
+            with(this.binding) {
+                progressBar.visibility = View.GONE
+                searchHistoryListView.visibility = View.GONE
+                tracksList.visibility = View.GONE
+                placeholderFindViewGroup.visibility = View.GONE
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (flagNavigateToPlayer) {
+            this.binding.menuFindSearchEditText.setText(textSearch)
+            binding.menuFindSearchEditText.selectAll()
+            searchVM.searchDebounce(textSearch)
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.tracksList.adapter = null
+        binding.historyTracksList.adapter = null
+        findAdapter = null
+        historyAdapter = null
         _binding = null
+
     }
 
     companion object {

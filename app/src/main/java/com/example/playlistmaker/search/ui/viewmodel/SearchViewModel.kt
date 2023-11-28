@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.util.debounce
 import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.SearchTracksInteractor
 import com.example.playlistmaker.search.domain.api.SetViewVisibilityUseCase
@@ -12,8 +11,12 @@ import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.mappers.MapToTrackUI
 import com.example.playlistmaker.search.ui.mappers.TrackToTrackUI
 import com.example.playlistmaker.search.ui.models.SearchScreenState
+import com.example.playlistmaker.util.debounce
 import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SearchViewModel(
     private val searchHistoryInteractor: SearchHistoryInteractor,
@@ -38,16 +41,23 @@ class SearchViewModel(
     }
 
     fun showSearchHistory(flag: Boolean) {
-        val currentList = searchHistoryInteractor.getTracksList()
-        if (flag && currentList.isNotEmpty()) {
-            currentSearchViewScreenState.postValue(
-                SearchScreenState.Hictory(
-                    currentList.map { it -> trackToTrackUI.fromTrack(it) }, false
-                )
-            )
-        } else {
-            currentSearchViewScreenState.value =
-                (SearchScreenState.EmptyHistory(emptyList(), false))
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                getSearchHstoryTracks().collect { listHistory ->
+                    if (flag && listHistory.isNotEmpty()) {
+                        currentSearchViewScreenState.postValue(
+                            SearchScreenState.Hictory(
+                                listHistory.map { it -> trackToTrackUI.map(it) }, false
+                            )
+                        )
+                    } else {
+                        currentSearchViewScreenState.postValue(
+                            (SearchScreenState.EmptyHistory(emptyList(), false))
+                        )
+                    }
+                }
+
+            }
         }
     }
 
@@ -61,7 +71,10 @@ class SearchViewModel(
         }
     }
 
-    fun getSearchHstoryTracks() = searchHistoryInteractor.getTracksList()
+    private fun getSearchHstoryTracks(): Flow<ArrayList<Track>> {
+        return searchHistoryInteractor.getTracksList()
+    }
+
     fun savedTrack(track: Track) {
         searchHistoryInteractor.saved(track)
     }
@@ -82,6 +95,7 @@ class SearchViewModel(
 
     fun stop() {
         onCleared()
+        latestSearchText = null
     }
 
     private fun processResult(data: List<Track>?, error: String?, textSearch: String) {

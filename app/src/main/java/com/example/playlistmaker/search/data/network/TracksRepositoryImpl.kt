@@ -1,5 +1,6 @@
 package com.example.playlistmaker.search.data.network
 
+import com.example.playlistmaker.favorite.data.db.AppDataBase
 import com.example.playlistmaker.search.data.NetworkClient
 import com.example.playlistmaker.search.data.dto.TrackRequest
 import com.example.playlistmaker.search.data.dto.TracksResponse
@@ -9,7 +10,10 @@ import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
+class TracksRepositoryImpl(
+    private val networkClient: NetworkClient,
+    private val appDataBase: AppDataBase
+) : TracksRepository {
     override fun getMusic(term: String): Flow<SearchResultData<List<Track>>> = flow {
         val response = networkClient.searchTracks(TrackRequest(term))
         when (response?.resultCode) {
@@ -18,6 +22,7 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
             }
 
             200 -> {
+                val listId = appDataBase.getFavoriteTrackDao().getIdFavoriteTracks()
                 val resultSearch = (response as TracksResponse).results.map {
                     Track(
                         it.trackId,
@@ -30,7 +35,8 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
                         it.getYear(),
                         it.getParam(it.primaryGenreName),
                         it.getParam(it.previewUrl),
-                        it.getCoverArtwork()
+                        it.getCoverArtwork(),
+                        inFavorite = listId.contains(it.trackId)
                     )
                 }
                 emit(SearchResultData.Data(resultSearch))

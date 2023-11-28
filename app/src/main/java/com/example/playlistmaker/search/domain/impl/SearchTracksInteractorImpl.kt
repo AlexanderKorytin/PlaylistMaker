@@ -4,7 +4,6 @@ import com.example.playlistmaker.search.domain.api.SearchTracksInteractor
 import com.example.playlistmaker.search.domain.api.TracksRepository
 import com.example.playlistmaker.search.domain.models.Result
 import com.example.playlistmaker.search.domain.models.SearchResultData
-import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
