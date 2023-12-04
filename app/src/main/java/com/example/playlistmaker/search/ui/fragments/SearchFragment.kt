@@ -170,9 +170,8 @@ class SearchFragment : Fragment() {
             placeholderButton.isVisible = false
             tracksList.isVisible = true
         }
-        lifecycleScope.launch {
-            adapter.submitList(ArrayList())
-        }
+
+        adapter.submitList(ArrayList())
     }
 
     private fun showContent(adapter: FindAdapter, tracks: ArrayList<TrackUI>) {
@@ -185,9 +184,7 @@ class SearchFragment : Fragment() {
                 placeholderButton.visibility = View.GONE
                 tracksList.visibility = View.VISIBLE
             }
-            lifecycleScope.launch {
-                adapter.submitList(tracks)
-            }
+            adapter.submitList(tracks)
         }
     }
 
@@ -200,9 +197,7 @@ class SearchFragment : Fragment() {
             placeholderButton.isVisible = false
             tracksList.isVisible = true
         }
-        lifecycleScope.launch {
-            adapter.submitList(ArrayList())
-        }
+        adapter.submitList(ArrayList())
     }
 
     private fun showEmpty(adapter: FindAdapter) {
@@ -217,9 +212,7 @@ class SearchFragment : Fragment() {
                 placeholderFindText.text = getString(R.string.placeholder_nothing_found_text)
                 placeholderFindTint.setImageDrawable(requireContext().getDrawable(R.drawable.nothing_found))
             }
-            lifecycleScope.launch {
                 adapter.submitList(ArrayList())
-            }
         }
     }
 
@@ -236,9 +229,7 @@ class SearchFragment : Fragment() {
                     getString(R.string.placeholder_communication_problems_text)
                 placeholderFindTint.setImageDrawable(requireContext().getDrawable(R.drawable.communication_problem))
             }
-            lifecycleScope.launch {
                 adapter.submitList(ArrayList())
-            }
         }
     }
 
@@ -260,10 +251,8 @@ class SearchFragment : Fragment() {
                 placeholderFindViewGroup.visibility = View.GONE
                 placeholderButton.visibility = View.GONE
             }
-            lifecycleScope.launch {
                 findAdapter.submitList(ArrayList())
                 historyAdapter.submitList(list)
-            }
         } else {
             with(this.binding) {
                 progressBar.visibility = View.GONE

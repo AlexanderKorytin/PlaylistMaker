@@ -8,9 +8,8 @@ import com.example.playlistmaker.databinding.TrackViewBinding
 import com.example.playlistmaker.search.ui.models.TrackUI
 
 
-class FindAdapter(val trackClickListner: TrackClickListner) :
+class FindAdapter(private val trackClickListner: TrackClickListner) :
     ListAdapter<TrackUI, FindViewHolder>(TracksDiffUtil()) {
-   // var trackList = ArrayList<TrackUI>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FindViewHolder {
         val layoutInspector = LayoutInflater.from(parent.context)
         val viewBinding = TrackViewBinding.inflate(layoutInspector, parent, false)
@@ -23,7 +22,7 @@ class FindAdapter(val trackClickListner: TrackClickListner) :
         holder.bind(currentList[position])
         holder.itemView.setOnClickListener {
             it.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
-            trackClickListner.onTrackClick(currentList.get(position))
+            trackClickListner.onTrackClick(getItem(position))
         }
     }
 

@@ -93,9 +93,7 @@ class FavoriteTracksFragment : Fragment() {
 
     private fun showContent(tracks: List<Track>) {
         with(binding) {
-            lifecycleScope.launch {
-                favoriteAdapter?.submitList(favoriteTracksVM.mapToTrackUI.mapList(tracks))
-            }
+            favoriteAdapter?.submitList(favoriteTracksVM.mapToTrackUI.mapList(tracks))
             favoriteTracksList.isVisible = true
             placeholderGroup.isVisible = false
         }

@@ -25,5 +25,8 @@ class TracksDiffUtil(
                 oldItem.primaryGenreName == newItem.primaryGenreName
     }
 
+    override fun getChangePayload(oldItem: TrackUI, newItem: TrackUI): Any? {
+        return super.getChangePayload(oldItem, newItem)
+    }
 
 }
