@@ -93,13 +93,10 @@ class FavoriteTracksFragment : Fragment() {
     }
 
     private fun showContent(tracks: List<Track>) {
-//        favoriteAdapter?.trackList?.clear()
-//        favoriteAdapter?.trackList?.addAll(favoriteTracksVM.mapToTrackUI.mapList(tracks))
         with(binding) {
             lifecycleScope.launch {
                 updateTracksList(favoriteAdapter!!, favoriteTracksVM.mapToTrackUI.mapList(tracks))
             }
-//            favoriteTracksList.adapter?.notifyDataSetChanged()
             favoriteTracksList.isVisible = true
             placeholderGroup.isVisible = false
         }
