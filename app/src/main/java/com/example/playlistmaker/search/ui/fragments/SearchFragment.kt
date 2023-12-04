@@ -19,8 +19,11 @@ import com.example.playlistmaker.player.ui.MediaActivity
 import com.example.playlistmaker.search.ui.FindAdapter
 import com.example.playlistmaker.search.ui.models.SearchScreenState
 import com.example.playlistmaker.search.ui.models.TrackUI
+import com.example.playlistmaker.search.ui.updateTracksList
 import com.example.playlistmaker.search.ui.viewmodel.SearchViewModel
 import com.example.playlistmaker.util.debounce
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -169,9 +172,9 @@ class SearchFragment : Fragment() {
             placeholderButton.isVisible = false
             tracksList.isVisible = true
         }
-        adapter.trackList.clear()
-        adapter.notifyDataSetChanged()
-
+        lifecycleScope.launch {
+            updateTracksList(adapter, ArrayList())
+        }
     }
 
     private fun showContent(adapter: FindAdapter, tracks: ArrayList<TrackUI>) {
@@ -184,8 +187,9 @@ class SearchFragment : Fragment() {
                 placeholderButton.visibility = View.GONE
                 tracksList.visibility = View.VISIBLE
             }
-            adapter.trackList = tracks
-            adapter.notifyDataSetChanged()
+            lifecycleScope.launch {
+                updateTracksList(adapter, tracks)
+            }
         }
     }
 
@@ -198,9 +202,9 @@ class SearchFragment : Fragment() {
             placeholderButton.isVisible = false
             tracksList.isVisible = true
         }
-
-        adapter.trackList.clear()
-        adapter.notifyDataSetChanged()
+        lifecycleScope.launch {
+            updateTracksList(adapter, ArrayList())
+        }
     }
 
     private fun showEmpty(adapter: FindAdapter) {
@@ -215,8 +219,9 @@ class SearchFragment : Fragment() {
                 placeholderFindText.text = getString(R.string.placeholder_nothing_found_text)
                 placeholderFindTint.setImageDrawable(requireContext().getDrawable(R.drawable.nothing_found))
             }
-            adapter.trackList.clear()
-            adapter.notifyDataSetChanged()
+            lifecycleScope.launch {
+                updateTracksList(adapter, ArrayList())
+            }
         }
     }
 
@@ -233,8 +238,9 @@ class SearchFragment : Fragment() {
                     getString(R.string.placeholder_communication_problems_text)
                 placeholderFindTint.setImageDrawable(requireContext().getDrawable(R.drawable.communication_problem))
             }
-            adapter.trackList.clear()
-            adapter.notifyDataSetChanged()
+            lifecycleScope.launch {
+                updateTracksList(adapter, ArrayList())
+            }
         }
     }
 
@@ -256,10 +262,10 @@ class SearchFragment : Fragment() {
                 placeholderFindViewGroup.visibility = View.GONE
                 placeholderButton.visibility = View.GONE
             }
-            findAdapter.trackList.clear()
-            findAdapter.notifyDataSetChanged()
-            historyAdapter.trackList = list as ArrayList<TrackUI>
-            historyAdapter.notifyDataSetChanged()
+            lifecycleScope.launch {
+                updateTracksList(findAdapter, ArrayList())
+                updateTracksList(historyAdapter, list as ArrayList<TrackUI>)
+            }
         } else {
             with(this.binding) {
                 progressBar.visibility = View.GONE
