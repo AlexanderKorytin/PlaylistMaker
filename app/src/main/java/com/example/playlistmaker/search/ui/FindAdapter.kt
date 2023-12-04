@@ -22,11 +22,11 @@ class FindAdapter(private val trackClickListner: TrackClickListner) :
         holder.bind(currentList[position])
         holder.itemView.setOnClickListener {
             it.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
-            trackClickListner.onTrackClick(getItem(position))
+            trackClickListner.onTrackClick(currentList[holder.adapterPosition])
         }
     }
 
     fun interface TrackClickListner {
-        fun onTrackClick(track: TrackUI)
+        fun onTrackClick(trackUI: TrackUI)
     }
 }

@@ -18,7 +18,6 @@ import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.FindAdapter
 import com.example.playlistmaker.search.ui.models.TrackUI
 import com.example.playlistmaker.util.debounce
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoriteTracksFragment : Fragment() {
@@ -56,9 +55,9 @@ class FavoriteTracksFragment : Fragment() {
         favoriteAdapter = FindAdapter {
             clickedTrackDebounce(it)
         }
-
         binding.favoriteTracksList.adapter = favoriteAdapter
         binding.favoriteTracksList.layoutManager = LinearLayoutManager(requireContext())
+
         favoriteTracksVM.updateFavoriteTracks()
         favoriteTracksVM.getScreenState().observe(viewLifecycleOwner) {
             when (it) {

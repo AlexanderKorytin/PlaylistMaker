@@ -2,14 +2,11 @@ package com.example.playlistmaker.search.ui
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.playlistmaker.search.ui.models.TrackUI
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
-class TracksDiffUtil(
-) : DiffUtil.ItemCallback<TrackUI>() {
+class TracksDiffUtil : DiffUtil.ItemCallback<TrackUI>() {
 
     override fun areItemsTheSame(oldItem: TrackUI, newItem: TrackUI): Boolean {
-       return oldItem.trackId == newItem.trackId
+        return oldItem.trackId == newItem.trackId
     }
 
     override fun areContentsTheSame(oldItem: TrackUI, newItem: TrackUI): Boolean {
@@ -23,10 +20,6 @@ class TracksDiffUtil(
                 oldItem.country == newItem.country &&
                 oldItem.coverArtWork == newItem.coverArtWork &&
                 oldItem.primaryGenreName == newItem.primaryGenreName
-    }
-
-    override fun getChangePayload(oldItem: TrackUI, newItem: TrackUI): Any? {
-        return super.getChangePayload(oldItem, newItem)
     }
 
 }
