@@ -19,10 +19,8 @@ import com.example.playlistmaker.player.ui.MediaActivity
 import com.example.playlistmaker.search.ui.FindAdapter
 import com.example.playlistmaker.search.ui.models.SearchScreenState
 import com.example.playlistmaker.search.ui.models.TrackUI
-import com.example.playlistmaker.search.ui.updateTracksList
 import com.example.playlistmaker.search.ui.viewmodel.SearchViewModel
 import com.example.playlistmaker.util.debounce
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -173,7 +171,7 @@ class SearchFragment : Fragment() {
             tracksList.isVisible = true
         }
         lifecycleScope.launch {
-            updateTracksList(adapter, ArrayList())
+            adapter.submitList(ArrayList())
         }
     }
 
@@ -188,7 +186,7 @@ class SearchFragment : Fragment() {
                 tracksList.visibility = View.VISIBLE
             }
             lifecycleScope.launch {
-                updateTracksList(adapter, tracks)
+                adapter.submitList(tracks)
             }
         }
     }
@@ -203,7 +201,7 @@ class SearchFragment : Fragment() {
             tracksList.isVisible = true
         }
         lifecycleScope.launch {
-            updateTracksList(adapter, ArrayList())
+            adapter.submitList(ArrayList())
         }
     }
 
@@ -220,7 +218,7 @@ class SearchFragment : Fragment() {
                 placeholderFindTint.setImageDrawable(requireContext().getDrawable(R.drawable.nothing_found))
             }
             lifecycleScope.launch {
-                updateTracksList(adapter, ArrayList())
+                adapter.submitList(ArrayList())
             }
         }
     }
@@ -239,7 +237,7 @@ class SearchFragment : Fragment() {
                 placeholderFindTint.setImageDrawable(requireContext().getDrawable(R.drawable.communication_problem))
             }
             lifecycleScope.launch {
-                updateTracksList(adapter, ArrayList())
+                adapter.submitList(ArrayList())
             }
         }
     }
@@ -263,8 +261,8 @@ class SearchFragment : Fragment() {
                 placeholderButton.visibility = View.GONE
             }
             lifecycleScope.launch {
-                updateTracksList(findAdapter, ArrayList())
-                updateTracksList(historyAdapter, list as ArrayList<TrackUI>)
+                findAdapter.submitList(ArrayList())
+                historyAdapter.submitList(list)
             }
         } else {
             with(this.binding) {

@@ -6,48 +6,24 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class TracksDiffUtil(
-    private val oldList: ArrayList<TrackUI>,
-    private val newList: ArrayList<TrackUI>
-) : DiffUtil.Callback() {
+) : DiffUtil.ItemCallback<TrackUI>() {
 
-
-    override fun getOldListSize(): Int = oldList.size
-
-    override fun getNewListSize(): Int = newList.size
-
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition].trackId == newList[newItemPosition].trackId
+    override fun areItemsTheSame(oldItem: TrackUI, newItem: TrackUI): Boolean {
+       return oldItem.trackId == newItem.trackId
     }
 
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val newTrack = newList[newItemPosition]
-        val oldTrack = oldList[oldItemPosition]
-        return compare(oldTrack, newTrack)
-    }
-
-    private fun compare(oldTrack: TrackUI, newTrack: TrackUI): Boolean {
-
-        return oldTrack.trackId == newTrack.trackId &&
-                oldTrack.trackName == newTrack.trackName &&
-                oldTrack.artistName == newTrack.artistName &&
-                oldTrack.trackTime == newTrack.trackTime &&
-                oldTrack.inFavorite == newTrack.inFavorite &&
-                oldTrack.artworkUrl100 == newTrack.artworkUrl100 &&
-                oldTrack.collectionName == newTrack.collectionName &&
-                oldTrack.country == newTrack.country &&
-                oldTrack.coverArtWork == newTrack.coverArtWork &&
-                oldTrack.primaryGenreName == newTrack.primaryGenreName
-
+    override fun areContentsTheSame(oldItem: TrackUI, newItem: TrackUI): Boolean {
+        return oldItem.trackId == newItem.trackId &&
+                oldItem.trackName == newItem.trackName &&
+                oldItem.artistName == newItem.artistName &&
+                oldItem.trackTime == newItem.trackTime &&
+                oldItem.inFavorite == newItem.inFavorite &&
+                oldItem.artworkUrl100 == newItem.artworkUrl100 &&
+                oldItem.collectionName == newItem.collectionName &&
+                oldItem.country == newItem.country &&
+                oldItem.coverArtWork == newItem.coverArtWork &&
+                oldItem.primaryGenreName == newItem.primaryGenreName
     }
 
 
-}
-
-suspend fun updateTracksList(adapter: FindAdapter, newList: ArrayList<TrackUI>) {
-    val tracksDiffUtilCallBack = TracksDiffUtil(adapter.trackList, newList)
-    val tracksDiffResult = DiffUtil.calculateDiff(tracksDiffUtilCallBack, true)
-    adapter.trackList = newList
-    withContext(Dispatchers.Main) {
-        tracksDiffResult.dispatchUpdatesTo(adapter)
-    }
 }

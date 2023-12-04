@@ -17,7 +17,6 @@ import com.example.playlistmaker.player.ui.MediaActivity
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.FindAdapter
 import com.example.playlistmaker.search.ui.models.TrackUI
-import com.example.playlistmaker.search.ui.updateTracksList
 import com.example.playlistmaker.util.debounce
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -95,7 +94,7 @@ class FavoriteTracksFragment : Fragment() {
     private fun showContent(tracks: List<Track>) {
         with(binding) {
             lifecycleScope.launch {
-                updateTracksList(favoriteAdapter!!, favoriteTracksVM.mapToTrackUI.mapList(tracks))
+                favoriteAdapter?.submitList(favoriteTracksVM.mapToTrackUI.mapList(tracks))
             }
             favoriteTracksList.isVisible = true
             placeholderGroup.isVisible = false
