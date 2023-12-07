@@ -47,8 +47,6 @@ class AlbumsCreatorFragment : Fragment() {
                     .transform(CenterCrop(), RoundedCorners(radiusIconTrackPx))
                     .into(binding.listCover)
                 saveImageToPrivateStorage(uri)
-            } else {
-                binding.listCover.setImageDrawable(requireContext().getDrawable(R.drawable.image_empty_cover))
             }
         }
 
