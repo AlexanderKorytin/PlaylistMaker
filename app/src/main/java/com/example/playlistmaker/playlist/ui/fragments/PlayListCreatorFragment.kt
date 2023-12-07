@@ -24,11 +24,11 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.playlistmaker.playlist.domain.models.PlayList
-import com.example.playlistmaker.playlist.ui.viewmodel.PlayListsViewModel
 import com.example.playlistmaker.R
 import com.example.playlistmaker.app.dpToPx
 import com.example.playlistmaker.databinding.AlbumCreatorFragmentBinding
+import com.example.playlistmaker.playlist.domain.models.PlayList
+import com.example.playlistmaker.playlist.ui.viewmodel.PlayListsViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.markodevcic.peko.PermissionRequester
 import com.markodevcic.peko.PermissionResult
@@ -126,8 +126,8 @@ class PlayListCreatorFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (binding.namePlaylist.text.isNotEmpty()
-                        || binding.descriptionPlaylist.text.isNotEmpty()
-                        || coverUri != null
+                    || binding.descriptionPlaylist.text.isNotEmpty()
+                    || coverUri != null
                 ) dialog.show() else findNavController().navigateUp()
             }
         })
