@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Playlist Maker</string>
+    <string name="app_name">Playlist Maker</string>
     <string name="bot_find" translatable="true">Поиск</string>
     <string name="bot_media" translatable="true">Медиатека</string>
     <string name="bot_settings" translatable="true">Настройки</string>
@@ -12,7 +12,7 @@
     <string name="user_agreement_uri" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
     <string name="share_app_text" translatable="false">https://practicum.yandex.ru/profile/android-developer/</string>
     <string name="my_email_adress" translatable="false">koritin@list.ru</string>
-    <string name="placeholder_nothing_found_text" translatable="false">Ничего не нашлось</string>
+    <string name="placeholder_nothing_found_text">Ничего не нашлось</string>
     <string name="placeholder_communication_problems_text" translatable="true">Проблемы со связью\n\nЗагрузка не удалась. Проверьте\nподключение к интернету</string>
     <string name="update" translatable="true">Обновить</string>
     <string name="you_find" translatable="true">Вы искали</string>
@@ -36,4 +36,5 @@
     <string name="new_playlist">Новый плейлист</string>
     <string name="playlist_name_hint">Название*</string>
     <string name="playlist_description_hint">Описание</string>
+    <string name="create">Создать</string>
 </resources>

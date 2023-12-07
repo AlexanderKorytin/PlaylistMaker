@@ -15,6 +15,7 @@ import com.example.playlistmaker.settings.di.settingsDataModule
 import com.example.playlistmaker.settings.di.settingsDomainModule
 import com.example.playlistmaker.settings.di.settingsViewModelModule
 import com.example.playlistmaker.sharing.di.sharingDomainModule
+import com.markodevcic.peko.PermissionRequester
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -28,6 +29,8 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        PermissionRequester.initialize(applicationContext)
 
         startKoin {
             androidContext(this@App)
