@@ -34,15 +34,23 @@
         tools:layout="@layout/activity_media" />
     <fragment
         android:id="@+id/mediaLibraryFragment"
-        android:name="com.example.playlistmaker.albumslist.ui.fragments.MediaLibraryFragment"
+        android:name="com.example.playlistmaker.playlist.ui.fragments.MediaLibraryFragment"
         android:label="media_library_fragment"
         tools:layout="@layout/media_library_fragment" >
         <action
             android:id="@+id/action_mediaLibraryFragment_to_mediaActivity"
-            app:destination="@id/mediaActivity" />
+            app:destination="@id/mediaActivity"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_mediaLibraryFragment_to_albumsCreatorFragment"
-            app:destination="@id/albumsCreatorFragment" />
+            app:destination="@id/albumsCreatorFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/agreementFragment"
@@ -51,7 +59,7 @@
         tools:layout="@layout/agreement_fragment" />
     <fragment
         android:id="@+id/albumsCreatorFragment"
-        android:name="com.example.playlistmaker.albumslist.ui.fragments.AlbumsCreatorFragment"
+        android:name="com.example.playlistmaker.playlist.ui.fragments.PlayListCreatorFragment"
         android:label="album_creator_fragment"
         tools:layout="@layout/album_creator_fragment" />
 </navigation>

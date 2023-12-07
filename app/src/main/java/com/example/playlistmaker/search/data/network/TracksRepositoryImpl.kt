@@ -1,6 +1,6 @@
 package com.example.playlistmaker.search.data.network
 
-import com.example.playlistmaker.favorite.data.db.AppDataBase
+import com.example.playlistmaker.core.db.AppDataBase
 import com.example.playlistmaker.search.data.NetworkClient
 import com.example.playlistmaker.search.data.dto.TrackRequest
 import com.example.playlistmaker.search.data.dto.TracksResponse

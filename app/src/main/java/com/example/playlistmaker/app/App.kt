@@ -2,12 +2,14 @@ package com.example.playlistmaker.app
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.albumslist.di.albumsViewModelModule
+import com.example.playlistmaker.playlist.di.playListsDataModule
+import com.example.playlistmaker.playlist.di.playListsDomainModule
 import com.example.playlistmaker.favoritetracks.di.favoriteTracksDataModule
 import com.example.playlistmaker.favoritetracks.di.favoriteTracksDomainModule
 import com.example.playlistmaker.favoritetracks.di.favoriteTracksViewModelViewModelModule
 import com.example.playlistmaker.player.di.playerDomainModule
 import com.example.playlistmaker.player.di.playerViewModelModule
+import com.example.playlistmaker.playlists.di.playListsViewModelModule
 import com.example.playlistmaker.search.di.searchDataModule
 import com.example.playlistmaker.search.di.searchDomainModule
 import com.example.playlistmaker.search.di.searchViewModelModule
@@ -47,7 +49,9 @@ class App : Application() {
                 sharingDomainModule,
                 settingsViewModelModule,
 
-                albumsViewModelModule,
+                playListsViewModelModule,
+                playListsDataModule,
+                playListsDomainModule,
 
                 favoriteTracksViewModelViewModelModule,
                 favoriteTracksDataModule,

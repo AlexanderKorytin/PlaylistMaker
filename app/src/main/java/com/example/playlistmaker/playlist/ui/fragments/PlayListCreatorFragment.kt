@@ -1,4 +1,4 @@
-package com.example.playlistmaker.albumslist.ui.fragments
+package com.example.playlistmaker.playlist.ui.fragments
 
 import android.Manifest
 import android.content.Intent
@@ -13,29 +13,39 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.playlist.domain.models.PlayList
+import com.example.playlistmaker.playlist.ui.viewmodel.PlayListsViewModel
 import com.example.playlistmaker.R
 import com.example.playlistmaker.app.dpToPx
 import com.example.playlistmaker.databinding.AlbumCreatorFragmentBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.markodevcic.peko.PermissionRequester
 import com.markodevcic.peko.PermissionResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
 
-class AlbumsCreatorFragment : Fragment() {
+class PlayListCreatorFragment : Fragment() {
     private var _binding: AlbumCreatorFragmentBinding? = null
     private val binding get() = _binding!!
+    private var coverUri: Uri? = null
+    private val playListsVM by viewModel<PlayListsViewModel>()
     private val requester = PermissionRequester.instance()
+
     val pickMedia =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
@@ -62,6 +72,15 @@ class AlbumsCreatorFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+            .setTitle(requireContext().getString(R.string.create_playlist_dialog_title))
+            .setMessage(requireContext().getString(R.string.create_playlist_dialog_message))
+            .setNegativeButton(requireContext().getString(R.string.canсel)) { dialog, which ->
+
+            }
+            .setPositiveButton(requireContext().getString(R.string.сomplete)) { dialog, which ->
+                findNavController().navigateUp()
+            }
 
         val playListNameTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -80,11 +99,38 @@ class AlbumsCreatorFragment : Fragment() {
                 chekedPermission()
             }
         }
+        binding.createPlaylist.setOnClickListener {
+            Toast.makeText(
+                requireContext(),
+                "Плейлист ${binding.namePlaylist.text} создан",
+                Toast.LENGTH_LONG
+            ).show()
 
-        binding.backNewList.setOnClickListener {
+            playListsVM.savePlayList(
+                playList = PlayList(
+                    playListName = binding.namePlaylist.text.toString(),
+                    playListCover = coverUri.toString(),
+                    playListDescription = binding.descriptionPlaylist.text.toString(),
+                )
+            )
             findNavController().navigateUp()
         }
 
+        binding.backNewList.setOnClickListener {
+            if (binding.namePlaylist.text.isNotEmpty()
+                || binding.descriptionPlaylist.text.isNotEmpty()
+                || coverUri != null
+            ) dialog.show() else findNavController().navigateUp()
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (binding.namePlaylist.text.isNotEmpty()
+                        || binding.descriptionPlaylist.text.isNotEmpty()
+                        || coverUri != null
+                ) dialog.show() else findNavController().navigateUp()
+            }
+        })
     }
 
     override fun onDestroyView() {
@@ -96,8 +142,9 @@ class AlbumsCreatorFragment : Fragment() {
         requester.request(Manifest.permission.CAMERA).collect { result ->
             when (result) {
                 is PermissionResult.Granted -> {
-                    withContext(Dispatchers.IO){
-                        pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                    withContext(Dispatchers.IO) {
+                        pickMedia
+                            .launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                     }
                 }// Пользователь дал разрешение, можно продолжать работу
                 is PermissionResult.Denied.NeedsRationale -> {}// Необходимо показать разрешение
@@ -129,5 +176,6 @@ class AlbumsCreatorFragment : Fragment() {
         BitmapFactory
             .decodeStream(inputStream)
             .compress(Bitmap.CompressFormat.JPEG, 50, outputStream)
+        coverUri = file.toUri()
     }
 }

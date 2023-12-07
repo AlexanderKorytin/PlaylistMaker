@@ -5,4 +5,5 @@
     <color name="new_playlist_edittext">#FFFFFF</color>
     <color name="new_playlist_button_not_enabled">#AEAFB4</color>
     <color name="new_playlist_button_enabled">#3772E7</color>
+    <color name="alert_dialog_color">#FFF</color>
 </resources>
