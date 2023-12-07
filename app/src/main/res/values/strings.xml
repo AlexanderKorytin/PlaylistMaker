@@ -33,4 +33,7 @@
     <string name="Albums">Плейлисты</string>
     <string name="No_media_for_playing">Нет отрывка для прослушивания</string>
     <string name="agreement">Соглашение</string>
+    <string name="new_playlist">Новый плейлист</string>
+    <string name="playlist_name_hint">Название*</string>
+    <string name="playlist_description_hint">Описание</string>
 </resources>

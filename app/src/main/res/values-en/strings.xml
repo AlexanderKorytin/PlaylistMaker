@@ -30,4 +30,6 @@
     <string name="Albums">Albums</string>
     <string name="No_media_for_playing">A song excerpt is missing</string>
     <string name="agreement">Agreement</string>
+    <string name="new_playlist">Новый плейлист</string>
+    <string name="playlist_name_hint">Название*</string>
 </resources>
