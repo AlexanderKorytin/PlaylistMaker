@@ -23,7 +23,8 @@ class PlayListViewHolder(private val parentViewBinding: PlaylistItemBinding) :
         )
         val file = File(filePath, playList.playListCover)
 
-        parentViewBinding.quantityTracks.text = "${playList.quantityTracks} ${getEndMessage(playList.quantityTracks)}"
+        parentViewBinding.quantityTracks.text =
+            "${playList.quantityTracks} ${getEndMessage(playList.quantityTracks)}"
         parentViewBinding.playlistNameRecycler.text = playList.playListName
         Glide
             .with(parentViewBinding.root.context)
