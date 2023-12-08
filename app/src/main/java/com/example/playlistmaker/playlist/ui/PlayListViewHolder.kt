@@ -10,6 +10,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.app.dpToPx
 import com.example.playlistmaker.databinding.PlaylistItemBinding
 import com.example.playlistmaker.playlist.domain.models.PlayList
+import com.example.playlistmaker.util.getEndMessage
 import java.io.File
 
 class PlayListViewHolder(private val parentViewBinding: PlaylistItemBinding) :
@@ -33,19 +34,5 @@ class PlayListViewHolder(private val parentViewBinding: PlaylistItemBinding) :
             .transform(CenterCrop(), RoundedCorners(radiusIconTrackPx))
             .into(parentViewBinding.listCoverRecycler)
 
-    }
-
-    private fun getEndMessage(count: Int): String {
-        val endMessage = when (count % 100) {
-            in 11..19 -> "треков"
-            else -> {
-                when (count % 10) {
-                    1 -> "трек"
-                    in 2..4 -> "трека"
-                    else -> "треков"
-                }
-            }
-        }
-        return endMessage
     }
 }
