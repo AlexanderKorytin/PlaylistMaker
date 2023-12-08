@@ -22,7 +22,7 @@ class PlayListsViewModel(private val interactor: PlayListInteractor) : ViewModel
         }
     }
 
-    fun getAllPlayLists(){
+    fun getAllPlayLists() {
         viewModelScope.launch(Dispatchers.IO) {
             interactor.getAllPlayLists().collect { result ->
                 if (result.isNotEmpty()) {
