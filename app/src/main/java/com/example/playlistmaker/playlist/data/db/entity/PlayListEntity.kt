@@ -3,8 +3,6 @@ package com.example.playlistmaker.playlist.data.db.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import org.jetbrains.annotations.Nullable
-import java.io.File
 
 @Entity(tableName = "Playlists")
 data class PlayListEntity(
@@ -16,4 +14,4 @@ data class PlayListEntity(
     var playListCover: String,
     var tracksIds: String,
     var quantityTracks: Int
-    )
+)

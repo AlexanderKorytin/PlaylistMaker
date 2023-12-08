@@ -5,7 +5,7 @@ import com.example.playlistmaker.playlist.domain.api.PlayListsRepository
 import com.example.playlistmaker.playlist.domain.models.PlayList
 import kotlinx.coroutines.flow.Flow
 
-class PlayListInteractorImpl(private val repository: PlayListsRepository) : PlayListInteractor{
+class PlayListInteractorImpl(private val repository: PlayListsRepository) : PlayListInteractor {
     override suspend fun savePlayListToDb(playList: PlayList) {
         repository.savePlayListToBase(playList)
     }

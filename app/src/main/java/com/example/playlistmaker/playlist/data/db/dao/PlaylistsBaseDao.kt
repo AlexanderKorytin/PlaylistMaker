@@ -10,7 +10,7 @@ import com.example.playlistmaker.playlist.data.db.entity.PlayListEntity
 @Dao
 interface PlaylistsBaseDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun savePlayList(playList :PlayListEntity)
+    suspend fun savePlayList(playList: PlayListEntity)
 
     @Query("SELECT * FROM Playlists ")
     suspend fun getAllPlayLists(): List<PlayListEntity>
