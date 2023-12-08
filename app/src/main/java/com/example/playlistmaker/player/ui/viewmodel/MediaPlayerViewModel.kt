@@ -12,24 +12,30 @@ import com.example.playlistmaker.player.domain.models.PlayerState
 import com.example.playlistmaker.player.ui.mappers.MapClickedTrackGsonToClickedTrack
 import com.example.playlistmaker.player.ui.models.ClickedTrackGson
 import com.example.playlistmaker.player.ui.models.MediaPlayerScreenState
+import com.example.playlistmaker.playlist.data.models.TrackIds
 import com.example.playlistmaker.playlist.domain.api.PlayListInteractor
+import com.example.playlistmaker.playlist.domain.models.PlayList
 import com.example.playlistmaker.playlist.ui.models.PlayListsScreenState
+import com.example.playlistmaker.playlist.ui.models.StateLocations
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
+import kotlin.collections.ArrayList
 
 class MediaPlayerViewModel(
     val clickedTrack: ClickedTrackGson,
     private val mediaPlayerInteractor: MediaPlayerInteractor,
     private val favoriteTracksInteractor: FavoriteTracksInteractor,
     private val playListInteractor: PlayListInteractor,
-    getClicketTrack: MapClickedTrackGsonToClickedTrack,
+    clickedTrackConverter: MapClickedTrackGsonToClickedTrack,
+    private val json: Gson
 ) : ViewModel() {
 
-    var playedTrack = getClicketTrack.map(clickedTrack)
+    var playedTrack = clickedTrackConverter.map(clickedTrack)
 
     private var timerJob: Job? = null
 
@@ -44,10 +50,16 @@ class MediaPlayerViewModel(
             "mm:ss", Locale.getDefault()
         ).format(mediaPlayerInteractor.getTimerStart())
 
+    private val staeLocation: MutableLiveData<StateLocations> = MutableLiveData()
+
+    fun getLocation(): LiveData<StateLocations> = staeLocation
+
     private val bottomSheetState: MutableLiveData<PlayListsScreenState> = MutableLiveData()
     fun getBootomSheetState(): LiveData<PlayListsScreenState> = bottomSheetState
 
-    private var currentTrack = MutableLiveData<ClickedTrack>(getClicketTrack.map(clickedTrack))
+    private var currentTrack =
+        MutableLiveData<ClickedTrack>(clickedTrackConverter.map(clickedTrack))
+
     fun getCurrentTrack(): LiveData<ClickedTrack> = currentTrack
 
     private var playerScreenState = MutableLiveData<MediaPlayerScreenState>(
@@ -104,7 +116,20 @@ class MediaPlayerViewModel(
         updateTimerMedia()
         playerScreenState.value =
             currentPlayerStateState.value?.copy(playerState = mediaPlayerInteractor.getPlayerState())
+    }
 
+    fun checkLocationTrackInPL(playList: PlayList) {
+        val ids = json.fromJson(playList.tracksIds, TrackIds::class.java)?: TrackIds(ArrayList())
+        if (ids.data.contains(playedTrack.trackId.toString())) {
+            staeLocation.postValue(StateLocations.isLocation(playList))
+        } else {
+            viewModelScope.launch(Dispatchers.IO) {
+                ids.data.add(playedTrack.trackId.toString())
+                playList.tracksIds = json.toJson(ids.data)
+                playListInteractor.saveTrack(playedTrack.mapToTrack(), playList)
+                staeLocation.postValue(StateLocations.notLocation(playList))
+            }
+        }
     }
 
     fun pausePlayer() {

@@ -1,4 +1,4 @@
-package com.example.playlistmaker.player.ui
+package com.example.playlistmaker.player.ui.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -23,10 +23,12 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.app.dpToPx
 import com.example.playlistmaker.databinding.ActivityMediaBinding
 import com.example.playlistmaker.player.domain.models.PlayerState
+import com.example.playlistmaker.player.ui.PlayListsPlayerAdapter
 import com.example.playlistmaker.player.ui.models.ClickedTrackGson
 import com.example.playlistmaker.player.ui.viewmodel.MediaPlayerViewModel
 import com.example.playlistmaker.playlist.domain.models.PlayList
 import com.example.playlistmaker.playlist.ui.models.PlayListsScreenState
+import com.example.playlistmaker.playlist.ui.models.StateLocations
 import com.example.playlistmaker.util.debounce
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -73,6 +75,25 @@ class MediaPlayerFragment : Fragment() {
             false
         ) {
             onClickPlayList(it)
+        }
+        playerVM.getLocation().observe(viewLifecycleOwner) {
+            when (it) {
+                is StateLocations.isLocation ->
+                    Toast.makeText(
+                        requireContext(),
+                        "Трек уже добавлен в плейлист ${it.playList.playListName}",
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                is StateLocations.notLocation -> {
+                    playerVM.getAllPlayLists()
+                    Toast.makeText(
+                        requireContext(),
+                        "Добавлено в плейлист ${it.playList.playListName}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
         }
         playerVM.getBootomSheetState().observe(viewLifecycleOwner) {
             when (it) {
@@ -273,7 +294,7 @@ class MediaPlayerFragment : Fragment() {
     }
 
     private fun onClickPlayList(playList: PlayList) {
-
+        playerVM.checkLocationTrackInPL(playList)
     }
 
 

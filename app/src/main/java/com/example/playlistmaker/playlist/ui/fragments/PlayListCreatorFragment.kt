@@ -109,6 +109,7 @@ class PlayListCreatorFragment : Fragment() {
                     playListName = binding.namePlaylist.text.toString(),
                     playListCover = coverUri ?: "",
                     playListDescription = binding.descriptionPlaylist.text.toString(),
+                    tracksIds = ""
                 )
             )
             findNavController().navigateUp()

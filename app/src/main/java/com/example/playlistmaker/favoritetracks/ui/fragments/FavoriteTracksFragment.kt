@@ -13,7 +13,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.TabFavoritesFragmentsBinding
 import com.example.playlistmaker.favoritetracks.ui.models.FavoriteTracksScreenState
 import com.example.playlistmaker.favoritetracks.ui.viewmodel.FavoriteTracksViewModel
-import com.example.playlistmaker.player.ui.MediaPlayerFragment
+import com.example.playlistmaker.player.ui.fragments.MediaPlayerFragment
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.FindAdapter
 import com.example.playlistmaker.search.ui.models.TrackUI

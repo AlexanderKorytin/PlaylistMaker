@@ -1,6 +1,6 @@
 package com.example.playlistmaker.playlist.data.db.converter
 
-import com.example.playlistmaker.favorite.data.db.entity.TrackPLEntity
+import com.example.playlistmaker.playlist.data.db.entity.TrackPLEntity
 import com.example.playlistmaker.playlist.data.db.entity.PlayListEntity
 import com.example.playlistmaker.playlist.domain.models.PlayList
 import com.example.playlistmaker.search.domain.models.Track
@@ -21,7 +21,7 @@ class PlayListDbConverter {
         return PlayListEntity(
             playListName = playList.playListName,
             playListCover = playList.playListCover,
-            tracksIds = playList.tracksIds,
+            tracksIds = playList.tracksIds ?:"",
             quantityTracks = playList.quantityTracks,
             playListDescription = playList.playListDescription,
         )

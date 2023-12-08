@@ -15,7 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.SearchFragmentBinding
-import com.example.playlistmaker.player.ui.MediaPlayerFragment
+import com.example.playlistmaker.player.ui.fragments.MediaPlayerFragment
 import com.example.playlistmaker.search.ui.FindAdapter
 import com.example.playlistmaker.search.ui.models.SearchScreenState
 import com.example.playlistmaker.search.ui.models.TrackUI

@@ -1,5 +1,6 @@
 package com.example.playlistmaker.playlist.domain.models
 
+import com.google.gson.Gson
 import java.io.File
 
 data class PlayList(
@@ -7,6 +8,6 @@ data class PlayList(
     val playListName: String,
     val playListDescription: String,
     val playListCover: String,
-    val tracksIds: String = "",
-    val quantityTracks: Int = 0
+    var tracksIds: String?,
+    var quantityTracks: Int = 0
 )

@@ -63,7 +63,7 @@
         tools:layout="@layout/album_creator_fragment" />
     <fragment
         android:id="@+id/mediaPlayerFragment"
-        android:name="com.example.playlistmaker.player.ui.MediaPlayerFragment"
+        android:name="com.example.playlistmaker.player.ui.fragments.MediaPlayerFragment"
         android:label="activity_media"
         tools:layout="@layout/activity_media">
         <action
