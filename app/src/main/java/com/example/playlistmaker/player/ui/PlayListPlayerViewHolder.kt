@@ -1,4 +1,4 @@
-package com.example.playlistmaker.player.ui.viewmodel
+package com.example.playlistmaker.player.ui
 
 import android.os.Environment
 import androidx.core.net.toUri

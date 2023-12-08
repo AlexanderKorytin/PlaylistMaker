@@ -4,10 +4,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.example.playlistmaker.databinding.PlaylistItemBottomSheetBinding
-import com.example.playlistmaker.player.ui.viewmodel.PlayListPlayerViewHolder
 import com.example.playlistmaker.playlist.domain.models.PlayList
 
-class PlayListsPlayerAdapter :
+class PlayListsPlayerAdapter(private val playListClick: PlaylistClick) :
     ListAdapter<PlayList, PlayListPlayerViewHolder>(PlaylistsDiffUtilPlayer()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlayListPlayerViewHolder {
         val viewBinding = PlaylistItemBottomSheetBinding.inflate(
@@ -20,5 +19,11 @@ class PlayListsPlayerAdapter :
 
     override fun onBindViewHolder(holder: PlayListPlayerViewHolder, position: Int) {
         holder.bind(currentList[position])
+        holder.itemView.setOnClickListener {
+            playListClick.onClick(currentList[holder.adapterPosition])
+        }
+    }
+     interface PlaylistClick{
+        fun onClick(playList: PlayList)
     }
 }
