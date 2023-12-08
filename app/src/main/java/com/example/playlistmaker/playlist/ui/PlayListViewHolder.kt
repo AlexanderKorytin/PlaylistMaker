@@ -23,8 +23,7 @@ class PlayListViewHolder(private val parentViewBinding: PlaylistItemBinding) :
         )
         val file = File(filePath, playList.playListCover)
 
-
-        parentViewBinding.quantityTracks.text = playList.quantityTracks.toString()
+        parentViewBinding.quantityTracks.text = "${playList.quantityTracks} ${getEndMessage(playList.quantityTracks)}"
         parentViewBinding.playlistNameRecycler.text = playList.playListName
         Glide
             .with(parentViewBinding.root.context)
@@ -33,5 +32,19 @@ class PlayListViewHolder(private val parentViewBinding: PlaylistItemBinding) :
             .transform(CenterCrop(), RoundedCorners(radiusIconTrackPx))
             .into(parentViewBinding.listCoverRecycler)
 
+    }
+
+    private fun getEndMessage(count: Int): String {
+        val endMessage = when (count % 100) {
+            in 11..19 -> "треков"
+            else -> {
+                when (count % 10) {
+                    1 -> "трек"
+                    in 2..4 -> "трека"
+                    else -> "треков"
+                }
+            }
+        }
+        return endMessage
     }
 }
