@@ -304,7 +304,7 @@
             android:paddingHorizontal="@dimen/padding_16"
             android:paddingTop="18dp"
             android:paddingBottom="@dimen/padding_12"
-            android:text="Добавить в плейтист"
+            android:text="@string/add_to_playlist"
             android:textAllCaps="false"
             android:textColor="@color/tabtextcolor"
             android:textFontWeight="500"

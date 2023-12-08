@@ -41,4 +41,5 @@
     <string name="create_playlist_dialog_title" translatable="false">Завершить создание плейлиста?</string>
     <string name="canсel">Отмена</string>
     <string name="сomplete">Завершить</string>
+    <string name="add_to_playlist">Добавить в плейтист</string>
 </resources>

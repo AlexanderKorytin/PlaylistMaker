@@ -8,4 +8,5 @@
     <color name="alert_dialog_color">#FFF</color>
     <color name="bottom_sheet_behavior_playlists">#1A1B22</color>
     <color name="bottom_sheet_behavior_playlists_line">#FFFFFF</color>
+    <color name="bottom_sheet_behavior_playlists_text_quantity">#FFFFFF</color>
 </resources>
