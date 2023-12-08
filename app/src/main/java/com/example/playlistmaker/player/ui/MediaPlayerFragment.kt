@@ -3,14 +3,19 @@ package com.example.playlistmaker.player.ui
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.HapticFeedbackConstants
+import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -20,34 +25,68 @@ import com.example.playlistmaker.databinding.ActivityMediaBinding
 import com.example.playlistmaker.player.domain.models.PlayerState
 import com.example.playlistmaker.player.ui.models.ClickedTrackGson
 import com.example.playlistmaker.player.ui.viewmodel.MediaPlayerViewModel
+import com.example.playlistmaker.playlist.domain.models.PlayList
+import com.example.playlistmaker.playlist.ui.models.PlayListsScreenState
+import com.example.playlistmaker.util.debounce
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
 
-class MediaActivity : AppCompatActivity(R.layout.activity_media) {
-
+class MediaPlayerFragment : Fragment() {
 
     private var receivedTrack: String? = null
-    private lateinit var binding: ActivityMediaBinding
+    private var _binding: ActivityMediaBinding? = null
+    private val binding get() = _binding!!
     private lateinit var outAnim: Animation
     private lateinit var inAnim: Animation
+    private val bottomSheetBehavior by lazy { BottomSheetBehavior.from(binding.playlistsBottomSheet) }
+    private var bottomSheetAdapter: PlayListsPlayerAdapter? = null
+    private lateinit var clickedPlayListDebounce: (PlayList) -> Unit
 
     private val playerVM: MediaPlayerViewModel by viewModel<MediaPlayerViewModel> {
-        parametersOf(ClickedTrackGson(intent.getStringExtra("clickedTrack")))
+        parametersOf(ClickedTrackGson(arguments?.getString("clickedTrack")?:""))
     }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = ActivityMediaBinding.inflate(layoutInflater, container, false)
+        return binding.root
+    }
     @SuppressLint("ClickableViewAccessibility")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityMediaBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         val radiusIconTrackDp = 8.0f
-        val radiusIconTrackPx = dpToPx(radiusIconTrackDp, this)
+        val radiusIconTrackPx = dpToPx(radiusIconTrackDp, requireContext())
 
+        bottomSheetAdapter = PlayListsPlayerAdapter{onClickPlayList(it)}
+        binding.playlistsRecyclerPlayer.adapter = bottomSheetAdapter
+
+        clickedPlayListDebounce = debounce<PlayList>(
+            CLICKED_PLAYLIST_DELAY,
+            lifecycleScope,
+            false
+        ){
+            onClickPlayList(it)
+        }
+        playerVM.getBootomSheetState().observe(viewLifecycleOwner) {
+            when (it) {
+                is PlayListsScreenState.PlayListsContent -> {
+                    showBottomSheetContent(it.data)
+                }
+
+                is PlayListsScreenState.Empty -> {
+                    showBottomSheetEmpty()
+                }
+            }
+        }
         receivedTrack = savedInstanceState?.getString(CLICKED_TRACK, "")
-            ?: intent.getStringExtra("clickedTrack")
-        playerVM.getPlayerScreenState().observe(this) { currentPlayerState ->
+            ?: arguments?.getString("clickedTrack")
+        playerVM.getPlayerScreenState().observe(viewLifecycleOwner) { currentPlayerState ->
             when (currentPlayerState.playerState) {
                 PlayerState.STATE_DEFAULT -> {
                     with(binding) {
@@ -59,14 +98,14 @@ class MediaActivity : AppCompatActivity(R.layout.activity_media) {
                 PlayerState.STATE_PREPARED -> {
                     with(binding) {
                         playPause.isEnabled = true
-                        playPause.setImageDrawable(getDrawable(R.drawable.play_button))
+                        playPause.setImageDrawable(requireContext().getDrawable(R.drawable.play_button))
                         timerMedia.text = currentPlayerState.currentTime
                     }
                 }
 
                 PlayerState.STATE_PLAYING -> {
                     with(binding) {
-                        playPause.setImageDrawable(getDrawable(R.drawable.pause_button))
+                        playPause.setImageDrawable(requireContext().getDrawable(R.drawable.pause_button))
                         timerMedia.text = currentPlayerState.currentTime
                     }
 
@@ -75,18 +114,18 @@ class MediaActivity : AppCompatActivity(R.layout.activity_media) {
                 else -> {
                     with(binding) {
                         timerMedia.text = currentPlayerState.currentTime
-                        playPause.setImageDrawable(getDrawable(R.drawable.play_button))
+                        playPause.setImageDrawable(requireContext().getDrawable(R.drawable.play_button))
                     }
                 }
 
             }
         }
 
-        playerVM.getCurrentTrack().observe(this) { track ->
+        playerVM.getCurrentTrack().observe(viewLifecycleOwner) { track ->
 
             if (track.previewUrl == "") {
                 binding.playPause.isEnabled = false
-                Toast.makeText(this, getString(R.string.No_media_for_playing), Toast.LENGTH_LONG)
+                Toast.makeText(requireContext(), getString(R.string.No_media_for_playing), Toast.LENGTH_LONG)
                     .show()
             } else binding.playPause.isEnabled = true
 
@@ -126,14 +165,14 @@ class MediaActivity : AppCompatActivity(R.layout.activity_media) {
             playerVM.changedSingInFavorite()
         }
 
-        playerVM.getCurrentSingFavorite().observe(this) { sing ->
-            if (sing) binding.addFavorite.setImageDrawable(getDrawable(R.drawable.in_favorite_true))
-            else binding.addFavorite.setImageDrawable(getDrawable(R.drawable.in_favorite_false))
+        playerVM.getCurrentSingFavorite().observe(viewLifecycleOwner) { sing ->
+            if (sing) binding.addFavorite.setImageDrawable(requireContext().getDrawable(R.drawable.in_favorite_true))
+            else binding.addFavorite.setImageDrawable(requireContext().getDrawable(R.drawable.in_favorite_false))
         }
 
         //загружаем анимации
-        inAnim = AnimationUtils.loadAnimation(this, R.anim.fadein)
-        outAnim = AnimationUtils.loadAnimation(this, R.anim.fadeout)
+        inAnim = AnimationUtils.loadAnimation(requireContext(), R.anim.fadein)
+        outAnim = AnimationUtils.loadAnimation(requireContext(), R.anim.fadeout)
         //добавляем слушателя на анимацию
         outAnim.setAnimationListener(object : AnimationListener {
             override fun onAnimationStart(animation: Animation?) {
@@ -162,8 +201,31 @@ class MediaActivity : AppCompatActivity(R.layout.activity_media) {
             }
 
         })
+
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> binding.overlay.isVisible = false
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                        binding.overlay.isVisible = true
+                        playerVM.getAllPlayLists()
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                binding.overlay.alpha = slideOffset
+            }
+
+        })
+        binding.addCollection.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+
+
         binding.backMedia.setOnClickListener {
-            this.onBackPressedDispatcher.onBackPressed()
+           requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
         binding.playPause.setOnTouchListener { v, event ->
@@ -186,16 +248,36 @@ class MediaActivity : AppCompatActivity(R.layout.activity_media) {
                 }
             }
         }
+
+        binding.createAlbumPlayer.setOnClickListener {
+            findNavController().navigate(R.id.action_mediaPlayerFragment_to_albumsCreatorFragment)
+        }
+    }
+    private fun showBottomSheetContent(list: List<PlayList>) {
+        bottomSheetAdapter?.submitList(list)
     }
 
+    private fun showBottomSheetEmpty() {
+
+    }
+    private fun onClickPlayList(playList: PlayList){
+
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        playerVM.getAllPlayLists()
+    }
     override fun onPause() {
         super.onPause()
         playerVM.pausePlayer()
     }
 
     companion object {
-        private const val CLICKED_TRACK = "CLICKED_TRACK"
+        private val CLICKED_TRACK = "CLICKED_TRACK"
         private const val CURRENTTRACK = "clickedTrack"
+        private const val CLICKED_PLAYLIST_DELAY = 300L
         fun createArgs(clickedTrack: String?): Bundle = bundleOf(CURRENTTRACK to clickedTrack)
     }
 }

@@ -12,6 +12,8 @@ import com.example.playlistmaker.player.domain.models.PlayerState
 import com.example.playlistmaker.player.ui.mappers.MapClickedTrackGsonToClickedTrack
 import com.example.playlistmaker.player.ui.models.ClickedTrackGson
 import com.example.playlistmaker.player.ui.models.MediaPlayerScreenState
+import com.example.playlistmaker.playlist.domain.api.PlayListInteractor
+import com.example.playlistmaker.playlist.ui.models.PlayListsScreenState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -23,7 +25,8 @@ class MediaPlayerViewModel(
     val clickedTrack: ClickedTrackGson,
     private val mediaPlayerInteractor: MediaPlayerInteractor,
     private val favoriteTracksInteractor: FavoriteTracksInteractor,
-    getClicketTrack: MapClickedTrackGsonToClickedTrack
+    private val playListInteractor: PlayListInteractor,
+    getClicketTrack: MapClickedTrackGsonToClickedTrack,
 ) : ViewModel() {
 
     var playedTrack = getClicketTrack.map(clickedTrack)
@@ -41,6 +44,8 @@ class MediaPlayerViewModel(
             "mm:ss", Locale.getDefault()
         ).format(mediaPlayerInteractor.getTimerStart())
 
+    private val bottomSheetState: MutableLiveData<PlayListsScreenState> = MutableLiveData()
+    fun getBootomSheetState(): LiveData<PlayListsScreenState> = bottomSheetState
 
     private var currentTrack = MutableLiveData<ClickedTrack>(getClicketTrack.map(clickedTrack))
     fun getCurrentTrack(): LiveData<ClickedTrack> = currentTrack
@@ -51,6 +56,17 @@ class MediaPlayerViewModel(
             mediaPlayerInteractor.getPlayerState()
         )
     )
+
+    fun getAllPlayLists() {
+        viewModelScope.launch(Dispatchers.IO) {
+            playListInteractor.getAllPlayLists().collect {
+                if (it.isNotEmpty()) bottomSheetState.postValue(
+                    PlayListsScreenState.PlayListsContent(it)
+                )
+                else bottomSheetState.postValue(PlayListsScreenState.Empty)
+            }
+        }
+    }
 
     fun getPlayerScreenState(): LiveData<MediaPlayerScreenState> = playerScreenState
 

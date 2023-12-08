@@ -13,7 +13,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.TabFavoritesFragmentsBinding
 import com.example.playlistmaker.favoritetracks.ui.models.FavoriteTracksScreenState
 import com.example.playlistmaker.favoritetracks.ui.viewmodel.FavoriteTracksViewModel
-import com.example.playlistmaker.player.ui.MediaActivity
+import com.example.playlistmaker.player.ui.MediaPlayerFragment
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.FindAdapter
 import com.example.playlistmaker.search.ui.models.TrackUI
@@ -47,8 +47,8 @@ class FavoriteTracksFragment : Fragment() {
             false
         ) { track ->
             findNavController().navigate(
-                R.id.action_mediaLibraryFragment_to_mediaActivity,
-                MediaActivity.createArgs(favoriteTracksVM.json.toJson(track))
+                R.id.action_mediaLibraryFragment_to_mediaPlayerFragment,
+                MediaPlayerFragment.createArgs(favoriteTracksVM.json.toJson(track))
             )
         }
 

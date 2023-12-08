@@ -121,14 +121,17 @@ class PlayListCreatorFragment : Fragment() {
             ) dialog.show() else findNavController().navigateUp()
         }
 
-        requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (binding.namePlaylist.text.isNotEmpty()
-                    || binding.descriptionPlaylist.text.isNotEmpty()
-                    || coverUri != null
-                ) dialog.show() else findNavController().navigateUp()
-            }
-        })
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (binding.namePlaylist.text.isNotEmpty()
+                        || binding.descriptionPlaylist.text.isNotEmpty()
+                        || coverUri != null
+                    ) dialog.show() else findNavController().navigateUp()
+                }
+
+            })
     }
 
     override fun onDestroyView() {

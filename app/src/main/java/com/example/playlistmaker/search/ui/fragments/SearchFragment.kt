@@ -15,13 +15,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.SearchFragmentBinding
-import com.example.playlistmaker.player.ui.MediaActivity
+import com.example.playlistmaker.player.ui.MediaPlayerFragment
 import com.example.playlistmaker.search.ui.FindAdapter
 import com.example.playlistmaker.search.ui.models.SearchScreenState
 import com.example.playlistmaker.search.ui.models.TrackUI
 import com.example.playlistmaker.search.ui.viewmodel.SearchViewModel
 import com.example.playlistmaker.util.debounce
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -57,8 +56,8 @@ class SearchFragment : Fragment() {
             searchVM.savedTrack(track.toTrack())
             val clickedTrack = searchVM.json.toJson(track)
             findNavController().navigate(
-                R.id.action_searchFragment_to_mediaActivity,
-                MediaActivity.createArgs(clickedTrack)
+                R.id.action_searchFragment_to_mediaPlayerFragment,
+                MediaPlayerFragment.createArgs(clickedTrack)
             )
         }
         // Задаем адаптеры
@@ -212,7 +211,7 @@ class SearchFragment : Fragment() {
                 placeholderFindText.text = getString(R.string.placeholder_nothing_found_text)
                 placeholderFindTint.setImageDrawable(requireContext().getDrawable(R.drawable.nothing_found))
             }
-                adapter.submitList(ArrayList())
+            adapter.submitList(ArrayList())
         }
     }
 
@@ -229,7 +228,7 @@ class SearchFragment : Fragment() {
                     getString(R.string.placeholder_communication_problems_text)
                 placeholderFindTint.setImageDrawable(requireContext().getDrawable(R.drawable.communication_problem))
             }
-                adapter.submitList(ArrayList())
+            adapter.submitList(ArrayList())
         }
     }
 
@@ -251,8 +250,8 @@ class SearchFragment : Fragment() {
                 placeholderFindViewGroup.visibility = View.GONE
                 placeholderButton.visibility = View.GONE
             }
-                findAdapter.submitList(ArrayList())
-                historyAdapter.submitList(list)
+            findAdapter.submitList(ArrayList())
+            historyAdapter.submitList(list)
         } else {
             with(this.binding) {
                 progressBar.visibility = View.GONE

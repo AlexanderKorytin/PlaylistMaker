@@ -20,7 +20,7 @@ class StartActivity : AppCompatActivity() {
         binding.bottomNavigationView.setupWithNavController(navController)
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.mediaActivity, R.id.agreementFragment, R.id.albumsCreatorFragment ->
+                R.id.mediaPlayerFragment, R.id.agreementFragment, R.id.albumsCreatorFragment ->
                     binding.bottomNavigationView.isVisible = false
 
                 else -> binding.bottomNavigationView.isVisible = true
