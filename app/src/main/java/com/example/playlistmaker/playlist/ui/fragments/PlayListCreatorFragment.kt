@@ -17,7 +17,6 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -108,7 +107,7 @@ class PlayListCreatorFragment : Fragment() {
             playListsVM.savePlayList(
                 playList = PlayList(
                     playListName = binding.namePlaylist.text.toString(),
-                    playListCover = coverUri?:"",
+                    playListCover = coverUri ?: "",
                     playListDescription = binding.descriptionPlaylist.text.toString(),
                 )
             )
@@ -170,7 +169,7 @@ class PlayListCreatorFragment : Fragment() {
             filePath.mkdirs()
         }
         coverUri = "${uri.lastPathSegment}.jpg"
-        val file = File(filePath, coverUri?:"")
+        val file = File(filePath, coverUri ?: "")
         val inputStream = requireActivity().contentResolver.openInputStream(uri)
         val outputStream = FileOutputStream(file)
         BitmapFactory
