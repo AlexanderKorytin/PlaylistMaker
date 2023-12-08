@@ -1,4 +1,4 @@
-package com.example.playlistmaker.playlist.ui.viewmodel
+package com.example.playlistmaker.playlist.ui
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.playlistmaker.playlist.domain.models.PlayList

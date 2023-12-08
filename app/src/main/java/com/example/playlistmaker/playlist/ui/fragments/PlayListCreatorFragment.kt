@@ -42,7 +42,7 @@ import java.io.FileOutputStream
 class PlayListCreatorFragment : Fragment() {
     private var _binding: AlbumCreatorFragmentBinding? = null
     private val binding get() = _binding!!
-    private var coverUri: Uri? = null
+    private var coverUri: String? = null
     private val playListsVM by viewModel<PlayListsViewModel>()
     private val requester = PermissionRequester.instance()
 
@@ -53,7 +53,6 @@ class PlayListCreatorFragment : Fragment() {
                 val radiusIconTrackPx = dpToPx(radiusIconTrackDp, requireContext())
                 Glide.with(requireContext())
                     .load(uri)
-                    .placeholder(R.drawable.placeholder_media_image)
                     .transform(CenterCrop(), RoundedCorners(radiusIconTrackPx))
                     .into(binding.listCover)
                 saveImageToPrivateStorage(uri)
@@ -109,7 +108,7 @@ class PlayListCreatorFragment : Fragment() {
             playListsVM.savePlayList(
                 playList = PlayList(
                     playListName = binding.namePlaylist.text.toString(),
-                    playListCover = coverUri.toString(),
+                    playListCover = coverUri?:"",
                     playListDescription = binding.descriptionPlaylist.text.toString(),
                 )
             )
@@ -170,12 +169,12 @@ class PlayListCreatorFragment : Fragment() {
         if (!filePath.exists()) {
             filePath.mkdirs()
         }
-        val file = File(filePath, "album_cover_.jpg")
+        coverUri = "${uri.lastPathSegment}.jpg"
+        val file = File(filePath, coverUri?:"")
         val inputStream = requireActivity().contentResolver.openInputStream(uri)
         val outputStream = FileOutputStream(file)
         BitmapFactory
             .decodeStream(inputStream)
-            .compress(Bitmap.CompressFormat.JPEG, 50, outputStream)
-        coverUri = file.toUri()
+            .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
     }
 }
