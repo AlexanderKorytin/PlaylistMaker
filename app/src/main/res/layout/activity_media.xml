@@ -326,7 +326,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_24"
             android:orientation="vertical"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/playlist_item_bottom_sheet" />
 
     </LinearLayout>
 
