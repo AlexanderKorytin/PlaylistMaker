@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     tools:context=".playlist.ui.fragments.PlayListCreatorFragment">
 
@@ -32,32 +32,42 @@
             app:layout_constraintStart_toEndOf="@id/back_new_list"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/list_cover"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/list_cover_contener"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginHorizontal="@dimen/padding_24"
-            android:layout_marginTop="26dp"
-            android:src="@drawable/new_list_rouded_rectangle"
+            android:layout_marginHorizontal="22dp"
+            android:layout_marginTop="24dp"
+            app:cardCornerRadius="@dimen/padding_8"
+            app:cardElevation="0dp"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_name_new_list_fragment" />
+            app:layout_constraintTop_toBottomOf="@id/text_name_new_list_fragment">
+
+            <ImageView
+                android:id="@+id/list_cover"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="2dp"
+                android:layout_marginTop="2dp"
+                android:src="@drawable/new_list_rouded_rectangle" />
+        </androidx.cardview.widget.CardView>
 
         <EditText
             android:id="@+id/name_playlist"
+            style="@style/new_playlist_edittext"
             android:layout_marginTop="32dp"
             android:hint="@string/playlist_name_hint"
-            style="@style/new_playlist_edittext"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/list_cover" />
+            app:layout_constraintTop_toBottomOf="@id/list_cover_contener" />
 
         <EditText
             android:id="@+id/description_playlist"
+            style="@style/new_playlist_edittext"
             android:layout_marginTop="@dimen/padding_16"
             android:hint="@string/playlist_description_hint"
-            style="@style/new_playlist_edittext"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/name_playlist" />
@@ -66,22 +76,22 @@
             android:id="@+id/create_playlist"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:enabled="false"
             android:layout_marginHorizontal="17dp"
-            android:layout_marginBottom="32dp"
             android:layout_marginTop="170dp"
+            android:layout_marginBottom="32dp"
             android:background="@drawable/new_playlist_button"
-            android:paddingHorizontal="12.5dp"
-            android:textSize="16sp"
+            android:enabled="false"
             android:fontFamily="@font/ys_display_regular"
-            android:textFontWeight="500"
-            android:textColor="@color/white"
+            android:paddingHorizontal="12.5dp"
+            android:text="@string/create"
             android:textAllCaps="false"
-            app:layout_constraintTop_toBottomOf="@id/description_playlist"
+            android:textColor="@color/white"
+            android:textFontWeight="500"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:text="@string/create"/>
+            app:layout_constraintTop_toBottomOf="@id/description_playlist" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
