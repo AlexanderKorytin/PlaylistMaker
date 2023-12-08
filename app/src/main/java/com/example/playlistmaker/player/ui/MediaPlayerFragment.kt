@@ -45,17 +45,18 @@ class MediaPlayerFragment : Fragment() {
     private lateinit var clickedPlayListDebounce: (PlayList) -> Unit
 
     private val playerVM: MediaPlayerViewModel by viewModel<MediaPlayerViewModel> {
-        parametersOf(ClickedTrackGson(arguments?.getString("clickedTrack")?:""))
+        parametersOf(ClickedTrackGson(arguments?.getString("clickedTrack") ?: ""))
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = ActivityMediaBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -63,14 +64,14 @@ class MediaPlayerFragment : Fragment() {
         val radiusIconTrackDp = 8.0f
         val radiusIconTrackPx = dpToPx(radiusIconTrackDp, requireContext())
 
-        bottomSheetAdapter = PlayListsPlayerAdapter{onClickPlayList(it)}
+        bottomSheetAdapter = PlayListsPlayerAdapter { onClickPlayList(it) }
         binding.playlistsRecyclerPlayer.adapter = bottomSheetAdapter
 
         clickedPlayListDebounce = debounce<PlayList>(
             CLICKED_PLAYLIST_DELAY,
             lifecycleScope,
             false
-        ){
+        ) {
             onClickPlayList(it)
         }
         playerVM.getBootomSheetState().observe(viewLifecycleOwner) {
@@ -125,7 +126,11 @@ class MediaPlayerFragment : Fragment() {
 
             if (track.previewUrl == "") {
                 binding.playPause.isEnabled = false
-                Toast.makeText(requireContext(), getString(R.string.No_media_for_playing), Toast.LENGTH_LONG)
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.No_media_for_playing),
+                    Toast.LENGTH_LONG
+                )
                     .show()
             } else binding.playPause.isEnabled = true
 
@@ -215,7 +220,12 @@ class MediaPlayerFragment : Fragment() {
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                binding.overlay.alpha = slideOffset
+                binding.overlay.alpha = when (slideOffset) {
+                    in 0F..0.4F -> 60F
+                    in 0.4F..0.6F -> 70F
+                    in 0.6F..1.0F -> 99F
+                    else -> 50F
+                }
             }
 
         })
@@ -225,7 +235,7 @@ class MediaPlayerFragment : Fragment() {
 
 
         binding.backMedia.setOnClickListener {
-           requireActivity().onBackPressedDispatcher.onBackPressed()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
         binding.playPause.setOnTouchListener { v, event ->
@@ -253,6 +263,7 @@ class MediaPlayerFragment : Fragment() {
             findNavController().navigate(R.id.action_mediaPlayerFragment_to_albumsCreatorFragment)
         }
     }
+
     private fun showBottomSheetContent(list: List<PlayList>) {
         bottomSheetAdapter?.submitList(list)
     }
@@ -260,7 +271,8 @@ class MediaPlayerFragment : Fragment() {
     private fun showBottomSheetEmpty() {
 
     }
-    private fun onClickPlayList(playList: PlayList){
+
+    private fun onClickPlayList(playList: PlayList) {
 
     }
 
@@ -269,6 +281,7 @@ class MediaPlayerFragment : Fragment() {
         super.onResume()
         playerVM.getAllPlayLists()
     }
+
     override fun onPause() {
         super.onPause()
         playerVM.pausePlayer()

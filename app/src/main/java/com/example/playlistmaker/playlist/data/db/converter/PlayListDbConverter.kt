@@ -1,7 +1,9 @@
 package com.example.playlistmaker.playlist.data.db.converter
 
+import com.example.playlistmaker.favorite.data.db.entity.TrackPLEntity
 import com.example.playlistmaker.playlist.data.db.entity.PlayListEntity
 import com.example.playlistmaker.playlist.domain.models.PlayList
+import com.example.playlistmaker.search.domain.models.Track
 
 class PlayListDbConverter {
     fun map(playListEntity: PlayListEntity): PlayList {
@@ -24,4 +26,38 @@ class PlayListDbConverter {
             playListDescription = playList.playListDescription,
         )
     }
+
+    fun map(track: Track): TrackPLEntity {
+        return TrackPLEntity(
+            trackId = track.trackId,
+            trackName = track.trackName,
+            artistName = track.artistName,
+            trackTime = track.trackTime,
+            artworkUrl100 = track.artworkUrl100,
+            country = track.country,
+            collectionName = track.collectionName,
+            year = track.year,
+            previewUrl = track.previewUrl,
+            primaryGenreName = track.primaryGenreName,
+            coverArtWork = track.coverArtWork,
+        )
+    }
+
+    fun map(trackEntity: TrackPLEntity): Track {
+        return Track(
+            trackId = trackEntity.trackId,
+            trackName = trackEntity.trackName,
+            artistName = trackEntity.artistName,
+            trackTime = trackEntity.trackTime,
+            artworkUrl100 = trackEntity.artworkUrl100,
+            country = trackEntity.country,
+            collectionName = trackEntity.collectionName,
+            year = trackEntity.year,
+            primaryGenreName = trackEntity.primaryGenreName,
+            previewUrl = trackEntity.previewUrl,
+            coverArtWork = trackEntity.coverArtWork,
+            inFavorite = true
+        )
+    }
+
 }
