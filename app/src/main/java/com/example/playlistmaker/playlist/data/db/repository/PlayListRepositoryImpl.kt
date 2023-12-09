@@ -24,8 +24,9 @@ class PlayListRepositoryImpl(
 
     override suspend fun saveTrack(track: Track, playList: PlayList) {
         appDataBase.getAllTracksDao().insertTrack(converter.map(track))
-        playList.quantityTracks++
-        appDataBase.getPlayListsBaseDao().updateTracksIdsInPlayList(converter.map(playList))
+        playList.quantityTracks += 1
+        val playListEntity = converter.map(playList)
+        appDataBase.getPlayListsBaseDao().updateTracksIdsInPlayList(playListEntity)
     }
 
 

@@ -8,6 +8,6 @@ data class PlayList(
     val playListName: String,
     val playListDescription: String,
     val playListCover: String,
-    var tracksIds: String?,
+    var tracksIds: String,
     var quantityTracks: Int = 0
 )

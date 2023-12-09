@@ -18,7 +18,7 @@ interface PlaylistsBaseDao {
     @Query("SELECT tracksIds FROM Playlists WHERE playListId = :playListId")
     suspend fun getTracksIdsFromPlayList(playListId: Int): String
 
-    @Update(entity = PlayListEntity::class, onConflict = OnConflictStrategy.REPLACE)
+    @Update(entity = PlayListEntity::class,)
     suspend fun updateTracksIdsInPlayList(entity: PlayListEntity)
 
 }

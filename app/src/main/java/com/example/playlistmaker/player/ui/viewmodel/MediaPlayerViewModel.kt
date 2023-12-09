@@ -119,13 +119,11 @@ class MediaPlayerViewModel(
     }
 
     fun checkLocationTrackInPL(playList: PlayList) {
-        val ids = json.fromJson(playList.tracksIds, TrackIds::class.java)?: TrackIds(ArrayList())
-        if (ids.data.contains(playedTrack.trackId.toString())) {
+        if (playList.tracksIds.contains(playedTrack.trackId.toString())) {
             staeLocation.postValue(StateLocations.isLocation(playList))
         } else {
+            playList.tracksIds += playedTrack.trackId.toString()
             viewModelScope.launch(Dispatchers.IO) {
-                ids.data.add(playedTrack.trackId.toString())
-                playList.tracksIds = json.toJson(ids.data)
                 playListInteractor.saveTrack(playedTrack.mapToTrack(), playList)
                 staeLocation.postValue(StateLocations.notLocation(playList))
             }
