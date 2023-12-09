@@ -3,10 +3,9 @@ package com.example.playlistmaker.player.ui
 import androidx.recyclerview.widget.DiffUtil
 import com.example.playlistmaker.playlist.domain.models.PlayList
 
-class PlaylistsDiffUtilPlayer: DiffUtil.ItemCallback<PlayList>() {
+class PlaylistsDiffUtilPlayer : DiffUtil.ItemCallback<PlayList>() {
     override fun areItemsTheSame(oldItem: PlayList, newItem: PlayList): Boolean =
-        oldItem.playListId == newItem.playListId&&oldItem.tracksIds == newItem.tracksIds
-
+        oldItem.playListId == newItem.playListId
 
     override fun areContentsTheSame(oldItem: PlayList, newItem: PlayList): Boolean {
         return oldItem.playListId == newItem.playListId &&

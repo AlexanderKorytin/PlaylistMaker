@@ -31,6 +31,8 @@ import com.example.playlistmaker.playlist.ui.models.PlayListsScreenState
 import com.example.playlistmaker.playlist.ui.models.StateLocations
 import com.example.playlistmaker.util.debounce
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -42,7 +44,6 @@ class MediaPlayerFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var outAnim: Animation
     private lateinit var inAnim: Animation
-    private val bottomSheetBehavior by lazy { BottomSheetBehavior.from(binding.playlistsBottomSheet) }
     private var bottomSheetAdapter: PlayListsPlayerAdapter? = null
     private lateinit var clickedPlayListDebounce: (PlayList) -> Unit
 
@@ -62,6 +63,7 @@ class MediaPlayerFragment : Fragment() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.playlistsBottomSheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         val radiusIconTrackDp = 8.0f
         val radiusIconTrackPx = dpToPx(radiusIconTrackDp, requireContext())
@@ -76,25 +78,28 @@ class MediaPlayerFragment : Fragment() {
         ) {
             onClickPlayList(it)
         }
+
         playerVM.getLocation().observe(viewLifecycleOwner) {
             when (it) {
                 is StateLocations.isLocation ->
                     Toast.makeText(
                         requireContext(),
                         "Трек уже добавлен в плейлист ${it.playList.playListName}",
-                        Toast.LENGTH_LONG
+                        Toast.LENGTH_SHORT
                     ).show()
 
                 is StateLocations.notLocation -> {
                     playerVM.getAllPlayLists()
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                     Toast.makeText(
                         requireContext(),
                         "Добавлено в плейлист ${it.playList.playListName}",
-                        Toast.LENGTH_LONG
+                        Toast.LENGTH_SHORT
                     ).show()
                 }
             }
         }
+
         playerVM.getBootomSheetState().observe(viewLifecycleOwner) {
             when (it) {
                 is PlayListsScreenState.PlayListsContent -> {
@@ -106,8 +111,10 @@ class MediaPlayerFragment : Fragment() {
                 }
             }
         }
+
         receivedTrack = savedInstanceState?.getString(CLICKED_TRACK, "")
             ?: arguments?.getString("clickedTrack")
+
         playerVM.getPlayerScreenState().observe(viewLifecycleOwner) { currentPlayerState ->
             when (currentPlayerState.playerState) {
                 PlayerState.STATE_DEFAULT -> {
@@ -235,19 +242,11 @@ class MediaPlayerFragment : Fragment() {
                     BottomSheetBehavior.STATE_HIDDEN -> binding.overlay.isVisible = false
                     BottomSheetBehavior.STATE_COLLAPSED -> {
                         binding.overlay.isVisible = true
-                        playerVM.getAllPlayLists()
                     }
                 }
             }
 
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                binding.overlay.alpha = when (slideOffset) {
-                    in 0F..0.4F -> 60F
-                    in 0.4F..0.6F -> 70F
-                    in 0.6F..1.0F -> 99F
-                    else -> 50F
-                }
-            }
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
 
         })
         binding.addCollection.setOnClickListener {
@@ -256,7 +255,7 @@ class MediaPlayerFragment : Fragment() {
 
 
         binding.backMedia.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            findNavController().navigateUp()
         }
 
         binding.playPause.setOnTouchListener { v, event ->
@@ -281,7 +280,11 @@ class MediaPlayerFragment : Fragment() {
         }
 
         binding.createAlbumPlayer.setOnClickListener {
-            findNavController().navigate(R.id.action_mediaPlayerFragment_to_albumsCreatorFragment)
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            lifecycleScope.launch {
+                delay(500)
+                findNavController().navigate(R.id.action_mediaPlayerFragment_to_albumsCreatorFragment)
+            }
         }
     }
 
@@ -306,6 +309,13 @@ class MediaPlayerFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         playerVM.pausePlayer()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        bottomSheetAdapter = null
+        binding.playlistsRecyclerPlayer.adapter = null
+        _binding = null
     }
 
     companion object {

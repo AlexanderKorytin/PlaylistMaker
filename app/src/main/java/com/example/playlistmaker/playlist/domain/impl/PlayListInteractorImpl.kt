@@ -1,6 +1,5 @@
 package com.example.playlistmaker.playlist.domain.impl
 
-import com.example.playlistmaker.playlist.data.models.TrackIds
 import com.example.playlistmaker.playlist.domain.api.PlayListInteractor
 import com.example.playlistmaker.playlist.domain.api.PlayListsRepository
 import com.example.playlistmaker.playlist.domain.models.PlayList

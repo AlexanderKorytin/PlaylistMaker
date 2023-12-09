@@ -5,7 +5,6 @@ import com.example.playlistmaker.playlist.data.db.converter.PlayListDbConverter
 import com.example.playlistmaker.playlist.domain.api.PlayListsRepository
 import com.example.playlistmaker.playlist.domain.models.PlayList
 import com.example.playlistmaker.search.domain.models.Track
-import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -24,8 +23,8 @@ class PlayListRepositoryImpl(
 
     override suspend fun saveTrack(track: Track, playList: PlayList) {
         appDataBase.getAllTracksDao().insertTrack(converter.map(track))
-        playList.quantityTracks += 1
         val playListEntity = converter.map(playList)
+        playListEntity.quantityTracks += 1
         appDataBase.getPlayListsBaseDao().updateTracksIdsInPlayList(playListEntity)
     }
 

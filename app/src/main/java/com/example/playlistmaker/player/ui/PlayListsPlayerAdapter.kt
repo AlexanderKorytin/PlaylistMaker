@@ -23,7 +23,8 @@ class PlayListsPlayerAdapter(private val playListClick: PlaylistClick) :
             playListClick.onClick(currentList[holder.adapterPosition])
         }
     }
-    fun interface PlaylistClick{
+
+    fun interface PlaylistClick {
         fun onClick(playList: PlayList)
     }
 }

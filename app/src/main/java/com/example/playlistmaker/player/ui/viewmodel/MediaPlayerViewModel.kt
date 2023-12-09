@@ -12,7 +12,6 @@ import com.example.playlistmaker.player.domain.models.PlayerState
 import com.example.playlistmaker.player.ui.mappers.MapClickedTrackGsonToClickedTrack
 import com.example.playlistmaker.player.ui.models.ClickedTrackGson
 import com.example.playlistmaker.player.ui.models.MediaPlayerScreenState
-import com.example.playlistmaker.playlist.data.models.TrackIds
 import com.example.playlistmaker.playlist.domain.api.PlayListInteractor
 import com.example.playlistmaker.playlist.domain.models.PlayList
 import com.example.playlistmaker.playlist.ui.models.PlayListsScreenState
@@ -24,7 +23,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
-import kotlin.collections.ArrayList
 
 class MediaPlayerViewModel(
     val clickedTrack: ClickedTrackGson,

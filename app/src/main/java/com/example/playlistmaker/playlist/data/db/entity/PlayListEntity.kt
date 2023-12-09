@@ -7,8 +7,8 @@ import com.google.gson.Gson
 
 @Entity(tableName = "Playlists")
 data class PlayListEntity(
-    @PrimaryKey() @ColumnInfo("playListId")
-    var playListId: Int = 0,
+    @PrimaryKey(autoGenerate = true) @ColumnInfo("playListId")
+    var playListId: Int,
     val playListName: String,
     val playListDescription: String,
     val playListCover: String,
