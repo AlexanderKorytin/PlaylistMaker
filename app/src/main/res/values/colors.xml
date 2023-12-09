@@ -26,5 +26,6 @@
     <color name="bottom_sheet_behavior_playlists">#FFFFFF</color>
     <color name="bottom_sheet_behavior_playlists_line">#E6E8EB</color>
     <color name="bottom_sheet_behavior_playlists_text_quantity">#AEAFB4</color>
+    <color name="playlist_create_background">#FFFFFF</color>
 
 </resources>

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/playlist_create_background"
     android:orientation="vertical"
     tools:context=".playlist.ui.fragments.PlayListCreatorFragment">
 
@@ -50,6 +51,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="2dp"
+                android:background="@color/playlist_create_background"
                 android:layout_marginTop="2dp"
                 android:src="@drawable/new_list_rouded_rectangle" />
         </androidx.cardview.widget.CardView>
