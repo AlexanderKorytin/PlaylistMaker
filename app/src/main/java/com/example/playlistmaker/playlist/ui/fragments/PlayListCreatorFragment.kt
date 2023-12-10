@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -84,13 +85,47 @@ class PlayListCreatorFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.createPlaylist.isEnabled = s?.isNotEmpty()!!
+                with(binding) {
+                    if (s?.isNotEmpty()!!) {
+                        namePlaylist.background =
+                            requireContext().getDrawable(R.drawable.playlist_edittext_not_empty)
+                        textInFrameHintName.isVisible = true
+                        createPlaylist.isEnabled = true
+                    } else {
+                        namePlaylist.background =
+                            requireContext().getDrawable(R.drawable.playlist_edittext_empty)
+                        textInFrameHintName.isVisible = false
+                        createPlaylist.isEnabled = false
+                    }
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {}
 
         }
         binding.namePlaylist.addTextChangedListener(playListNameTextWatcher)
+
+        val playListDescriptionTextWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                with(binding) {
+                    if (s?.isNotEmpty()!!) {
+                        descriptionPlaylist.background =
+                            requireContext().getDrawable(R.drawable.playlist_edittext_not_empty)
+                        textInFrameHintDescription.isVisible = true
+                    } else {
+                        descriptionPlaylist.background =
+                            requireContext().getDrawable(R.drawable.playlist_edittext_empty)
+                        textInFrameHintDescription.isVisible = false
+                    }
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+
+        }
+        binding.descriptionPlaylist.addTextChangedListener(playListDescriptionTextWatcher)
 
         binding.listCover.setOnClickListener {
             lifecycleScope.launch {

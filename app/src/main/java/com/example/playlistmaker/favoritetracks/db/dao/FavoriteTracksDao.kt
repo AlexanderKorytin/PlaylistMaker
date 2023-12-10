@@ -1,11 +1,11 @@
-package com.example.playlistmaker.favorite.data.db.dao
+package com.example.playlistmaker.favoritetracks.db.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.playlistmaker.favorite.data.db.entity.TrackEntity
+import com.example.playlistmaker.favoritetracks.db.entity.TrackEntity
 
 @Dao
 interface FavoriteTracksDao {

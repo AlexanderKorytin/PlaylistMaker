@@ -2,8 +2,8 @@ package com.example.playlistmaker.core.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.playlistmaker.favorite.data.db.dao.FavoriteTracksDao
-import com.example.playlistmaker.favorite.data.db.entity.TrackEntity
+import com.example.playlistmaker.favoritetracks.db.dao.FavoriteTracksDao
+import com.example.playlistmaker.favoritetracks.db.entity.TrackEntity
 import com.example.playlistmaker.playlist.data.db.dao.AllTracksDao
 import com.example.playlistmaker.playlist.data.db.dao.PlaylistsBaseDao
 import com.example.playlistmaker.playlist.data.db.entity.PlayListEntity

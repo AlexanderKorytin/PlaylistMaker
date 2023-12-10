@@ -20,6 +20,7 @@
     <color name="edit_text_cursor_color">#3772E7</color>
     <color name="bottomNavViewColorIcon">#1A1B22</color>
     <color name="new_playlist_edittext">#AEAFB4</color>
+    <color name="new_playlist_edittext_not_empty">#3772E7</color>
     <color name="new_playlist_button_not_enabled">#AEAFB4</color>
     <color name="new_playlist_button_enabled">#3772E7</color>
     <color name="alert_dialog_color">#1A1B22</color>

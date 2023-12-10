@@ -76,6 +76,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/list_cover_contener" />
 
+            <TextView
+                android:id="@+id/text_in_frame_hint_name"
+                style="@style/hint_edit_text"
+                android:text="@string/playlist_name_hint"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@id/name_playlist"
+                app:layout_constraintStart_toStartOf="@id/name_playlist"
+                app:layout_constraintTop_toTopOf="@id/name_playlist" />
+
             <EditText
                 android:id="@+id/description_playlist"
                 style="@style/new_playlist_edittext"
@@ -84,6 +93,23 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/name_playlist" />
+
+            <TextView
+                android:id="@+id/text_in_frame_hint_description"
+                style="@style/hint_edit_text"
+                android:text="@string/playlist_description_hint"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@id/description_playlist"
+                app:layout_constraintStart_toStartOf="@id/description_playlist"
+                app:layout_constraintTop_toTopOf="@id/description_playlist" />
+
+            <TextView
+                android:id="@+id/hint_name"
+                style="@style/hint_edit_text"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@id/name_playlist"
+                app:layout_constraintStart_toStartOf="@id/name_playlist"
+                app:layout_constraintTop_toTopOf="@id/name_playlist" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
