@@ -143,11 +143,11 @@
     </style>
 
     <style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="android:textColor">@color/alert_dialog_color</item>
+        <item name="android:textColor">@color/alert_dialog_button_text_color</item>
     </style>
 
     <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="android:textColor">@color/alert_dialog_color</item>
+        <item name="android:textColor">@color/alert_dialog_button_text_color</item>
     </style>
 
     <style name="hint_edit_text">

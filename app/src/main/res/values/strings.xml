@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Playlist Maker</string>
+    <string name="app_name" translatable="false">Playlist Maker</string>
     <string name="bot_find" translatable="true">Поиск</string>
     <string name="bot_media" translatable="true">Медиатека</string>
     <string name="bot_settings" translatable="true">Настройки</string>
@@ -37,8 +37,8 @@
     <string name="playlist_name_hint">Название*</string>
     <string name="playlist_description_hint">Описание</string>
     <string name="create">Создать</string>
-    <string name="create_playlist_dialog_message" translatable="false">Все несохраненные данные будут потеряны</string>
-    <string name="create_playlist_dialog_title" translatable="false">Завершить создание плейлиста?</string>
+    <string name="create_playlist_dialog_message">Все несохраненные данные будут потеряны</string>
+    <string name="create_playlist_dialog_title">Завершить создание плейлиста?</string>
     <string name="canсel">Отмена</string>
     <string name="сomplete">Завершить</string>
     <string name="add_to_playlist">Добавить в плейтист</string>

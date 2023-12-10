@@ -160,6 +160,26 @@ class SearchFragment : Fragment() {
         searchVM.stop()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (flagNavigateToPlayer) {
+            this.binding.menuFindSearchEditText.setText(textSearch)
+            binding.menuFindSearchEditText.selectAll()
+            searchVM.searchDebounce(textSearch)
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.tracksList.adapter = null
+        binding.historyTracksList.adapter = null
+        findAdapter = null
+        historyAdapter = null
+        _binding = null
+
+    }
+
+
     private fun showStart(adapter: FindAdapter) {
         with(this.binding) {
             clearIcon.isClickable = true
@@ -260,25 +280,6 @@ class SearchFragment : Fragment() {
                 placeholderFindViewGroup.visibility = View.GONE
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (flagNavigateToPlayer) {
-            this.binding.menuFindSearchEditText.setText(textSearch)
-            binding.menuFindSearchEditText.selectAll()
-            searchVM.searchDebounce(textSearch)
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding.tracksList.adapter = null
-        binding.historyTracksList.adapter = null
-        findAdapter = null
-        historyAdapter = null
-        _binding = null
-
     }
 
     companion object {
