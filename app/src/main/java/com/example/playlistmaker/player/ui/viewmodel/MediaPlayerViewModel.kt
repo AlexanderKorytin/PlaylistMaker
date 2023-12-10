@@ -15,7 +15,7 @@ import com.example.playlistmaker.player.ui.models.MediaPlayerScreenState
 import com.example.playlistmaker.playlist.domain.api.PlayListInteractor
 import com.example.playlistmaker.playlist.domain.models.PlayList
 import com.example.playlistmaker.playlist.ui.models.PlayListsScreenState
-import com.example.playlistmaker.playlist.ui.models.StateLocations
+import com.example.playlistmaker.playlist.ui.models.ToastStase
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -48,9 +48,9 @@ class MediaPlayerViewModel(
             "mm:ss", Locale.getDefault()
         ).format(mediaPlayerInteractor.getTimerStart())
 
-    private val staeLocation: MutableLiveData<StateLocations> = MutableLiveData()
+    private val toastState: MutableLiveData<ToastStase> = MutableLiveData()
 
-    fun getLocation(): LiveData<StateLocations> = staeLocation
+    fun getToastState(): LiveData<ToastStase> = toastState
 
     private val bottomSheetState: MutableLiveData<PlayListsScreenState> = MutableLiveData()
     fun getBootomSheetState(): LiveData<PlayListsScreenState> = bottomSheetState
@@ -118,12 +118,12 @@ class MediaPlayerViewModel(
 
     fun checkLocationTrackInPL(playList: PlayList) {
         if (playList.tracksIds.contains(playedTrack.trackId.toString())) {
-            staeLocation.postValue(StateLocations.isLocation(playList))
+            toastState.postValue(ToastStase.isLocation(playList))
         } else {
             playList.tracksIds += playedTrack.trackId.toString()
             viewModelScope.launch(Dispatchers.IO) {
                 playListInteractor.saveTrack(playedTrack.mapToTrack(), playList)
-                staeLocation.postValue(StateLocations.notLocation(playList))
+                toastState.postValue(ToastStase.notLocation(playList))
             }
         }
     }
@@ -175,6 +175,9 @@ class MediaPlayerViewModel(
             }
         }
 
+    }
+    fun toastWasShown() {
+        toastState.value = ToastStase.None
     }
 
     fun playbackControl() {

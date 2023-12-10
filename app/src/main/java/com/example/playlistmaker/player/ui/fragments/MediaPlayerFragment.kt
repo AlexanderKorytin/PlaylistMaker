@@ -28,7 +28,7 @@ import com.example.playlistmaker.player.ui.models.ClickedTrackGson
 import com.example.playlistmaker.player.ui.viewmodel.MediaPlayerViewModel
 import com.example.playlistmaker.playlist.domain.models.PlayList
 import com.example.playlistmaker.playlist.ui.models.PlayListsScreenState
-import com.example.playlistmaker.playlist.ui.models.StateLocations
+import com.example.playlistmaker.playlist.ui.models.ToastStase
 import com.example.playlistmaker.util.debounce
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.delay
@@ -79,16 +79,18 @@ class MediaPlayerFragment : Fragment() {
             onClickPlayList(it)
         }
 
-        playerVM.getLocation().observe(viewLifecycleOwner) {
+        playerVM.getToastState().observe(viewLifecycleOwner) {
             when (it) {
-                is StateLocations.isLocation ->
+                is ToastStase.isLocation ->{
                     Toast.makeText(
                         requireContext(),
                         "Трек уже добавлен в плейлист ${it.playList.playListName}",
                         Toast.LENGTH_SHORT
                     ).show()
+                    playerVM.toastWasShown()
+                }
 
-                is StateLocations.notLocation -> {
+                is ToastStase.notLocation -> {
                     playerVM.getAllPlayLists()
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                     Toast.makeText(
@@ -96,7 +98,9 @@ class MediaPlayerFragment : Fragment() {
                         "Добавлено в плейлист ${it.playList.playListName}",
                         Toast.LENGTH_SHORT
                     ).show()
+                    playerVM.toastWasShown()
                 }
+                is ToastStase.None -> {}
             }
         }
 
