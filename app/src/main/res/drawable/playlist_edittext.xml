@@ -4,10 +4,10 @@
     <size
         android:width="328dp"
         android:height="56dp" />
-    <solid android:color="?attr/colorPrimary"/>
-    <corners android:radius="@dimen/padding_4"/>
+    <solid android:color="?attr/colorPrimary" />
+    <corners android:radius="@dimen/padding_4" />
 
     <stroke
-        android:color="@color/new_playlist_edittext"
-        android:width="1dp"/>
+        android:width="1dp"
+        android:color="@color/new_playlist_edittext" />
 </shape>
