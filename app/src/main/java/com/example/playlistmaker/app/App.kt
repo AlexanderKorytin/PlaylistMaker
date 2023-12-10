@@ -59,7 +59,7 @@ class App : Application() {
             )
         }
         val switchPreference = getSharedPreferences(APP_SETTINGS_PREF_KEY, MODE_PRIVATE)
-        val darkThemeEnabled = switchPreference.getBoolean(DARK_THEME, darkTheme)
+        val darkThemeEnabled: Boolean = switchPreference.getBoolean(DARK_THEME, darkTheme)
         switchTheme(darkThemeEnabled)
     }
 

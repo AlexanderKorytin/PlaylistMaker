@@ -82,18 +82,15 @@ class PlayListCreatorFragment : Fragment() {
             }
 
         val playListNameTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 with(binding) {
                     if (s?.isNotEmpty()!!) {
-                        namePlaylist.background =
-                            requireContext().getDrawable(R.drawable.playlist_edittext_not_empty)
                         textInFrameHintName.isVisible = true
                         createPlaylist.isEnabled = true
                     } else {
-                        namePlaylist.background =
-                            requireContext().getDrawable(R.drawable.playlist_edittext_empty)
                         textInFrameHintName.isVisible = false
                         createPlaylist.isEnabled = false
                     }
@@ -101,29 +98,40 @@ class PlayListCreatorFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable?) {}
-
+        }
+        with(binding){
+            namePlaylist.setOnFocusChangeListener { _, focus ->
+                if (focus|| namePlaylist.text.isNotEmpty()) namePlaylist.background =
+                    requireContext().getDrawable(R.drawable.playlist_edittext_not_empty)
+                else namePlaylist.background =
+                    requireContext().getDrawable(R.drawable.playlist_edittext_empty)
+            }
         }
         binding.namePlaylist.addTextChangedListener(playListNameTextWatcher)
 
         val playListDescriptionTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 with(binding) {
                     if (s?.isNotEmpty()!!) {
-                        descriptionPlaylist.background =
-                            requireContext().getDrawable(R.drawable.playlist_edittext_not_empty)
                         textInFrameHintDescription.isVisible = true
                     } else {
-                        descriptionPlaylist.background =
-                            requireContext().getDrawable(R.drawable.playlist_edittext_empty)
                         textInFrameHintDescription.isVisible = false
                     }
                 }
             }
 
             override fun afterTextChanged(s: Editable?) {}
-
+        }
+        with(binding) {
+            descriptionPlaylist.setOnFocusChangeListener { _, focus ->
+                if (focus||descriptionPlaylist.text.isNotEmpty()) descriptionPlaylist.background =
+                    requireContext().getDrawable(R.drawable.playlist_edittext_not_empty)
+                else descriptionPlaylist.background =
+                    requireContext().getDrawable(R.drawable.playlist_edittext_empty)
+            }
         }
         binding.descriptionPlaylist.addTextChangedListener(playListDescriptionTextWatcher)
 
