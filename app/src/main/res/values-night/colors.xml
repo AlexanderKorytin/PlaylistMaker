@@ -10,4 +10,5 @@
     <color name="bottom_sheet_behavior_playlists_line">#FFFFFF</color>
     <color name="bottom_sheet_behavior_playlists_text_quantity">#FFFFFF</color>
     <color name="playlist_create_background">#1A1B22</color>
+    <color name="bottom_naw_line_top">#E6E8EB</color>
 </resources>

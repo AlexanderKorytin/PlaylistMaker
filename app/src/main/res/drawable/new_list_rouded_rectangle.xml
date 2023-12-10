@@ -7,7 +7,6 @@
         <shape android:shape="rectangle">
 
             <corners android:radius="8dp" />
-            <solid android:color="@color/playlist_create_background"/>
 
             <stroke
                 android:width="1dp"
