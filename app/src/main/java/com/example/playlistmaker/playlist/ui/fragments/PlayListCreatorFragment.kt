@@ -115,11 +115,7 @@ class PlayListCreatorFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 with(binding) {
-                    if (s?.isNotEmpty()!!) {
-                        textInFrameHintDescription.isVisible = true
-                    } else {
-                        textInFrameHintDescription.isVisible = false
-                    }
+                    textInFrameHintDescription.isVisible = s?.isNotEmpty()!!
                 }
             }
 
