@@ -81,7 +81,7 @@ class MediaPlayerFragment : Fragment() {
 
         playerVM.getToastState().observe(viewLifecycleOwner) {
             when (it) {
-                is ToastStase.isLocation ->{
+                is ToastStase.isLocation -> {
                     Toast.makeText(
                         requireContext(),
                         "Трек уже добавлен в плейлист ${it.playList.playListName}",
@@ -100,6 +100,7 @@ class MediaPlayerFragment : Fragment() {
                     ).show()
                     playerVM.toastWasShown()
                 }
+
                 is ToastStase.None -> {}
             }
         }

@@ -176,6 +176,7 @@ class MediaPlayerViewModel(
         }
 
     }
+
     fun toastWasShown() {
         toastState.value = ToastStase.None
     }
