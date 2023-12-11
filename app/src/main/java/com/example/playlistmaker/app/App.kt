@@ -22,12 +22,15 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
 const val APP_SETTINGS_PREF_KEY = "App settings"
+const val IS_FIRST_START = "first_start"
 const val DARK_THEME = "dark_theme"
 
 class App : Application() {
 
 
     private var darkTheme: Boolean = false
+    private var isfirstStart = true
+    private var firstStart: Boolean = true
 
     override fun onCreate() {
         super.onCreate()
@@ -60,17 +63,27 @@ class App : Application() {
         }
         val switchPreference = getSharedPreferences(APP_SETTINGS_PREF_KEY, MODE_PRIVATE)
         val darkThemeEnabled: Boolean = switchPreference.getBoolean(DARK_THEME, darkTheme)
+
+        isfirstStart = switchPreference.getBoolean(IS_FIRST_START, true)
+        if (isfirstStart) switchPreference.edit().putBoolean(IS_FIRST_START, false).apply()
+
         switchTheme(darkThemeEnabled)
     }
 
     fun switchTheme(darkThemeEnabled: Boolean) {
-        darkTheme = darkThemeEnabled
-        AppCompatDelegate.setDefaultNightMode(
-            if (darkThemeEnabled) {
-                AppCompatDelegate.MODE_NIGHT_YES
-            } else {
-                AppCompatDelegate.MODE_NIGHT_NO
-            }
-        )
+        if (isfirstStart) {
+            AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            isfirstStart = false
+        } else {
+            darkTheme = darkThemeEnabled
+            AppCompatDelegate.setDefaultNightMode(
+                if (darkThemeEnabled) {
+                    AppCompatDelegate.MODE_NIGHT_YES
+                } else {
+                    AppCompatDelegate.MODE_NIGHT_NO
+                }
+            )
+        }
+
     }
 }
