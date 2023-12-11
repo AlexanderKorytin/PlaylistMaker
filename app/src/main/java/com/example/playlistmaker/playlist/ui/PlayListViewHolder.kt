@@ -30,7 +30,7 @@ class PlayListViewHolder(private val parentViewBinding: PlaylistItemBinding) :
         Glide
             .with(parentViewBinding.root.context)
             .load(file.toUri())
-            .placeholder(R.drawable.placeholder_media_image)
+            .placeholder(R.drawable.placeholder_playlist_item)
             .transform(CenterCrop(), RoundedCorners(radiusIconTrackPx))
             .into(parentViewBinding.listCoverRecycler)
 
