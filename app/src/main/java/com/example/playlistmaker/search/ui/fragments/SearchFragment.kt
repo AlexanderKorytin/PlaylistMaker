@@ -15,7 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.SearchFragmentBinding
-import com.example.playlistmaker.player.ui.MediaActivity
+import com.example.playlistmaker.player.ui.fragments.MediaPlayerFragment
 import com.example.playlistmaker.search.ui.FindAdapter
 import com.example.playlistmaker.search.ui.models.SearchScreenState
 import com.example.playlistmaker.search.ui.models.TrackUI
@@ -56,8 +56,8 @@ class SearchFragment : Fragment() {
             searchVM.savedTrack(track.toTrack())
             val clickedTrack = searchVM.json.toJson(track)
             findNavController().navigate(
-                R.id.action_searchFragment_to_mediaActivity,
-                MediaActivity.createArgs(clickedTrack)
+                R.id.action_searchFragment_to_mediaPlayerFragment,
+                MediaPlayerFragment.createArgs(clickedTrack)
             )
         }
         // Задаем адаптеры
@@ -160,6 +160,26 @@ class SearchFragment : Fragment() {
         searchVM.stop()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (flagNavigateToPlayer) {
+            this.binding.menuFindSearchEditText.setText(textSearch)
+            binding.menuFindSearchEditText.selectAll()
+            searchVM.searchDebounce(textSearch)
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.tracksList.adapter = null
+        binding.historyTracksList.adapter = null
+        findAdapter = null
+        historyAdapter = null
+        _binding = null
+
+    }
+
+
     private fun showStart(adapter: FindAdapter) {
         with(this.binding) {
             clearIcon.isClickable = true
@@ -169,9 +189,8 @@ class SearchFragment : Fragment() {
             placeholderButton.isVisible = false
             tracksList.isVisible = true
         }
-        adapter.trackList.clear()
-        adapter.notifyDataSetChanged()
 
+        adapter.submitList(ArrayList())
     }
 
     private fun showContent(adapter: FindAdapter, tracks: ArrayList<TrackUI>) {
@@ -184,8 +203,7 @@ class SearchFragment : Fragment() {
                 placeholderButton.visibility = View.GONE
                 tracksList.visibility = View.VISIBLE
             }
-            adapter.trackList = tracks
-            adapter.notifyDataSetChanged()
+            adapter.submitList(tracks)
         }
     }
 
@@ -198,9 +216,7 @@ class SearchFragment : Fragment() {
             placeholderButton.isVisible = false
             tracksList.isVisible = true
         }
-
-        adapter.trackList.clear()
-        adapter.notifyDataSetChanged()
+        adapter.submitList(ArrayList())
     }
 
     private fun showEmpty(adapter: FindAdapter) {
@@ -215,8 +231,7 @@ class SearchFragment : Fragment() {
                 placeholderFindText.text = getString(R.string.placeholder_nothing_found_text)
                 placeholderFindTint.setImageDrawable(requireContext().getDrawable(R.drawable.nothing_found))
             }
-            adapter.trackList.clear()
-            adapter.notifyDataSetChanged()
+            adapter.submitList(ArrayList())
         }
     }
 
@@ -233,8 +248,7 @@ class SearchFragment : Fragment() {
                     getString(R.string.placeholder_communication_problems_text)
                 placeholderFindTint.setImageDrawable(requireContext().getDrawable(R.drawable.communication_problem))
             }
-            adapter.trackList.clear()
-            adapter.notifyDataSetChanged()
+            adapter.submitList(ArrayList())
         }
     }
 
@@ -256,10 +270,8 @@ class SearchFragment : Fragment() {
                 placeholderFindViewGroup.visibility = View.GONE
                 placeholderButton.visibility = View.GONE
             }
-            findAdapter.trackList.clear()
-            findAdapter.notifyDataSetChanged()
-            historyAdapter.trackList = list as ArrayList<TrackUI>
-            historyAdapter.notifyDataSetChanged()
+            findAdapter.submitList(ArrayList())
+            historyAdapter.submitList(list)
         } else {
             with(this.binding) {
                 progressBar.visibility = View.GONE
@@ -268,25 +280,6 @@ class SearchFragment : Fragment() {
                 placeholderFindViewGroup.visibility = View.GONE
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (flagNavigateToPlayer) {
-            this.binding.menuFindSearchEditText.setText(textSearch)
-            binding.menuFindSearchEditText.selectAll()
-            searchVM.searchDebounce(textSearch)
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding.tracksList.adapter = null
-        binding.historyTracksList.adapter = null
-        findAdapter = null
-        historyAdapter = null
-        _binding = null
-
     }
 
     companion object {

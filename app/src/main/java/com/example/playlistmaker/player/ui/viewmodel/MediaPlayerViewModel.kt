@@ -5,13 +5,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.favorite.domain.api.FavoriteTracksInteractor
+import com.example.playlistmaker.favoritetracks.domain.api.FavoriteTracksInteractor
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
 import com.example.playlistmaker.player.domain.models.ClickedTrack
 import com.example.playlistmaker.player.domain.models.PlayerState
 import com.example.playlistmaker.player.ui.mappers.MapClickedTrackGsonToClickedTrack
 import com.example.playlistmaker.player.ui.models.ClickedTrackGson
 import com.example.playlistmaker.player.ui.models.MediaPlayerScreenState
+import com.example.playlistmaker.playlist.domain.api.PlayListInteractor
+import com.example.playlistmaker.playlist.domain.models.PlayList
+import com.example.playlistmaker.playlist.ui.models.PlayListsScreenState
+import com.example.playlistmaker.playlist.ui.models.ToastStase
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -23,10 +28,12 @@ class MediaPlayerViewModel(
     val clickedTrack: ClickedTrackGson,
     private val mediaPlayerInteractor: MediaPlayerInteractor,
     private val favoriteTracksInteractor: FavoriteTracksInteractor,
-    getClicketTrack: MapClickedTrackGsonToClickedTrack
+    private val playListInteractor: PlayListInteractor,
+    clickedTrackConverter: MapClickedTrackGsonToClickedTrack,
+    private val json: Gson
 ) : ViewModel() {
 
-    var playedTrack = getClicketTrack.map(clickedTrack)
+    var playedTrack = clickedTrackConverter.map(clickedTrack)
 
     private var timerJob: Job? = null
 
@@ -41,8 +48,16 @@ class MediaPlayerViewModel(
             "mm:ss", Locale.getDefault()
         ).format(mediaPlayerInteractor.getTimerStart())
 
+    private val toastState: MutableLiveData<ToastStase> = MutableLiveData()
 
-    private var currentTrack = MutableLiveData<ClickedTrack>(getClicketTrack.map(clickedTrack))
+    fun getToastState(): LiveData<ToastStase> = toastState
+
+    private val bottomSheetState: MutableLiveData<PlayListsScreenState> = MutableLiveData()
+    fun getBootomSheetState(): LiveData<PlayListsScreenState> = bottomSheetState
+
+    private var currentTrack =
+        MutableLiveData<ClickedTrack>(clickedTrackConverter.map(clickedTrack))
+
     fun getCurrentTrack(): LiveData<ClickedTrack> = currentTrack
 
     private var playerScreenState = MutableLiveData<MediaPlayerScreenState>(
@@ -51,6 +66,17 @@ class MediaPlayerViewModel(
             mediaPlayerInteractor.getPlayerState()
         )
     )
+
+    fun getAllPlayLists() {
+        viewModelScope.launch(Dispatchers.IO) {
+            playListInteractor.getAllPlayLists().collect {
+                if (it.isNotEmpty()) bottomSheetState.postValue(
+                    PlayListsScreenState.PlayListsContent(it)
+                )
+                else bottomSheetState.postValue(PlayListsScreenState.Empty)
+            }
+        }
+    }
 
     fun getPlayerScreenState(): LiveData<MediaPlayerScreenState> = playerScreenState
 
@@ -88,7 +114,18 @@ class MediaPlayerViewModel(
         updateTimerMedia()
         playerScreenState.value =
             currentPlayerStateState.value?.copy(playerState = mediaPlayerInteractor.getPlayerState())
+    }
 
+    fun checkLocationTrackInPL(playList: PlayList) {
+        if (playList.tracksIds.contains(playedTrack.trackId.toString())) {
+            toastState.postValue(ToastStase.isLocation(playList))
+        } else {
+            playList.tracksIds += playedTrack.trackId.toString()
+            viewModelScope.launch(Dispatchers.IO) {
+                playListInteractor.saveTrack(playedTrack.mapToTrack(), playList)
+                toastState.postValue(ToastStase.notLocation(playList))
+            }
+        }
     }
 
     fun pausePlayer() {
@@ -138,6 +175,10 @@ class MediaPlayerViewModel(
             }
         }
 
+    }
+
+    fun toastWasShown() {
+        toastState.value = ToastStase.None
     }
 
     fun playbackControl() {

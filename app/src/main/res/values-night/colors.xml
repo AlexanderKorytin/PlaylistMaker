@@ -2,4 +2,13 @@
 <resources>
     <color name="tabtextcolor">#FFFFFF</color>
     <color name="bottomNavViewColorIcon">#FFFFFF</color>
+    <color name="new_playlist_edittext">#FFFFFF</color>
+    <color name="new_playlist_button_not_enabled">#AEAFB4</color>
+    <color name="new_playlist_button_enabled">#3772E7</color>
+    <color name="alert_dialog_color">#FFF</color>
+    <color name="bottom_sheet_behavior_playlists">#1A1B22</color>
+    <color name="bottom_sheet_behavior_playlists_line">#FFFFFF</color>
+    <color name="bottom_sheet_behavior_playlists_text_quantity">#FFFFFF</color>
+    <color name="playlist_create_background">#1A1B22</color>
+    <color name="bottom_naw_line_top">#E6E8EB</color>
 </resources>

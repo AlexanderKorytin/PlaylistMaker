@@ -13,7 +13,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.TabFavoritesFragmentsBinding
 import com.example.playlistmaker.favoritetracks.ui.models.FavoriteTracksScreenState
 import com.example.playlistmaker.favoritetracks.ui.viewmodel.FavoriteTracksViewModel
-import com.example.playlistmaker.player.ui.MediaActivity
+import com.example.playlistmaker.player.ui.fragments.MediaPlayerFragment
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.FindAdapter
 import com.example.playlistmaker.search.ui.models.TrackUI
@@ -47,17 +47,17 @@ class FavoriteTracksFragment : Fragment() {
             false
         ) { track ->
             findNavController().navigate(
-                R.id.action_mediaLibraryFragment_to_mediaActivity,
-                MediaActivity.createArgs(favoriteTracksVM.json.toJson(track))
+                R.id.action_mediaLibraryFragment_to_mediaPlayerFragment,
+                MediaPlayerFragment.createArgs(favoriteTracksVM.json.toJson(track))
             )
         }
 
         favoriteAdapter = FindAdapter {
             clickedTrackDebounce(it)
         }
-
         binding.favoriteTracksList.adapter = favoriteAdapter
         binding.favoriteTracksList.layoutManager = LinearLayoutManager(requireContext())
+
         favoriteTracksVM.updateFavoriteTracks()
         favoriteTracksVM.getScreenState().observe(viewLifecycleOwner) {
             when (it) {
@@ -91,10 +91,8 @@ class FavoriteTracksFragment : Fragment() {
     }
 
     private fun showContent(tracks: List<Track>) {
-        favoriteAdapter?.trackList?.clear()
-        favoriteAdapter?.trackList?.addAll(favoriteTracksVM.mapToTrackUI.mapList(tracks))
-        with(binding){
-            favoriteTracksList.adapter?.notifyDataSetChanged()
+        with(binding) {
+            favoriteAdapter?.submitList(favoriteTracksVM.mapToTrackUI.mapList(tracks))
             favoriteTracksList.isVisible = true
             placeholderGroup.isVisible = false
         }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Playlist Maker</string>
     <string name="bot_find">Find</string>
     <string name="bot_media">Media library</string>
     <string name="bot_settings">Settings</string>
@@ -30,4 +29,13 @@
     <string name="Albums">Albums</string>
     <string name="No_media_for_playing">A song excerpt is missing</string>
     <string name="agreement">Agreement</string>
+    <string name="new_playlist">New playlist</string>
+    <string name="playlist_name_hint">Name*</string>
+    <string name="playlist_description_hint">Description</string>
+    <string name="create">Create</string>
+    <string name="create_playlist_dialog_message">All unsaved data will be lost</string>
+    <string name="create_playlist_dialog_title">Finish creating a playlist?</string>
+    <string name="canсel">Cancel</string>
+    <string name="сomplete">Complete</string>
+    <string name="add_to_playlist">Add to playlist</string>
 </resources>

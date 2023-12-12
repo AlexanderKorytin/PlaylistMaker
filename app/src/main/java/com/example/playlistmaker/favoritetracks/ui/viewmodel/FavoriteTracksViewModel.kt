@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.favorite.domain.api.FavoriteTracksInteractor
+import com.example.playlistmaker.favoritetracks.domain.api.FavoriteTracksInteractor
 import com.example.playlistmaker.favoritetracks.ui.models.FavoriteTracksScreenState
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.mappers.MapToTrackUI
