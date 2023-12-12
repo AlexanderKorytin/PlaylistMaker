@@ -73,7 +73,7 @@
                 style="@style/new_playlist_edittext"
                 android:layout_marginTop="32dp"
                 android:hint="@string/playlist_name_hint"
-                android:textCursorDrawable="@drawable/edit_text_playlist_cursor"
+                android:textCursorDrawable="@drawable/edit_text_cursor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/list_cover_contener" />
@@ -93,7 +93,7 @@
                 style="@style/new_playlist_edittext"
                 android:layout_marginTop="@dimen/padding_16"
                 android:hint="@string/playlist_description_hint"
-                android:textCursorDrawable="@drawable/edit_text_playlist_cursor"
+                android:textCursorDrawable="@drawable/edit_text_cursor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/name_playlist" />
