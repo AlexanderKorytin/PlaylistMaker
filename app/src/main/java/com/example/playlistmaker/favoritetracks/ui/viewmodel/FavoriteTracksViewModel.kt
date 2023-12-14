@@ -16,7 +16,6 @@ import kotlinx.coroutines.withContext
 
 class FavoriteTracksViewModel(
     private val favoriteTracksInteractor: FavoriteTracksInteractor,
-    private val trackToTrackUI: TrackToTrackUI,
     val mapToTrackUI: MapToTrackUI,
     val json: Gson
 ) : ViewModel() {

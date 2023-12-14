@@ -9,29 +9,34 @@ import com.example.playlistmaker.currentplaylist.ui.models.CurrentPlayListScreen
 import com.example.playlistmaker.favoritetracks.domain.api.FavoriteTracksInteractor
 import com.example.playlistmaker.playlist.domain.models.PlayList
 import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.search.ui.mappers.MapToTrackUI
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class CurrentPlayListViewModel(
     val playList: String?,
     private val currentPlayListInteractor: CurrentPlayListInteractor,
-    private val favoriteTracksInteractor: FavoriteTracksInteractor
+    private val favoriteTracksInteractor: FavoriteTracksInteractor,
+    val mapper: MapToTrackUI,
+    val json: Gson
 ) : ViewModel() {
+
+    private val currentPlayList = json.fromJson(playList, PlayList::class.java)
 
     private val currentPlayListScreenState: MutableLiveData<CurrentPlayListScreenState> =
         MutableLiveData()
-
     fun getCurrentScreenState(): LiveData<CurrentPlayListScreenState> = currentPlayListScreenState
 
-    fun getTracks(playList: PlayList) {
+    fun getTracks() {
         viewModelScope.launch(Dispatchers.IO) {
-            currentPlayListInteractor.getTracksFromPlailist(playListId = playList.playListId)
+            currentPlayListInteractor.getTracksFromPlailist(playListId = currentPlayList.playListId)
                 .collect { result ->
                     when {
                         result.isEmpty() -> {
                             currentPlayListScreenState.postValue(
                                 CurrentPlayListScreenState.Empty(
-                                    playList.playListName
+                                    currentPlayList.playListName
                                 )
                             )
                         }
@@ -46,7 +51,7 @@ class CurrentPlayListViewModel(
                             list.map { it.inFavorite = favoriteList.contains(it) }
                             currentPlayListScreenState.postValue(
                                 CurrentPlayListScreenState.Content(
-                                    playListName = playList.playListName,
+                                    playListName = currentPlayList.playListName,
                                     list
                                 )
                             )

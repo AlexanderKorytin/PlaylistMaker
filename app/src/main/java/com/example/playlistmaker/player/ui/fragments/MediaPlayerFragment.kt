@@ -48,7 +48,7 @@ class MediaPlayerFragment : Fragment() {
     private lateinit var clickedPlayListDebounce: (PlayList) -> Unit
 
     private val playerVM: MediaPlayerViewModel by viewModel<MediaPlayerViewModel> {
-        parametersOf(ClickedTrackGson(arguments?.getString("clickedTrack") ?: ""))
+        parametersOf(ClickedTrackGson(arguments?.getString(CURRENTTRACK) ?: ""))
     }
 
     override fun onCreateView(

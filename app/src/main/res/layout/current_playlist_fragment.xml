@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="com.example.playlistmaker.currentplaylist.ui.fragments.CurrentPlayListFragment">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.example.playlistmaker.currentplaylist.ui.fragments.PlayListsFragment">
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/back_current_playlist"
@@ -30,9 +30,9 @@
             android:layout_marginTop="10dp"
             android:paddingHorizontal="@dimen/padding_4"
             android:paddingStart="@dimen/padding_4"
-            tools:text="Название"
             app:layout_constraintStart_toEndOf="@id/back_current_playlist"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Название" />
 
 
         <ImageView
@@ -67,12 +67,10 @@
             android:layout_height="match_parent"
             android:layout_marginHorizontal="12dp"
             android:layout_marginTop="@dimen/padding_16"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/current_playlist_name"
-            tools:listitem="@layout/track_view"
-            />
+            tools:listitem="@layout/track_view" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

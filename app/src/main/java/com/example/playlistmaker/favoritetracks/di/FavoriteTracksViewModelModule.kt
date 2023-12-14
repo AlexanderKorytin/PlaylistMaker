@@ -11,7 +11,6 @@ val favoriteTracksViewModelViewModelModule = module {
             favoriteTracksInteractor = get(),
             json = get(),
             mapToTrackUI = get(),
-            trackToTrackUI = get()
         )
     }
 
