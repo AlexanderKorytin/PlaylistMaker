@@ -9,9 +9,8 @@ val currentPlayListViewModelModule = module {
         CurrentPlayListViewModel(
             playList = playlist,
             currentPlayListInteractor = get(),
-            favoriteTracksInteractor = get(),
             json = get(),
-             mapper = get()
+            mapper = get()
         )
     }
 }

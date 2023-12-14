@@ -6,9 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.currentplaylist.domain.api.CurrentPlayListInteractor
 import com.example.playlistmaker.currentplaylist.ui.models.CurrentPlayListScreenState
-import com.example.playlistmaker.favoritetracks.domain.api.FavoriteTracksInteractor
 import com.example.playlistmaker.playlist.domain.models.PlayList
-import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.mappers.MapToTrackUI
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +15,6 @@ import kotlinx.coroutines.launch
 class CurrentPlayListViewModel(
     val playList: String?,
     private val currentPlayListInteractor: CurrentPlayListInteractor,
-    private val favoriteTracksInteractor: FavoriteTracksInteractor,
     val mapper: MapToTrackUI,
     val json: Gson
 ) : ViewModel() {
@@ -26,6 +23,7 @@ class CurrentPlayListViewModel(
 
     private val currentPlayListScreenState: MutableLiveData<CurrentPlayListScreenState> =
         MutableLiveData()
+
     fun getCurrentScreenState(): LiveData<CurrentPlayListScreenState> = currentPlayListScreenState
 
     fun getTracks() {

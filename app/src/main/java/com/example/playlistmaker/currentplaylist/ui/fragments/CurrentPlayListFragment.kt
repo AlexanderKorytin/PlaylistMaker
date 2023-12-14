@@ -53,8 +53,11 @@ class CurrentPlayListFragment : Fragment() {
                 MediaPlayerFragment.createArgs(currentPlayListVM.json.toJson(it))
             )
         }
-        val currentPL = currentPlayListVM.json.fromJson(arguments?.getString(CURRENTPLAYLIST), PlayList::class.java)
-            binding.currentPlaylistName.text = currentPL.playListName
+        val currentPL = currentPlayListVM.json.fromJson(
+            arguments?.getString(CURRENTPLAYLIST),
+            PlayList::class.java
+        )
+        binding.currentPlaylistName.text = currentPL.playListName
         adapter = FindAdapter { trackClickDebounce(it) }
 
         binding.albumsList.adapter = adapter
@@ -91,7 +94,7 @@ class CurrentPlayListFragment : Fragment() {
         }
     }
 
-    private fun showContent(name: String, listTracks: List<TrackUI>){
+    private fun showContent(name: String, listTracks: List<TrackUI>) {
         with(binding) {
             adapter?.submitList(listTracks)
             albumsList.isVisible = true
