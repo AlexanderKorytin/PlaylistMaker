@@ -7,10 +7,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.playlist.domain.api.PlayListInteractor
 import com.example.playlistmaker.playlist.domain.models.PlayList
 import com.example.playlistmaker.playlist.ui.models.PlayListsScreenState
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class PlayListsViewModel(private val interactor: PlayListInteractor) : ViewModel() {
+class PlayListsViewModel(
+    private val interactor: PlayListInteractor,
+    val json: Gson
+) : ViewModel() {
 
     private val screenState: MutableLiveData<PlayListsScreenState> = MutableLiveData()
 

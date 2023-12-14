@@ -6,7 +6,8 @@ import androidx.recyclerview.widget.ListAdapter
 import com.example.playlistmaker.databinding.PlaylistItemBinding
 import com.example.playlistmaker.playlist.domain.models.PlayList
 
-class PlayListAdapter : ListAdapter<PlayList, PlayListViewHolder>(PlayListsDiffUtil()) {
+class PlayListAdapter(private val CurrentPlayListClixk: OnPlayListClick) :
+    ListAdapter<PlayList, PlayListViewHolder>(PlayListsDiffUtil()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlayListViewHolder {
         val viewBinding =
             PlaylistItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -15,6 +16,12 @@ class PlayListAdapter : ListAdapter<PlayList, PlayListViewHolder>(PlayListsDiffU
 
     override fun onBindViewHolder(holder: PlayListViewHolder, position: Int) {
         holder.bind(currentList[position])
+        holder.itemView.setOnClickListener {
+            CurrentPlayListClixk.onClick(currentList[holder.adapterPosition])
+        }
     }
 
+    fun interface OnPlayListClick {
+        fun onClick(playList: PlayList)
+    }
 }

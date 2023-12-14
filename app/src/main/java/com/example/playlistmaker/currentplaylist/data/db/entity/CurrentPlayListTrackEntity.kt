@@ -7,7 +7,8 @@ import java.util.Calendar
 
 @Entity(tableName = "playlists_track")
 data class CurrentPlayListTrackEntity(
-    @PrimaryKey @ColumnInfo(name = "trackId")
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "trackKey")
+    val trackKey: Int = 0,
     val trackId: Long,
     val trackName: String,
     val artistName: String,
