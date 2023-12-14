@@ -13,12 +13,31 @@ class CurrentPlaListRepositoryImpl(
     private val appDataBase: AppDataBase
 ) : CurrentPlayListRepository {
     override suspend fun getCurrentPlayListTracks(playListId: Int): Flow<List<Track>> = flow {
-        val list = appDataBase.getCurrentPlayListDao().getTracksCurrentList(playListId)
-        emit(list.map { currentPlayListTrackDBConverter.map(it) })
+        val listTrack = appDataBase.getCurrentPlayListDao().getTracksCurrentList(playListId)
+            .map { currentPlayListTrackDBConverter.map(it) }
+        val listId = appDataBase.getFavoriteTrackDao().getIdFavoriteTracks()
+        val resultList = listTrack.map {
+            Track(
+                it.trackId,
+                it.trackName,
+                it.artistName,
+                it.trackTime,
+                it.artworkUrl100,
+                it.country,
+                it.collectionName,
+                it.year,
+                it.primaryGenreName,
+                it.previewUrl,
+                it.coverArtWork,
+                inFavorite = listId.contains(it.trackId)
+            )
+        }
+        emit(resultList)
     }
 
     override suspend fun saveTrackToPlayList(track: Track, playList: PlayList) {
-        appDataBase.getCurrentPlayListDao().saveTrackToPlaylistDB(currentPlayListTrackDBConverter.map(track, playList))
+        appDataBase.getCurrentPlayListDao()
+            .saveTrackToPlaylistDB(currentPlayListTrackDBConverter.map(track, playList))
     }
 
 }

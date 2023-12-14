@@ -42,17 +42,10 @@ class CurrentPlayListViewModel(
                         }
 
                         else -> {
-                            val favoriteList = mutableListOf<Track>()
-                            favoriteTracksInteractor.getFavoriteTracks().collect {
-                                favoriteList.addAll(it)
-                            }
-                            val list = mutableListOf<Track>()
-                            list.addAll(result)
-                            list.map { it.inFavorite = favoriteList.contains(it) }
                             currentPlayListScreenState.postValue(
                                 CurrentPlayListScreenState.Content(
                                     playListName = currentPlayList.playListName,
-                                    list
+                                    result
                                 )
                             )
                         }
