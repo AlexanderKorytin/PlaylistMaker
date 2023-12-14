@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="playlist_empty">Playlist is empty</string>
     <string name="bot_find">Find</string>
     <string name="bot_media">Media library</string>
     <string name="bot_settings">Settings</string>

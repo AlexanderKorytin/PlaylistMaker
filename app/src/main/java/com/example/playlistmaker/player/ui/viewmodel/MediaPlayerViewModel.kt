@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.currentplaylist.domain.api.CurrentPlayListInteractor
 import com.example.playlistmaker.favoritetracks.domain.api.FavoriteTracksInteractor
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
 import com.example.playlistmaker.player.domain.models.ClickedTrack
@@ -16,7 +17,6 @@ import com.example.playlistmaker.playlist.domain.api.PlayListInteractor
 import com.example.playlistmaker.playlist.domain.models.PlayList
 import com.example.playlistmaker.playlist.ui.models.PlayListsScreenState
 import com.example.playlistmaker.playlist.ui.models.ToastStase
-import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -30,10 +30,10 @@ class MediaPlayerViewModel(
     private val favoriteTracksInteractor: FavoriteTracksInteractor,
     private val playListInteractor: PlayListInteractor,
     clickedTrackConverter: MapClickedTrackGsonToClickedTrack,
-    private val json: Gson
+    private val currentPlayListInteractor: CurrentPlayListInteractor
 ) : ViewModel() {
 
-    var playedTrack = clickedTrackConverter.map(clickedTrack)
+    private var playedTrack = clickedTrackConverter.map(clickedTrack)
 
     private var timerJob: Job? = null
 
@@ -123,6 +123,10 @@ class MediaPlayerViewModel(
             playList.tracksIds += playedTrack.trackId.toString()
             viewModelScope.launch(Dispatchers.IO) {
                 playListInteractor.saveTrack(playedTrack.mapToTrack(), playList)
+                currentPlayListInteractor.saveTrackToPlayList(
+                    playList = playList,
+                    track = playedTrack.mapToTrack()
+                )
                 toastState.postValue(ToastStase.notLocation(playList))
             }
         }
