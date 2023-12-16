@@ -48,7 +48,7 @@ class CurrentPlayListViewModel(
         }
     }
 
-    suspend fun getTracks(tracksId: List<Long>, playListTracksIds: MutableList<Long>) {
+    suspend fun getTracks(tracksId: List<Long>, playListTracksIds: List<Long>) {
         currentPlayListInteractor.getTracksFromPlailist(tracksId)
             .collect { result ->
                 when {

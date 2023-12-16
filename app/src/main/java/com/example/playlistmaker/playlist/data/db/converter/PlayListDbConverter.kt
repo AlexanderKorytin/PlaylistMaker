@@ -13,7 +13,7 @@ class PlayListDbConverter(private val json: Gson) {
             playListId = playListEntity.playListId,
             playListName = playListEntity.playListName,
             playListCover = playListEntity.playListCover,
-            tracksIds = json.fromJson(playListEntity.tracksIds, TypeToken.get(ArrayList<Long>()::class.java)),
+            tracksIds = json.fromJson(playListEntity.tracksIds, object :TypeToken<ArrayList<Long>>() {}.type),
             quantityTracks = playListEntity.quantityTracks,
             playListDescription = playListEntity.playListDescription
         )
