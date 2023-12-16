@@ -37,7 +37,7 @@ class CurrentPlayListViewModel(
     fun getCurrentPlayListById() {
         viewModelScope.launch(Dispatchers.IO) {
             val album = currentPlayListInteractor.getPlayListById(playListId)
-            getTracks(album.tracksIds)
+            getTracks(album.tracksIds, album.tracksIds)
             val albumUI = PlayListUI(
                 playListName = album.playListName,
                 playListDescription = album.playListDescription,
@@ -48,7 +48,7 @@ class CurrentPlayListViewModel(
         }
     }
 
-    suspend fun getTracks(tracksId: List<Long>) {
+    suspend fun getTracks(tracksId: List<Long>, playListTracksIds: MutableList<Long>) {
         currentPlayListInteractor.getTracksFromPlailist(tracksId)
             .collect { result ->
                 when {
@@ -59,9 +59,18 @@ class CurrentPlayListViewModel(
                     }
 
                     else -> {
-                        val time = getSummaryTime(result)
+                        val list = playListTracksIds.map { it.toLong() }
+                        val resultUI = mutableListOf <Track>()
+                        resultUI.addAll(result)
+                        for (i in 0 until result.size) {
+                            val index = list.indexOf(result[i].trackId)
+                            resultUI[index] = result[i]
+                        }
+
+                        resultUI.reverse()
+                        val time = getSummaryTime(resultUI)
                         currentPlayListScreenState.postValue(
-                            CurrentPlayListScreenState.Content(result, time)
+                            CurrentPlayListScreenState.Content(resultUI, time)
                         )
                     }
                 }
@@ -71,15 +80,15 @@ class CurrentPlayListViewModel(
     private suspend fun getSummaryTime(tracks: List<Track>): String {
         var timeTracks = 0L
         for (track in tracks) {
-            val df = SimpleDateFormat("hh:mm")
+            val df = SimpleDateFormat("mm:ss")
             timeTracks += df.parse(track.trackTime).time
         }
-        val minutes = SimpleDateFormat("hh", Locale.getDefault()).format(timeTracks)
+        val minutes = SimpleDateFormat("mm", Locale.getDefault()).format(timeTracks)
         val end = getEndMessageForTime(minutes.toInt())
         return "${minutes} ${end}"
     }
 
-    private suspend fun getCounter(playList: PlayList): String {
+    private fun getCounter(playList: PlayList): String {
         return "${playList.quantityTracks} ${getEndMessage(playList.quantityTracks)}"
     }
 
