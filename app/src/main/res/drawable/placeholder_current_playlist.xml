@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:width="360dp"
+        android:height="360dp"
+        android:gravity="center">
+        <color android:color="@color/bottom_naw_line_top"/>
+        <shape android:shape="rectangle">
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+
+    <item
+        android:width="236dp"
+        android:height="234dp"
+        android:drawable="@drawable/placeholder_media_image"
+        android:gravity="center" />
+</layer-list>

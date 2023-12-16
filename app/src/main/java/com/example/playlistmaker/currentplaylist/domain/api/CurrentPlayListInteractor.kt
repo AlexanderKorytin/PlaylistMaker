@@ -5,7 +5,7 @@ import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 
 interface CurrentPlayListInteractor {
-    suspend fun getTracksFromPlailist(playListId: Int): Flow<List<Track>>
+    suspend fun getTracksFromPlailist(tracksId: List<Long>): Flow<List<Track>>
 
-    suspend fun saveTrackToPlayList(track: Track, playList: PlayList)
+    suspend fun getPlayListById(playListId: Int): PlayList
 }

@@ -168,7 +168,7 @@ class MediaPlayerFragment : Fragment() {
             } else binding.playPause.isEnabled = true
 
             Glide
-                .with(this)
+                .with(requireContext())
                 .load(track.coverArtWork)
                 .placeholder(R.drawable.placeholder_media_image)
                 .transform(CenterCrop(), RoundedCorners(radiusIconTrackPx))

@@ -9,12 +9,13 @@ import kotlinx.coroutines.flow.Flow
 class CurrentPlayListInteractorImpl(
     private val currentPlayListRepository: CurrentPlayListRepository
 ) : CurrentPlayListInteractor {
-    override suspend fun getTracksFromPlailist(playListId: Int): Flow<List<Track>> {
-        return currentPlayListRepository.getCurrentPlayListTracks(playListId)
+    override suspend fun getTracksFromPlailist(tracksId: List<Long>): Flow<List<Track>> {
+        return currentPlayListRepository.getCurrentPlayListTracks(tracksId)
     }
 
-    override suspend fun saveTrackToPlayList(track: Track, playList: PlayList) {
-        currentPlayListRepository.saveTrackToPlayList(track, playList)
+    override suspend fun getPlayListById(playListId: Int): PlayList {
+       return currentPlayListRepository.getPlayListById(playListId)
     }
+
 
 }

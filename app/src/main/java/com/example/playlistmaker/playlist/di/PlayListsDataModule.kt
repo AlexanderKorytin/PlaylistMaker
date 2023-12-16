@@ -4,5 +4,5 @@ import com.example.playlistmaker.playlist.data.db.converter.PlayListDbConverter
 import org.koin.dsl.module
 
 val playListsDataModule = module {
-    factory<PlayListDbConverter> { PlayListDbConverter() }
+    factory<PlayListDbConverter> { PlayListDbConverter(json = get()) }
 }

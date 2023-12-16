@@ -3,7 +3,7 @@ package com.example.playlistmaker.currentplaylist.ui.models
 import com.example.playlistmaker.search.domain.models.Track
 
 sealed interface CurrentPlayListScreenState {
-    data class Empty(val playListName: String): CurrentPlayListScreenState
+    object Empty: CurrentPlayListScreenState
 
-    data class Content(val playListName: String, val data: List<Track>): CurrentPlayListScreenState
+    data class Content(val data: List<Track>, val time: String): CurrentPlayListScreenState
 }

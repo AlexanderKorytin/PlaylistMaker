@@ -40,7 +40,7 @@ class PlayListsFragment : Fragment() {
         playListClickDebounce = debounce<PlayList>(CLICKDEBOUNCE, lifecycleScope, false) {
             findNavController().navigate(
                 R.id.action_mediaLibraryFragment_to_currentPlayListFragment2,
-                CurrentPlayListFragment.createArgs(playListsVM.json.toJson(it))
+                CurrentPlayListFragment.createArgs(it.playListId)
             )
         }
         adapter = PlayListAdapter { playListClickDebounce(it) }

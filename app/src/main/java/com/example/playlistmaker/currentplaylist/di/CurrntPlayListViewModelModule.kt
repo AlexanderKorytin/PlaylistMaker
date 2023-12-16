@@ -5,12 +5,12 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val currentPlayListViewModelModule = module {
-    viewModel { (playlist: String?) ->
+    viewModel { (playlistId: Int) ->
         CurrentPlayListViewModel(
-            playList = playlist,
+            playListId = playlistId,
             currentPlayListInteractor = get(),
-            json = get(),
-            mapper = get()
+            mapper = get(),
+            json = get()
         )
     }
 }

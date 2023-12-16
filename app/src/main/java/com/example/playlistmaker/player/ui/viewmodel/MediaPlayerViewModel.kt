@@ -117,16 +117,12 @@ class MediaPlayerViewModel(
     }
 
     fun checkLocationTrackInPL(playList: PlayList) {
-        if (playList.tracksIds.contains(playedTrack.trackId.toString())) {
+        if (playList.tracksIds.contains(playedTrack.trackId)) {
             toastState.postValue(ToastStase.isLocation(playList))
         } else {
-            playList.tracksIds += playedTrack.trackId.toString()
+            playList.tracksIds.add(playedTrack.trackId)
             viewModelScope.launch(Dispatchers.IO) {
                 playListInteractor.saveTrack(playedTrack.mapToTrack(), playList)
-                currentPlayListInteractor.saveTrackToPlayList(
-                    playList = playList,
-                    track = playedTrack.mapToTrack()
-                )
                 toastState.postValue(ToastStase.notLocation(playList))
             }
         }

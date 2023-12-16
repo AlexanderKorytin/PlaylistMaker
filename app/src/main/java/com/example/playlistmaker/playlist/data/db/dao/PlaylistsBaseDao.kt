@@ -15,6 +15,9 @@ interface PlaylistsBaseDao {
     @Query("SELECT * FROM Playlists ")
     suspend fun getAllPlayLists(): List<PlayListEntity>
 
+    @Query("SELECT * FROM playlists WHERE playListId = :id")
+    suspend fun getPlayListById(id: Int): PlayListEntity
+
     @Query("SELECT tracksIds FROM Playlists WHERE playListId = :playListId")
     suspend fun getTracksIdsFromPlayList(playListId: Int): String
 
