@@ -59,6 +59,7 @@ class CurrentPlayListViewModel(
                     }
 
                     else -> {
+
                         val list = playListTracksIds.map { it.toLong() }
                         val resultUI = mutableListOf <Track>()
                         resultUI.addAll(result)
@@ -66,8 +67,8 @@ class CurrentPlayListViewModel(
                             val index = list.indexOf(result[i].trackId)
                             resultUI[index] = result[i]
                         }
-
                         resultUI.reverse()
+
                         val time = getSummaryTime(resultUI)
                         currentPlayListScreenState.postValue(
                             CurrentPlayListScreenState.Content(resultUI, time)
