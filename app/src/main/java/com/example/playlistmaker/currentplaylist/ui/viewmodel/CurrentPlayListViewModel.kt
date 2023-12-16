@@ -60,11 +60,10 @@ class CurrentPlayListViewModel(
 
                     else -> {
 
-                        val list = playListTracksIds.map { it.toLong() }
                         val resultUI = mutableListOf <Track>()
                         resultUI.addAll(result)
                         for (i in 0 until result.size) {
-                            val index = list.indexOf(result[i].trackId)
+                            val index = playListTracksIds.indexOf(result[i].trackId)
                             resultUI[index] = result[i]
                         }
                         resultUI.reverse()

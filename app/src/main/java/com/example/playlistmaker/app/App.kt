@@ -32,8 +32,7 @@ class App : Application() {
 
 
     private var darkTheme: Boolean = false
-    private var isfirstStart = true
-    private var firstStart: Boolean = true
+    var isfirstStart = true
 
     override fun onCreate() {
         super.onCreate()
@@ -73,8 +72,6 @@ class App : Application() {
         val darkThemeEnabled: Boolean = switchPreference.getBoolean(DARK_THEME, darkTheme)
 
         isfirstStart = switchPreference.getBoolean(IS_FIRST_START, true)
-        if (isfirstStart) switchPreference.edit().putBoolean(IS_FIRST_START, false).apply()
-
         switchTheme(darkThemeEnabled)
     }
 
