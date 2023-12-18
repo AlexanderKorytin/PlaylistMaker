@@ -9,7 +9,7 @@ import org.koin.dsl.module
 val currentPlayListDomainModule = module {
 
     single<CurrentPlayListRepository> {
-        CurrentPlaListRepositoryImpl(appDataBase = get(), currentPlayListTrackDBConverter = get())
+        CurrentPlaListRepositoryImpl(appDataBase = get(), currentPlayListTrackDBConverter = get(), json = get())
     }
 
     factory<CurrentPlayListInteractor> {

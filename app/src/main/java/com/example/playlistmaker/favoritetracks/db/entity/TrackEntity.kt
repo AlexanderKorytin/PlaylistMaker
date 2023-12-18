@@ -19,5 +19,5 @@ data class TrackEntity(
     val primaryGenreName: String,
     val previewUrl: String,
     val coverArtWork: String,
-    val insertignTime: Long = Calendar.getInstance().time.time
+    val insertignTime: Long = Calendar.getInstance().time.time,
 )

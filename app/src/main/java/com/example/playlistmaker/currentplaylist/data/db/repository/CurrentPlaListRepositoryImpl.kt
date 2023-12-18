@@ -5,12 +5,15 @@ import com.example.playlistmaker.currentplaylist.domain.api.CurrentPlayListRepos
 import com.example.playlistmaker.playlist.data.db.converter.PlayListDbConverter
 import com.example.playlistmaker.playlist.domain.models.PlayList
 import com.example.playlistmaker.search.domain.models.Track
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class CurrentPlaListRepositoryImpl(
     private val currentPlayListTrackDBConverter: PlayListDbConverter,
-    private val appDataBase: AppDataBase
+    private val appDataBase: AppDataBase,
+    private val json: Gson
 ) : CurrentPlayListRepository {
     override suspend fun getCurrentPlayListTracks(tracksIds: List<Long>): Flow<List<Track>> = flow {
         val listTrack = appDataBase.getAllTracksDao().getTracksByIds(tracksIds.map { it.toLong() })
@@ -29,7 +32,8 @@ class CurrentPlaListRepositoryImpl(
                 it.primaryGenreName,
                 it.previewUrl,
                 it.coverArtWork,
-                inFavorite = listId.contains(it.trackId)
+                inFavorite = listId.contains(it.trackId),
+                it.playListIds
             )
         }
         emit(resultList)
@@ -38,6 +42,20 @@ class CurrentPlaListRepositoryImpl(
     override suspend fun getPlayListById(id: Int): PlayList {
         val currentList = appDataBase.getPlayListsBaseDao().getPlayListById(id)
         return currentPlayListTrackDBConverter.map(currentList)
+    }
+
+    override suspend fun updatePlaiListIdsInTrack(track: Track, playListID: Int) {
+        if (!track.playListIds.contains(playListID)){
+            track.playListIds.add(playListID)
+        }
+        appDataBase.getAllTracksDao().updateTrack(currentPlayListTrackDBConverter.map(track))
+
+    }
+
+    override suspend fun getPLIdFromTrack(trackId: Long): ArrayList<Int> {
+        val result = appDataBase.getAllTracksDao().getPlayListIDFromTrack(trackId)
+        return if (result != null) json.fromJson(result, object : TypeToken<ArrayList<Int>>(){}.type)
+        else arrayListOf()
     }
 
 }

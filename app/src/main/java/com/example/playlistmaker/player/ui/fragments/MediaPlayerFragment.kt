@@ -22,6 +22,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.app.dpToPx
 import com.example.playlistmaker.databinding.ActivityMediaBinding
+import com.example.playlistmaker.player.domain.models.ClickedTrack
 import com.example.playlistmaker.player.domain.models.PlayerState
 import com.example.playlistmaker.player.ui.PlayListsPlayerAdapter
 import com.example.playlistmaker.player.ui.models.ClickedTrackGson
@@ -302,7 +303,7 @@ class MediaPlayerFragment : Fragment() {
     }
 
     private fun onClickPlayList(playList: PlayList) {
-        playerVM.checkLocationTrackInPL(playList)
+        playerVM.checkLocationTrackInPL(playList, playerVM.playedTrack)
     }
 
 

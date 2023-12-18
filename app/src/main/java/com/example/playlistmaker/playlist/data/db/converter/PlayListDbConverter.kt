@@ -13,7 +13,10 @@ class PlayListDbConverter(private val json: Gson) {
             playListId = playListEntity.playListId,
             playListName = playListEntity.playListName,
             playListCover = playListEntity.playListCover,
-            tracksIds = json.fromJson(playListEntity.tracksIds, object :TypeToken<ArrayList<Long>>() {}.type),
+            tracksIds = json.fromJson(
+                playListEntity.tracksIds,
+                object : TypeToken<ArrayList<Long>>() {}.type
+            ),
             quantityTracks = playListEntity.quantityTracks,
             playListDescription = playListEntity.playListDescription
         )
@@ -43,6 +46,7 @@ class PlayListDbConverter(private val json: Gson) {
             previewUrl = track.previewUrl,
             primaryGenreName = track.primaryGenreName,
             coverArtWork = track.coverArtWork,
+            playlistIds = json.toJson(track.playListIds)
         )
     }
 
@@ -59,7 +63,11 @@ class PlayListDbConverter(private val json: Gson) {
             primaryGenreName = trackEntity.primaryGenreName,
             previewUrl = trackEntity.previewUrl,
             coverArtWork = trackEntity.coverArtWork,
-            inFavorite = true
+            inFavorite = true,
+            playListIds = json.fromJson(
+                trackEntity.playlistIds,
+                object : TypeToken<ArrayList<Int>>() {}.type
+            )
         )
     }
 

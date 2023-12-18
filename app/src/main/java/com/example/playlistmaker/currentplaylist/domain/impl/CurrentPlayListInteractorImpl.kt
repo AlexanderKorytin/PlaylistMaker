@@ -17,5 +17,13 @@ class CurrentPlayListInteractorImpl(
        return currentPlayListRepository.getPlayListById(playListId)
     }
 
+    override suspend fun saveTrackPlayListIdsChange(track: Track, playListId: Int) {
+        currentPlayListRepository.updatePlaiListIdsInTrack(track, playListId)
+    }
+
+    override suspend fun getPlayListIdsCurrentTrack(tracksId: Long): ArrayList<Int> {
+        return currentPlayListRepository.getPLIdFromTrack(tracksId)
+    }
+
 
 }

@@ -20,5 +20,6 @@ data class TrackPLEntity(
     val primaryGenreName: String,
     val previewUrl: String,
     val coverArtWork: String,
-    val insertignTime: Long = Calendar.getInstance().time.time
+    val insertignTime: Long = Calendar.getInstance().time.time,
+    val playlistIds: String = ""
 )

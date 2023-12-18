@@ -18,7 +18,8 @@ class MapToTrackUI {
                 it.primaryGenreName,
                 it.previewUrl,
                 it.coverArtWork,
-                it.inFavorite
+                it.inFavorite,
+                it.playListIds
             )
         } as ArrayList<TrackUI>
     }

@@ -14,4 +14,5 @@ data class Track(
     val previewUrl: String,
     val coverArtWork: String,
     var inFavorite: Boolean = false,
+    var playListIds: ArrayList<Int>
 )

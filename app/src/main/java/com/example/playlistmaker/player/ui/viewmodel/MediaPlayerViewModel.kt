@@ -19,6 +19,8 @@ import com.example.playlistmaker.playlist.ui.models.PlayListsScreenState
 import com.example.playlistmaker.playlist.ui.models.ToastStase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -33,11 +35,17 @@ class MediaPlayerViewModel(
     private val currentPlayListInteractor: CurrentPlayListInteractor
 ) : ViewModel() {
 
-    private var playedTrack = clickedTrackConverter.map(clickedTrack)
+    var playedTrack = clickedTrackConverter.map(clickedTrack)
 
     private var timerJob: Job? = null
 
     private fun preparePlayer() {
+            viewModelScope.launch(Dispatchers.IO) {
+                val listId = currentPlayListInteractor.getPlayListIdsCurrentTrack(
+                        playedTrack.trackId
+                    )
+                playedTrack.playListIds = listId
+            }
         mediaPlayerInteractor.prepare(playedTrack)
         checkingPreparePlayer()
     }
@@ -88,7 +96,7 @@ class MediaPlayerViewModel(
     fun changedSingInFavorite() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                favoriteTracksInteractor.changeSignFavorite(playedTrack.mapToTrack())
+                favoriteTracksInteractor.changeSignFavorite(playedTrack.mapClickedTrackToTrack())
             }
             playedTrack.inFavorite = !playedTrack.inFavorite
             currentSingInFavorite.postValue(playedTrack.inFavorite)
@@ -116,13 +124,20 @@ class MediaPlayerViewModel(
             currentPlayerStateState.value?.copy(playerState = mediaPlayerInteractor.getPlayerState())
     }
 
-    fun checkLocationTrackInPL(playList: PlayList) {
+    fun checkLocationTrackInPL(playList: PlayList, track: ClickedTrack) {
         if (playList.tracksIds.contains(playedTrack.trackId)) {
+            viewModelScope.launch(Dispatchers.IO) {
+                currentPlayListInteractor.saveTrackPlayListIdsChange(
+                    track.mapClickedTrackToTrack(),
+                    playList.playListId
+                )
+            }
             toastState.postValue(ToastStase.isLocation(playList))
         } else {
             playList.tracksIds.add(playedTrack.trackId)
+            track.playListIds.add(playList.playListId)
             viewModelScope.launch(Dispatchers.IO) {
-                playListInteractor.saveTrack(playedTrack.mapToTrack(), playList)
+                playListInteractor.saveTrack(playedTrack.mapClickedTrackToTrack(), playList)
                 toastState.postValue(ToastStase.notLocation(playList))
             }
         }

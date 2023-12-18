@@ -8,4 +8,8 @@ interface CurrentPlayListRepository {
     suspend fun getCurrentPlayListTracks(tracksId: List<Long>): Flow<List<Track>>
 
     suspend fun getPlayListById(id: Int): PlayList
+
+    suspend fun updatePlaiListIdsInTrack(track: Track, playListID: Int)
+
+    suspend fun getPLIdFromTrack(id: Long): ArrayList<Int>
 }
