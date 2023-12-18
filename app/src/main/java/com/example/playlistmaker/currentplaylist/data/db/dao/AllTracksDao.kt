@@ -1,6 +1,7 @@
 package com.example.playlistmaker.currentplaylist.data.db.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -20,4 +21,7 @@ interface AllTracksDao {
 
     @Query("SELECT playlistIds FROM all_tracks WHERE trackId = :trackPLEntityId")
     suspend fun getPlayListIDFromTrack(trackPLEntityId: Long): String
+
+    @Delete(TrackPLEntity::class)
+    suspend fun deleteTrack(trackPLEntity: TrackPLEntity)
 }

@@ -40,4 +40,6 @@
     <string name="сomplete">Complete</string>
     <string name="add_to_playlist">Add to playlist</string>
     <string name="playlist_is_empty">playlist is empty</string>
+    <string name="track_delete_dialog_title">Are you sure you want to delete a track from your playlist?</string>
+    <string name="delete">Delete</string>
 </resources>

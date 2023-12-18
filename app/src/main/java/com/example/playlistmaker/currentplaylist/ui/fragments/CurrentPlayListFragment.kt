@@ -15,14 +15,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.example.playlistmaker.R
+import com.example.playlistmaker.currentplaylist.ui.CurrentPlayListAdapter
 import com.example.playlistmaker.currentplaylist.ui.models.CurrentPlayListScreenState
 import com.example.playlistmaker.currentplaylist.ui.viewmodel.CurrentPlayListViewModel
 import com.example.playlistmaker.databinding.CurrentPlaylistFragmentBinding
 import com.example.playlistmaker.player.ui.fragments.MediaPlayerFragment
-import com.example.playlistmaker.search.ui.FindAdapter
 import com.example.playlistmaker.search.ui.models.TrackUI
 import com.example.playlistmaker.util.debounce
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import java.io.File
@@ -31,7 +34,7 @@ class CurrentPlayListFragment : Fragment() {
     private var _binding: CurrentPlaylistFragmentBinding? = null
     private val binding get() = _binding!!
 
-    private var adapter: FindAdapter? = null
+    private var adapter: CurrentPlayListAdapter? = null
 
     private lateinit var trackClickDebounce: (TrackUI) -> Unit
 
@@ -75,18 +78,17 @@ class CurrentPlayListFragment : Fragment() {
 
             with(binding) {
                 currentPlaylistName.text = currentAlbum.playListName
-                quantity.text = currentAlbum.counterTrack.toString()
+                quantity.text = currentAlbum.counterTrack
                 if (currentAlbum.playListDescription != "") {
                     currentPlaylistDescr.isVisible = true
                     currentPlaylistDescr.text = currentAlbum.playListDescription
                 } else {
                     currentPlaylistDescr.isVisible = false
                 }
-                point.isVisible = currentAlbum.counterTrack.first() != '0'
             }
 
         }
-        adapter = FindAdapter { trackClickDebounce(it) }
+        adapter = CurrentPlayListAdapter(::onClick, ::onLongClick)
 
         binding.albumsList.adapter = adapter
         binding.albumsList.layoutManager =
@@ -94,7 +96,7 @@ class CurrentPlayListFragment : Fragment() {
         currentPlayListVM.getCurrentScreenState().observe(viewLifecycleOwner) { result ->
             when (result) {
                 is CurrentPlayListScreenState.Empty -> {
-                    showEmpty()
+                    showEmpty(result.time)
                 }
 
                 is CurrentPlayListScreenState.Content -> {
@@ -113,10 +115,29 @@ class CurrentPlayListFragment : Fragment() {
         _binding = null
     }
 
-    private fun showEmpty() {
+    private fun onLongClick(trackUI: TrackUI) {
+        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+            .setTitle(R.string.track_delete_dialog_title)
+            .setNegativeButton(R.string.canсel){dialog, which ->
+
+            }
+            .setPositiveButton(R.string.delete){dialog, which ->
+                lifecycleScope.launch(Dispatchers.IO){
+                    currentPlayListVM.deleteTrack(trackUI.toTrack(), currentPlayListVM.playListId)
+                }
+            }
+        dialog.show()
+    }
+
+    private fun onClick(trackUI: TrackUI){
+        trackClickDebounce(trackUI)
+    }
+
+    private fun showEmpty(time: String) {
         with(binding) {
             albumsList.isVisible = false
             playlistIsEmpty.isVisible = true
+            summaryTime.text = time
         }
     }
 

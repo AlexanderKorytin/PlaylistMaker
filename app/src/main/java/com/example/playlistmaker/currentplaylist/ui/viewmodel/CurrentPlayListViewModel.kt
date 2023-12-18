@@ -25,9 +25,9 @@ class CurrentPlayListViewModel(
 ) : ViewModel() {
 
 
-    private val playlist: MutableLiveData<PlayListUI> = MutableLiveData()
+    private val playlistScreenState: MutableLiveData<PlayListUI> = MutableLiveData()
 
-    fun getPlayList(): LiveData<PlayListUI> = playlist
+    fun getPlayList(): LiveData<PlayListUI> = playlistScreenState
 
     private val currentPlayListScreenState: MutableLiveData<CurrentPlayListScreenState> =
         MutableLiveData()
@@ -37,24 +37,24 @@ class CurrentPlayListViewModel(
     fun getCurrentPlayListById() {
         viewModelScope.launch(Dispatchers.IO) {
             val album = currentPlayListInteractor.getPlayListById(playListId)
-            getTracks(album.tracksIds, album.tracksIds)
+            getTracks(album.tracksIds)
             val albumUI = PlayListUI(
                 playListName = album.playListName,
                 playListDescription = album.playListDescription,
                 counterTrack = getCounter(album),
                 playListCover = album.playListCover
             )
-            playlist.postValue(albumUI)
+            playlistScreenState.postValue(albumUI)
         }
     }
 
-    suspend fun getTracks(tracksId: List<Long>, playListTracksIds: List<Long>) {
-        currentPlayListInteractor.getTracksFromPlailist(tracksId)
+    suspend fun getTracks(tracksIds: List<Long>) {
+        currentPlayListInteractor.getTracksFromPlailist(tracksIds)
             .collect { result ->
                 when {
                     result.isEmpty() -> {
                         currentPlayListScreenState.postValue(
-                            CurrentPlayListScreenState.Empty
+                            CurrentPlayListScreenState.Empty(getSummaryTime(result))
                         )
                     }
 
@@ -63,7 +63,7 @@ class CurrentPlayListViewModel(
                         val resultUI = mutableListOf <Track>()
                         resultUI.addAll(result)
                         for (i in 0 until result.size) {
-                            val index = playListTracksIds.indexOf(result[i].trackId)
+                            val index = tracksIds.indexOf(result[i].trackId)
                             resultUI[index] = result[i]
                         }
                         resultUI.reverse()
@@ -75,6 +75,12 @@ class CurrentPlayListViewModel(
                     }
                 }
             }
+    }
+
+    suspend fun deleteTrack(track: Track, playListId: Int){
+        val album = currentPlayListInteractor.getPlayListById(playListId)
+        currentPlayListInteractor.deleteTrackFromPlayList(track, album)
+        getCurrentPlayListById()
     }
 
     private suspend fun getSummaryTime(tracks: List<Track>): String {

@@ -44,4 +44,6 @@
     <string name="add_to_playlist">Добавить в плейтист</string>
     <string name="playlist_empty">Не добавлено ни одного трека</string>
     <string name="playlist_is_empty">в плейлисте нет треков</string>
+    <string name="track_delete_dialog_title">Вы уверены, что хотите удалить трек из плейлиста?</string>
+    <string name="delete">Удалить</string>
 </resources>

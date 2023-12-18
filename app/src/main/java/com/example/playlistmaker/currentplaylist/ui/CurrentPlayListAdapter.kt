@@ -11,8 +11,8 @@ import com.example.playlistmaker.search.ui.models.TrackUI
 
 
 class CurrentPlayListAdapter(
-    private val trackClickListner: TrackClickListner,
-    private val trackLongClickLisner: TrackLongClickListner
+    private val onTrackClick: (TrackUI) -> Unit,
+    private val onLongTrackClick: (TrackUI) -> Unit
 ) :
     ListAdapter<TrackUI, FindViewHolder>(TracksDiffUtil()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FindViewHolder {
@@ -27,20 +27,14 @@ class CurrentPlayListAdapter(
         holder.bind(currentList[position])
         holder.itemView.setOnClickListener {
             it.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
-            trackClickListner.onTrackClick(currentList[holder.adapterPosition])
+            onTrackClick(currentList[holder.adapterPosition])
         }
 
         holder.itemView.setOnLongClickListener {
-            trackLongClickLisner.onTrackLongClick(currentList[position])
-            return@setOnLongClickListener false
+            onLongTrackClick(currentList[holder.adapterPosition])
+            return@setOnLongClickListener true
         }
     }
 
-    fun interface TrackClickListner {
-        fun onTrackClick(trackUI: TrackUI)
-    }
 
-    fun interface TrackLongClickListner {
-        fun onTrackLongClick(trackUI: TrackUI)
-    }
 }

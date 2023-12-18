@@ -25,5 +25,9 @@ class CurrentPlayListInteractorImpl(
         return currentPlayListRepository.getPLIdFromTrack(tracksId)
     }
 
+    override suspend fun deleteTrackFromPlayList(track: Track, playList: PlayList) {
+        currentPlayListRepository.deleteTrackFromPlayList(track, playList)
+    }
+
 
 }

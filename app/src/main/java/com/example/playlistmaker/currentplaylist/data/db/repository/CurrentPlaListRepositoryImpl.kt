@@ -58,4 +58,20 @@ class CurrentPlaListRepositoryImpl(
         else arrayListOf()
     }
 
+    override suspend fun deleteTrackFromPlayList(track: Track, playList: PlayList) {
+        val listId = getPLIdFromTrack(track.trackId)
+        if (listId.size == 1) {
+            appDataBase.getAllTracksDao().deleteTrack(currentPlayListTrackDBConverter.map(track))
+        }
+        else {
+            listId.remove(playList.playListId)
+            track.playListIds = listId
+            appDataBase.getAllTracksDao().updateTrack(currentPlayListTrackDBConverter.map(track))
+        }
+        playList.tracksIds.remove(track.trackId)
+        playList.quantityTracks = playList.tracksIds.size
+        appDataBase.getPlayListsBaseDao().updateTracksIdsInPlayList(currentPlayListTrackDBConverter.map(playList))
+    }
+
+
 }

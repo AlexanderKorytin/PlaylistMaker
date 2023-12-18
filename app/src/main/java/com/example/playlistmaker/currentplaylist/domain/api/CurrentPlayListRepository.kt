@@ -12,4 +12,6 @@ interface CurrentPlayListRepository {
     suspend fun updatePlaiListIdsInTrack(track: Track, playListID: Int)
 
     suspend fun getPLIdFromTrack(id: Long): ArrayList<Int>
+
+    suspend fun deleteTrackFromPlayList(track: Track, playList: PlayList)
 }
