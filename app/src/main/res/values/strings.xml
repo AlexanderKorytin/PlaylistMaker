@@ -48,4 +48,7 @@
     <string name="delete">Удалить</string>
     <string name="no_tracks_for_sharing">В этом плейлисте нет списка треков, которым можно поделиться</string>
     <string name="close">Закрыть</string>
+    <string name="share">Поделится</string>
+    <string name="edit_information">Редактировать информацию</string>
+    <string name="delete_playlist">Удалить плейлист</string>
 </resources>

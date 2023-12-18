@@ -54,8 +54,30 @@ class CurrentPlayListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val bottomSheetBehavior = BottomSheetBehavior.from(binding.currentPlaylistBottomSheet)
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+
+        val trackListBottomSheetBehavior =
+            BottomSheetBehavior.from(binding.currentPlaylistBottomSheet)
+        trackListBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+
+        val settingBottomSheetBehaivor =
+            BottomSheetBehavior.from(binding.currentPlayListSettingBottomSheet)
+
+        settingBottomSheetBehaivor.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback(){
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when(newState) {
+                    BottomSheetBehavior.STATE_COLLAPSED -> binding.overlay.isVisible = true
+                    BottomSheetBehavior.STATE_HIDDEN -> binding.overlay.isVisible = false
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+
+            }
+
+        })
+
+        settingBottomSheetBehaivor.state = BottomSheetBehavior.STATE_HIDDEN
         trackClickDebounce = debounce<TrackUI>(CLICKDEBOUNCE, lifecycleScope, false) {
             findNavController().navigate(
                 R.id.action_currentPlayListFragment2_to_mediaPlayerFragment,
@@ -116,6 +138,15 @@ class CurrentPlayListFragment : Fragment() {
             } else {
                 currentPlayListVM.sharingPlayList()
             }
+        }
+
+        binding.playlistSetting.setOnClickListener {
+            settingBottomSheetBehaivor.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+
+        binding.sharing.setOnClickListener {
+            currentPlayListVM.sharingPlayList()
+            settingBottomSheetBehaivor.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
         binding.backCurrentPlaylist.setOnClickListener {
