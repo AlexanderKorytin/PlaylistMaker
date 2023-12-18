@@ -1,5 +1,10 @@
 package com.example.playlistmaker.currentplaylist.data.db.repository
 
+import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.Intent
+import android.widget.Toast
+import com.example.playlistmaker.R
 import com.example.playlistmaker.core.db.AppDataBase
 import com.example.playlistmaker.currentplaylist.domain.api.CurrentPlayListRepository
 import com.example.playlistmaker.playlist.data.db.converter.PlayListDbConverter
@@ -13,7 +18,8 @@ import kotlinx.coroutines.flow.flow
 class CurrentPlaListRepositoryImpl(
     private val currentPlayListTrackDBConverter: PlayListDbConverter,
     private val appDataBase: AppDataBase,
-    private val json: Gson
+    private val json: Gson,
+    private val context: Context
 ) : CurrentPlayListRepository {
     override suspend fun getCurrentPlayListTracks(tracksIds: List<Long>): Flow<List<Track>> = flow {
         val listTrack = appDataBase.getAllTracksDao().getTracksByIds(tracksIds.map { it.toLong() })
@@ -45,7 +51,7 @@ class CurrentPlaListRepositoryImpl(
     }
 
     override suspend fun updatePlaiListIdsInTrack(track: Track, playListID: Int) {
-        if (!track.playListIds.contains(playListID)){
+        if (!track.playListIds.contains(playListID)) {
             track.playListIds.add(playListID)
         }
         appDataBase.getAllTracksDao().updateTrack(currentPlayListTrackDBConverter.map(track))
@@ -54,7 +60,10 @@ class CurrentPlaListRepositoryImpl(
 
     override suspend fun getPLIdFromTrack(trackId: Long): ArrayList<Int> {
         val result = appDataBase.getAllTracksDao().getPlayListIDFromTrack(trackId)
-        return if (result != null) json.fromJson(result, object : TypeToken<ArrayList<Int>>(){}.type)
+        return if (result != null) json.fromJson(
+            result,
+            object : TypeToken<ArrayList<Int>>() {}.type
+        )
         else arrayListOf()
     }
 
@@ -62,16 +71,28 @@ class CurrentPlaListRepositoryImpl(
         val listId = getPLIdFromTrack(track.trackId)
         if (listId.size == 1) {
             appDataBase.getAllTracksDao().deleteTrack(currentPlayListTrackDBConverter.map(track))
-        }
-        else {
+        } else {
             listId.remove(playList.playListId)
             track.playListIds = listId
             appDataBase.getAllTracksDao().updateTrack(currentPlayListTrackDBConverter.map(track))
         }
         playList.tracksIds.remove(track.trackId)
         playList.quantityTracks = playList.tracksIds.size
-        appDataBase.getPlayListsBaseDao().updateTracksIdsInPlayList(currentPlayListTrackDBConverter.map(playList))
+        appDataBase.getPlayListsBaseDao()
+            .updateTracksIdsInPlayList(currentPlayListTrackDBConverter.map(playList))
     }
 
 
+    override fun shareTrackList(message: String) {
+        val shareAppIntent = Intent(Intent.ACTION_SEND)
+        shareAppIntent.putExtra(Intent.EXTRA_TEXT, message)
+        shareAppIntent.type = "text/plain"
+        shareAppIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        try {
+            context.startActivity(shareAppIntent)
+        } catch (activityNotFound: ActivityNotFoundException) {
+            Toast.makeText(context, context.getString(R.string.app_not_found), Toast.LENGTH_SHORT)
+                .show()
+        }
+    }
 }

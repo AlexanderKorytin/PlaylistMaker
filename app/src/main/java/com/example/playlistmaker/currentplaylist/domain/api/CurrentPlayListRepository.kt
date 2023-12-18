@@ -14,4 +14,6 @@ interface CurrentPlayListRepository {
     suspend fun getPLIdFromTrack(id: Long): ArrayList<Int>
 
     suspend fun deleteTrackFromPlayList(track: Track, playList: PlayList)
+
+    fun shareTrackList(message: String)
 }

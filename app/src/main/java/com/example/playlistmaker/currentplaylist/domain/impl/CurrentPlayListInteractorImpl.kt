@@ -29,5 +29,9 @@ class CurrentPlayListInteractorImpl(
         currentPlayListRepository.deleteTrackFromPlayList(track, playList)
     }
 
+    override fun shareTrackList(message: String) {
+        currentPlayListRepository.shareTrackList(message)
+    }
+
 
 }

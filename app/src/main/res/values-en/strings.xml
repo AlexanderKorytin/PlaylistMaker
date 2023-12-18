@@ -42,4 +42,6 @@
     <string name="playlist_is_empty">playlist is empty</string>
     <string name="track_delete_dialog_title">Are you sure you want to delete a track from your playlist?</string>
     <string name="delete">Delete</string>
+    <string name="no_tracks_for_sharing">There is no track list to share in this playlist.</string>
+    <string name="close">Close</string>
 </resources>

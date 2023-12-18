@@ -63,7 +63,8 @@ class CurrentPlayListFragment : Fragment() {
             )
         }
         currentPlayListVM.getCurrentPlayListById()
-        currentPlayListVM.getPlayList().observe(viewLifecycleOwner) { currentAlbum ->
+
+        currentPlayListVM.getPlayListImmutableState().observe(viewLifecycleOwner) { currentAlbum ->
             val filePath = File(
                 requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
                 "playlist_maker_album"
@@ -93,7 +94,8 @@ class CurrentPlayListFragment : Fragment() {
         binding.albumsList.adapter = adapter
         binding.albumsList.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        currentPlayListVM.getCurrentScreenState().observe(viewLifecycleOwner) { result ->
+
+        currentPlayListVM.getPlayListMutableState().observe(viewLifecycleOwner) { result ->
             when (result) {
                 is CurrentPlayListScreenState.Empty -> {
                     showEmpty(result.time)
@@ -102,6 +104,17 @@ class CurrentPlayListFragment : Fragment() {
                 is CurrentPlayListScreenState.Content -> {
                     showContent(currentPlayListVM.mapper.mapList(result.data), result.time)
                 }
+            }
+        }
+
+        binding.playlistSharing.setOnClickListener {
+            if (adapter?.currentList?.isEmpty() == true) {
+                MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+                    .setMessage(R.string.no_tracks_for_sharing)
+                    .setPositiveButton(R.string.close) { dialog, which ->
+                    }.show()
+            } else {
+                currentPlayListVM.sharingPlayList()
             }
         }
 
@@ -117,19 +130,19 @@ class CurrentPlayListFragment : Fragment() {
 
     private fun onLongClick(trackUI: TrackUI) {
         val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
-            .setTitle(R.string.track_delete_dialog_title)
-            .setNegativeButton(R.string.canсel){dialog, which ->
+            .setMessage(R.string.track_delete_dialog_title)
+            .setNegativeButton(R.string.canсel) { dialog, which ->
 
             }
-            .setPositiveButton(R.string.delete){dialog, which ->
-                lifecycleScope.launch(Dispatchers.IO){
+            .setPositiveButton(R.string.delete) { dialog, which ->
+                lifecycleScope.launch(Dispatchers.IO) {
                     currentPlayListVM.deleteTrack(trackUI.toTrack(), currentPlayListVM.playListId)
                 }
             }
         dialog.show()
     }
 
-    private fun onClick(trackUI: TrackUI){
+    private fun onClick(trackUI: TrackUI) {
         trackClickDebounce(trackUI)
     }
 
@@ -138,6 +151,7 @@ class CurrentPlayListFragment : Fragment() {
             albumsList.isVisible = false
             playlistIsEmpty.isVisible = true
             summaryTime.text = time
+            adapter?.submitList(listOf())
         }
     }
 

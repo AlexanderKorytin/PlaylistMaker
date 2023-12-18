@@ -24,19 +24,24 @@ class CurrentPlayListViewModel(
     val json: Gson
 ) : ViewModel() {
 
+    private lateinit var album: PlayList
+
+    private lateinit var trackList: List<Track>
+    private lateinit var timeTracks: String
+
 
     private val playlistScreenState: MutableLiveData<PlayListUI> = MutableLiveData()
 
-    fun getPlayList(): LiveData<PlayListUI> = playlistScreenState
+    fun getPlayListImmutableState(): LiveData<PlayListUI> = playlistScreenState
 
     private val currentPlayListScreenState: MutableLiveData<CurrentPlayListScreenState> =
         MutableLiveData()
 
-    fun getCurrentScreenState(): LiveData<CurrentPlayListScreenState> = currentPlayListScreenState
+    fun getPlayListMutableState(): LiveData<CurrentPlayListScreenState> = currentPlayListScreenState
 
     fun getCurrentPlayListById() {
         viewModelScope.launch(Dispatchers.IO) {
-            val album = currentPlayListInteractor.getPlayListById(playListId)
+            album = currentPlayListInteractor.getPlayListById(playListId)
             getTracks(album.tracksIds)
             val albumUI = PlayListUI(
                 playListName = album.playListName,
@@ -60,15 +65,16 @@ class CurrentPlayListViewModel(
 
                     else -> {
 
-                        val resultUI = mutableListOf <Track>()
+                        val resultUI = mutableListOf<Track>()
                         resultUI.addAll(result)
                         for (i in 0 until result.size) {
                             val index = tracksIds.indexOf(result[i].trackId)
                             resultUI[index] = result[i]
                         }
                         resultUI.reverse()
-
+                        trackList = resultUI
                         val time = getSummaryTime(resultUI)
+                        timeTracks = time
                         currentPlayListScreenState.postValue(
                             CurrentPlayListScreenState.Content(resultUI, time)
                         )
@@ -77,8 +83,21 @@ class CurrentPlayListViewModel(
             }
     }
 
-    suspend fun deleteTrack(track: Track, playListId: Int){
-        val album = currentPlayListInteractor.getPlayListById(playListId)
+    fun sharingPlayList() {
+        var message = ""
+        message += "playList: ${album.playListName}\n"
+        if (album.playListDescription.isNotEmpty()) message += "${album.playListDescription}\n"
+        message += if (album.quantityTracks < 10) "quantity tracks: 0${album.quantityTracks}\n"
+        else "quantity tracks: ${album.quantityTracks}\n"
+        message += "tracks:\n"
+        for (i in 0 until trackList.size) {
+            message += "${i+1}. ${trackList[i].artistName} - ${trackList[i].trackName} (${trackList[i].trackTime})\n"
+        }
+        currentPlayListInteractor.shareTrackList(message)
+    }
+
+    suspend fun deleteTrack(track: Track, playListId: Int) {
+        album = currentPlayListInteractor.getPlayListById(playListId)
         currentPlayListInteractor.deleteTrackFromPlayList(track, album)
         getCurrentPlayListById()
     }

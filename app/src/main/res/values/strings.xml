@@ -46,4 +46,6 @@
     <string name="playlist_is_empty">в плейлисте нет треков</string>
     <string name="track_delete_dialog_title">Вы уверены, что хотите удалить трек из плейлиста?</string>
     <string name="delete">Удалить</string>
+    <string name="no_tracks_for_sharing">В этом плейлисте нет списка треков, которым можно поделиться</string>
+    <string name="close">Закрыть</string>
 </resources>
