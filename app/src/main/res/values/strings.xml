@@ -43,4 +43,5 @@
     <string name="сomplete">Завершить</string>
     <string name="add_to_playlist">Добавить в плейтист</string>
     <string name="playlist_empty">Не добавлено ни одного трека</string>
+    <string name="playlist_is_empty">в плейлисте нет треков</string>
 </resources>

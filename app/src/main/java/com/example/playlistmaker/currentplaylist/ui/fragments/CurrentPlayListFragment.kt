@@ -115,6 +115,8 @@ class CurrentPlayListFragment : Fragment() {
 
     private fun showEmpty() {
         with(binding) {
+            albumsList.isVisible = false
+            playlistIsEmpty.isVisible = true
         }
     }
 
@@ -122,6 +124,7 @@ class CurrentPlayListFragment : Fragment() {
         with(binding) {
             adapter?.submitList(listTracks)
             albumsList.isVisible = true
+            playlistIsEmpty.isVisible = false
             summaryTime.text = time
         }
     }

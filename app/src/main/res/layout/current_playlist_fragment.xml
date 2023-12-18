@@ -157,6 +157,19 @@
             android:layout_marginTop="@dimen/padding_8"
             android:background="@drawable/line_4_dp" />
 
+        <TextView
+            android:id="@+id/playlist_is_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/bottomNavViewColorIcon"
+            android:textFontWeight="400"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:layout_marginTop="@dimen/padding_12"
+            android:text="@string/playlist_is_empty"
+            android:visibility="gone"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/albums_list"
             android:layout_width="match_parent"
