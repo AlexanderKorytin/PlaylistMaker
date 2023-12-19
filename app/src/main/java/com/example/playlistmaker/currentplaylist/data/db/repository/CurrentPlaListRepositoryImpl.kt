@@ -58,7 +58,7 @@ class CurrentPlaListRepositoryImpl(
 
     }
 
-    override suspend fun getPLIdFromTrack(trackId: Long): ArrayList<Int> {
+    override suspend fun getPlayListIdsForTrack(trackId: Long): ArrayList<Int> {
         val result = appDataBase.getAllTracksDao().getPlayListIDFromTrack(trackId)
         return if (result != null) json.fromJson(
             result,
@@ -67,8 +67,8 @@ class CurrentPlaListRepositoryImpl(
         else arrayListOf()
     }
 
-    override suspend fun deleteTrackFromPlayList(track: Track, playList: PlayList) {
-        val listId = getPLIdFromTrack(track.trackId)
+    override suspend fun deleteTrackFromDB(track: Track, playList: PlayList) {
+        val listId = getPlayListIdsForTrack(track.trackId)
         if (listId.size == 1) {
             appDataBase.getAllTracksDao().deleteTrack(currentPlayListTrackDBConverter.map(track))
         } else {
@@ -93,6 +93,29 @@ class CurrentPlaListRepositoryImpl(
         } catch (activityNotFound: ActivityNotFoundException) {
             Toast.makeText(context, context.getString(R.string.app_not_found), Toast.LENGTH_SHORT)
                 .show()
+        }
+    }
+
+    override suspend fun deletePlayListFromBD(playList: PlayList) {
+        val listTracks = mutableListOf<Track>()
+        getCurrentPlayListTracks(playList.tracksIds).collect {
+            listTracks.addAll(it)
+        }
+        for (track in listTracks) {
+            deleteTracksFromPlayList(track, playList)
+        }
+        appDataBase.getPlayListsBaseDao()
+            .deletePlayList(currentPlayListTrackDBConverter.map(playList))
+    }
+
+    private suspend fun deleteTracksFromPlayList(track: Track, playList: PlayList) {
+        val listId = getPlayListIdsForTrack(track.trackId)
+        if (listId.size == 1) {
+            appDataBase.getAllTracksDao().deleteTrack(currentPlayListTrackDBConverter.map(track))
+        } else {
+            listId.remove(playList.playListId)
+            track.playListIds = listId
+            appDataBase.getAllTracksDao().updateTrack(currentPlayListTrackDBConverter.map(track))
         }
     }
 }

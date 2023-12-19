@@ -16,4 +16,6 @@ interface CurrentPlayListInteractor {
     suspend fun deleteTrackFromPlayList(track: Track, playList: PlayList)
 
     fun shareTrackList(message: String)
+
+    suspend fun deletePlayList(playList: PlayList)
 }

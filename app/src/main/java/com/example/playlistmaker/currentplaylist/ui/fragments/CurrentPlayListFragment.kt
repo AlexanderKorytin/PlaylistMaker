@@ -24,8 +24,6 @@ import com.example.playlistmaker.search.ui.models.TrackUI
 import com.example.playlistmaker.util.debounce
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import java.io.File
@@ -63,9 +61,9 @@ class CurrentPlayListFragment : Fragment() {
             BottomSheetBehavior.from(binding.currentPlayListSettingBottomSheet)
 
         settingBottomSheetBehaivor.addBottomSheetCallback(object :
-            BottomSheetBehavior.BottomSheetCallback(){
+            BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when(newState) {
+                when (newState) {
                     BottomSheetBehavior.STATE_COLLAPSED -> binding.overlay.isVisible = true
                     BottomSheetBehavior.STATE_HIDDEN -> binding.overlay.isVisible = false
                 }
@@ -149,6 +147,18 @@ class CurrentPlayListFragment : Fragment() {
             settingBottomSheetBehaivor.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
+        binding.deletePlaylist.setOnClickListener {
+            MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+                .setMessage("${requireContext().getString(R.string.playlist_del_alert_dialog_message)} «${binding.currentPlaylistName.text}»?")
+                .setNegativeButton(R.string.no) { dialog, which ->
+
+                }
+                .setPositiveButton(R.string.yes) { doalog, which ->
+                    currentPlayListVM.deletePlayList()
+                    findNavController().navigateUp()
+                }.show()
+        }
+
         binding.backCurrentPlaylist.setOnClickListener {
             findNavController().navigateUp()
         }
@@ -162,13 +172,11 @@ class CurrentPlayListFragment : Fragment() {
     private fun onLongClick(trackUI: TrackUI) {
         val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
             .setMessage(R.string.track_delete_dialog_title)
-            .setNegativeButton(R.string.canсel) { dialog, which ->
+            .setNegativeButton(R.string.no) { dialog, which ->
 
             }
-            .setPositiveButton(R.string.delete) { dialog, which ->
-                lifecycleScope.launch(Dispatchers.IO) {
-                    currentPlayListVM.deleteTrack(trackUI.toTrack(), currentPlayListVM.playListId)
-                }
+            .setPositiveButton(R.string.yes) { dialog, which ->
+                currentPlayListVM.deleteTrack(trackUI.toTrack())
             }
         dialog.show()
     }

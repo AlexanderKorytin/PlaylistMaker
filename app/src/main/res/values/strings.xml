@@ -44,11 +44,14 @@
     <string name="add_to_playlist">Добавить в плейтист</string>
     <string name="playlist_empty">Не добавлено ни одного трека</string>
     <string name="playlist_is_empty">в плейлисте нет треков</string>
-    <string name="track_delete_dialog_title">Вы уверены, что хотите удалить трек из плейлиста?</string>
+    <string name="track_delete_dialog_title">Хотите удалить трек?</string>
     <string name="delete">Удалить</string>
     <string name="no_tracks_for_sharing">В этом плейлисте нет списка треков, которым можно поделиться</string>
     <string name="close">Закрыть</string>
     <string name="share">Поделится</string>
     <string name="edit_information">Редактировать информацию</string>
     <string name="delete_playlist">Удалить плейлист</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="playlist_del_alert_dialog_message">Хотите удалить плейлист</string>
 </resources>

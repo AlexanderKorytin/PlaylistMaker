@@ -29,6 +29,10 @@ class CurrentPlayListViewModel(
     private lateinit var trackList: List<Track>
     private lateinit var timeTracks: String
 
+    fun getPlayList(): PlayList {
+        return album
+    }
+
 
     private val playlistScreenState: MutableLiveData<PlayListUI> = MutableLiveData()
 
@@ -91,18 +95,27 @@ class CurrentPlayListViewModel(
         else "quantity tracks: ${album.quantityTracks}\n"
         message += "tracks:\n"
         for (i in 0 until trackList.size) {
-            message += "${i+1}. ${trackList[i].artistName} - ${trackList[i].trackName} (${trackList[i].trackTime})\n"
+            message += "${i + 1}. ${trackList[i].artistName} - ${trackList[i].trackName} (${trackList[i].trackTime})\n"
         }
         currentPlayListInteractor.shareTrackList(message)
     }
 
-    suspend fun deleteTrack(track: Track, playListId: Int) {
-        album = currentPlayListInteractor.getPlayListById(playListId)
-        currentPlayListInteractor.deleteTrackFromPlayList(track, album)
-        getCurrentPlayListById()
+    fun deleteTrack(track: Track) {
+        viewModelScope.launch(Dispatchers.IO) {
+            album = currentPlayListInteractor.getPlayListById(playListId)
+            currentPlayListInteractor.deleteTrackFromPlayList(track, album)
+            getCurrentPlayListById()
+        }
     }
 
-    private suspend fun getSummaryTime(tracks: List<Track>): String {
+    fun deletePlayList() {
+        val playList = getPlayList()
+        viewModelScope.launch(Dispatchers.IO) {
+            currentPlayListInteractor.deletePlayList(playList)
+        }
+    }
+
+    private fun getSummaryTime(tracks: List<Track>): String {
         var timeTracks = 0L
         for (track in tracks) {
             val df = SimpleDateFormat("mm:ss")

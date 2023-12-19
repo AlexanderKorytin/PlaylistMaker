@@ -40,11 +40,14 @@
     <string name="сomplete">Complete</string>
     <string name="add_to_playlist">Add to playlist</string>
     <string name="playlist_is_empty">playlist is empty</string>
-    <string name="track_delete_dialog_title">Are you sure you want to delete a track from your playlist?</string>
+    <string name="track_delete_dialog_title">Do you want to delete a track?</string>
     <string name="delete">Delete</string>
     <string name="no_tracks_for_sharing">There is no track list to share in this playlist.</string>
     <string name="close">Close</string>
     <string name="share">Share</string>
     <string name="edit_information">Edit information</string>
     <string name="delete_playlist">Delete playlist</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="playlist_del_alert_dialog_message">Do you want to delete a playlist</string>
 </resources>

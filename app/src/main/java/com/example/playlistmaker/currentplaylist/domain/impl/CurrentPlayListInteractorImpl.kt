@@ -22,15 +22,19 @@ class CurrentPlayListInteractorImpl(
     }
 
     override suspend fun getPlayListIdsCurrentTrack(tracksId: Long): ArrayList<Int> {
-        return currentPlayListRepository.getPLIdFromTrack(tracksId)
+        return currentPlayListRepository.getPlayListIdsForTrack(tracksId)
     }
 
     override suspend fun deleteTrackFromPlayList(track: Track, playList: PlayList) {
-        currentPlayListRepository.deleteTrackFromPlayList(track, playList)
+        currentPlayListRepository.deleteTrackFromDB(track, playList)
     }
 
     override fun shareTrackList(message: String) {
         currentPlayListRepository.shareTrackList(message)
+    }
+
+    override suspend fun deletePlayList(playList: PlayList) {
+        currentPlayListRepository.deletePlayListFromBD(playList)
     }
 
 
