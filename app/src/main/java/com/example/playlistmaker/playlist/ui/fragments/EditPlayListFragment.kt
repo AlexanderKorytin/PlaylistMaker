@@ -63,6 +63,7 @@ class EditPlayListFragment : PlayListCreatorFragment() {
                 val file = File(filePath, it.playListCover)
                 Glide.with(requireContext())
                     .load(file.toUri())
+                    .placeholder(R.drawable.new_list_rouded_rectangle)
                     .transform(CenterCrop(), RoundedCorners(radiusIconTrackPx))
                     .into(binding.listCover)
             }
