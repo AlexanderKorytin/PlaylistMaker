@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 
 class CurrentPlayListViewModel(
-    val playListId: Int,
+    private val playListId: Int,
     private val currentPlayListInteractor: CurrentPlayListInteractor,
     val mapper: MapToTrackUI,
     val json: Gson
@@ -31,6 +31,10 @@ class CurrentPlayListViewModel(
 
     fun getPlayList(): PlayList {
         return album
+    }
+
+    fun getPlayListId(): Int {
+        return playListId
     }
 
 

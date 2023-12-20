@@ -54,4 +54,5 @@
     <string name="yes">Да</string>
     <string name="no">Нет</string>
     <string name="playlist_del_alert_dialog_message">Хотите удалить плейлист</string>
+    <string name="save">Сохранить</string>
 </resources>

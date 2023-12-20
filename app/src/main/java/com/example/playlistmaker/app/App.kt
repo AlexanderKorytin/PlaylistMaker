@@ -12,6 +12,7 @@ import com.example.playlistmaker.player.di.playerDomainModule
 import com.example.playlistmaker.player.di.playerViewModelModule
 import com.example.playlistmaker.playlist.di.playListsDataModule
 import com.example.playlistmaker.playlist.di.playListsDomainModule
+import com.example.playlistmaker.playlists.di.editPlayListViewModelModule
 import com.example.playlistmaker.playlists.di.playListsViewModelModule
 import com.example.playlistmaker.search.di.searchDataModule
 import com.example.playlistmaker.search.di.searchDomainModule
@@ -57,6 +58,7 @@ class App : Application() {
                 playListsViewModelModule,
                 playListsDataModule,
                 playListsDomainModule,
+                editPlayListViewModelModule,
 
                 favoriteTracksViewModelViewModelModule,
                 favoriteTracksDataModule,

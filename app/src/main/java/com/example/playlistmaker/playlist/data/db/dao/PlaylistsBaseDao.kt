@@ -23,7 +23,7 @@ interface PlaylistsBaseDao {
     suspend fun getTracksIdsFromPlayList(playListId: Int): String
 
     @Update(entity = PlayListEntity::class, onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateTracksIdsInPlayList(entity: PlayListEntity)
+    suspend fun updatePlayList(entity: PlayListEntity)
 
     @Delete(PlayListEntity::class)
     suspend fun deletePlayList(playList: PlayListEntity)

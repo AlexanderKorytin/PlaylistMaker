@@ -10,4 +10,6 @@ interface PlayListsRepository {
     suspend fun getAllPlayLists(): Flow<List<PlayList>>
 
     suspend fun saveTrack(track: Track, playList: PlayList)
+
+    suspend fun savePlayList(playList: PlayList)
 }

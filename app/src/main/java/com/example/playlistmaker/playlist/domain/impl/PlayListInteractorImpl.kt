@@ -7,7 +7,7 @@ import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 
 class PlayListInteractorImpl(private val repository: PlayListsRepository) : PlayListInteractor {
-    override suspend fun savePlayListToDb(playList: PlayList) {
+    override suspend fun saveTrackIdsToPlayListToDb(playList: PlayList) {
         repository.savePlayListToBase(playList)
     }
 
@@ -17,6 +17,10 @@ class PlayListInteractorImpl(private val repository: PlayListsRepository) : Play
 
     override suspend fun saveTrack(track: Track, playList: PlayList) {
         repository.saveTrack(track, playList)
+    }
+
+    override suspend fun savePlayList(playList: PlayList) {
+        repository.savePlayList(playList)
     }
 
 }

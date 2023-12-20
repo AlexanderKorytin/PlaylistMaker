@@ -11,18 +11,18 @@ import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class PlayListsViewModel(
+open class PlayListsViewModel(
     private val interactor: PlayListInteractor,
-    val json: Gson
+    open val json: Gson
 ) : ViewModel() {
 
     private val screenState: MutableLiveData<PlayListsScreenState> = MutableLiveData()
 
     fun getScreenState(): LiveData<PlayListsScreenState> = screenState
 
-    fun savePlayList(playList: PlayList) {
+   open fun savePlayList(playList: PlayList) {
         viewModelScope.launch(Dispatchers.IO) {
-            interactor.savePlayListToDb(playList)
+            interactor.saveTrackIdsToPlayListToDb(playList)
         }
     }
 

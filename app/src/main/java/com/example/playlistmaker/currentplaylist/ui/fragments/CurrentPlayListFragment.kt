@@ -20,6 +20,7 @@ import com.example.playlistmaker.currentplaylist.ui.models.CurrentPlayListScreen
 import com.example.playlistmaker.currentplaylist.ui.viewmodel.CurrentPlayListViewModel
 import com.example.playlistmaker.databinding.CurrentPlaylistFragmentBinding
 import com.example.playlistmaker.player.ui.fragments.MediaPlayerFragment
+import com.example.playlistmaker.playlist.ui.fragments.EditPlayListFragment
 import com.example.playlistmaker.search.ui.models.TrackUI
 import com.example.playlistmaker.util.debounce
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -157,6 +158,15 @@ class CurrentPlayListFragment : Fragment() {
                     currentPlayListVM.deletePlayList()
                     findNavController().navigateUp()
                 }.show()
+        }
+
+        binding.editInformation.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_currentPlayListFragment2_to_editPlayListFragment,
+                EditPlayListFragment.createArgs(
+                    currentPlayListVM.getPlayListId()
+                )
+            )
         }
 
         binding.backCurrentPlaylist.setOnClickListener {

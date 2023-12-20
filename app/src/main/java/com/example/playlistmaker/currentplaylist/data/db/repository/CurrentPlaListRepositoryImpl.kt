@@ -79,7 +79,7 @@ class CurrentPlaListRepositoryImpl(
         playList.tracksIds.remove(track.trackId)
         playList.quantityTracks = playList.tracksIds.size
         appDataBase.getPlayListsBaseDao()
-            .updateTracksIdsInPlayList(currentPlayListTrackDBConverter.map(playList))
+            .updatePlayList(currentPlayListTrackDBConverter.map(playList))
     }
 
 

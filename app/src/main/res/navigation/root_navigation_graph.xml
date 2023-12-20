@@ -93,5 +93,12 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_currentPlayListFragment2_to_editPlayListFragment"
+            app:destination="@id/editPlayListFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/editPlayListFragment"
+        android:name="com.example.playlistmaker.playlist.ui.fragments.EditPlayListFragment"
+        android:label="EditPlayListFragment" />
 </navigation>
