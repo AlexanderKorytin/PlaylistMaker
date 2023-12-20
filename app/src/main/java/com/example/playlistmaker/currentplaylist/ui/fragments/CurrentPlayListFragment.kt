@@ -66,6 +66,7 @@ class CurrentPlayListFragment : Fragment() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
                     BottomSheetBehavior.STATE_COLLAPSED -> binding.overlay.isVisible = true
+                    BottomSheetBehavior.STATE_HIDDEN -> binding.overlay.isVisible = false
                 }
             }
 
@@ -128,17 +129,7 @@ class CurrentPlayListFragment : Fragment() {
         }
 
         binding.playlistSharing.setOnClickListener {
-            binding.overlay.isVisible = true
-            if (adapter?.currentList?.isEmpty() == true) {
-                MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
-                    .setMessage(R.string.no_tracks_for_sharing)
-                    .setCancelable(false)
-                    .setPositiveButton(R.string.close) { dialog, which ->
-                        binding.overlay.isVisible = false
-                    }.show()
-            } else {
-                currentPlayListVM.sharingPlayList()
-            }
+           sharing()
         }
 
         binding.playlistSetting.setOnClickListener {
@@ -146,23 +137,22 @@ class CurrentPlayListFragment : Fragment() {
         }
 
         binding.sharing.setOnClickListener {
-            currentPlayListVM.sharingPlayList()
+            sharing()
             settingBottomSheetBehaivor.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
         binding.deletePlaylist.setOnClickListener {
             settingBottomSheetBehaivor.state = BottomSheetBehavior.STATE_HIDDEN
-            MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+            val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
                 .setMessage("${requireContext().getString(R.string.playlist_del_alert_dialog_message)} «${binding.currentPlaylistName.text}»?")
                 .setCancelable(false)
                 .setNegativeButton(R.string.no) { dialog, which ->
-                    binding.overlay.isVisible = false
                 }
                 .setPositiveButton(R.string.yes) { doalog, which ->
                     currentPlayListVM.deletePlayList()
-                    binding.overlay.isVisible = false
                     findNavController().navigateUp()
-                }.show()
+                }
+            dialog.show()
         }
 
         binding.editInformation.setOnClickListener {
@@ -184,6 +174,17 @@ class CurrentPlayListFragment : Fragment() {
         _binding = null
     }
 
+    private fun sharing(){
+        if (adapter?.currentList?.isEmpty() == true) {
+            MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+                .setMessage(R.string.no_tracks_for_sharing)
+                .setCancelable(false)
+                .setPositiveButton(R.string.close) { dialog, which ->
+                }.show()
+        } else {
+            currentPlayListVM.sharingPlayList()
+        }
+    }
     private fun onLongClick(trackUI: TrackUI) {
         binding.overlay.isVisible = true
         val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
