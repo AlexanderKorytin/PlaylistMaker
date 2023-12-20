@@ -154,6 +154,7 @@
         android:background="@drawable/bottom_sheet_bg"
         android:orientation="vertical"
         app:behavior_hideable="false"
+        android:layout_marginTop="@dimen/padding_24"
         app:behavior_peekHeight="266dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
