@@ -71,7 +71,7 @@ class CurrentPlayListFragment : Fragment() {
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-
+                binding.overlay.alpha = 1 - 2 * slideOffset
             }
 
         })
