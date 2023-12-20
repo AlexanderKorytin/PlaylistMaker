@@ -54,6 +54,18 @@ class EditPlayListFragment : PlayListCreatorFragment() {
             with(binding) {
                 namePlaylist.setText(it.playListName)
                 descriptionPlaylist.setText(it.playListDescription)
+
+                if (namePlaylist.text.isNotEmpty()) namePlaylist.background =
+                    requireContext().getDrawable(R.drawable.playlist_edittext_not_empty)
+                else namePlaylist.background =
+                    requireContext().getDrawable(R.drawable.playlist_edittext_empty)
+
+                if (descriptionPlaylist.text.isNotEmpty()) descriptionPlaylist.background =
+                    requireContext().getDrawable(R.drawable.playlist_edittext_not_empty)
+                else descriptionPlaylist.background =
+                    requireContext().getDrawable(R.drawable.playlist_edittext_empty)
+
+
                 val radiusIconTrackDp = 8.0f
                 val radiusIconTrackPx = dpToPx(radiusIconTrackDp, requireContext())
                 val filePath = File(
@@ -68,55 +80,6 @@ class EditPlayListFragment : PlayListCreatorFragment() {
                     .into(binding.listCover)
             }
         }
-        val playListNameTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                with(binding) {
-                    if (s?.isNotEmpty()!!) {
-                        textInFrameHintName.isVisible = true
-                        createPlaylist.isEnabled = true
-                    } else {
-                        textInFrameHintName.isVisible = false
-                        createPlaylist.isEnabled = false
-                    }
-                }
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-        }
-        with(binding) {
-            namePlaylist.setOnFocusChangeListener { _, focus ->
-                if (focus || namePlaylist.text.isNotEmpty()) namePlaylist.background =
-                    requireContext().getDrawable(R.drawable.playlist_edittext_not_empty)
-                else namePlaylist.background =
-                    requireContext().getDrawable(R.drawable.playlist_edittext_empty)
-            }
-        }
-        binding.namePlaylist.addTextChangedListener(playListNameTextWatcher)
-
-        val playListDescriptionTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                with(binding) {
-                    textInFrameHintDescription.isVisible = s?.isNotEmpty()!!
-                }
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-        }
-        with(binding) {
-            descriptionPlaylist.setOnFocusChangeListener { _, focus ->
-                if (focus || descriptionPlaylist.text.isNotEmpty()) descriptionPlaylist.background =
-                    requireContext().getDrawable(R.drawable.playlist_edittext_not_empty)
-                else descriptionPlaylist.background =
-                    requireContext().getDrawable(R.drawable.playlist_edittext_empty)
-            }
-        }
-        binding.descriptionPlaylist.addTextChangedListener(playListDescriptionTextWatcher)
 
         binding.createPlaylist.setOnClickListener {
             val album = playListsVM.getPlayListVM()
