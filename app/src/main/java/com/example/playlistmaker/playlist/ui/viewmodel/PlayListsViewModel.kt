@@ -20,7 +20,7 @@ open class PlayListsViewModel(
 
     fun getScreenState(): LiveData<PlayListsScreenState> = screenState
 
-   open fun savePlayList(playList: PlayList) {
+    open fun savePlayList(playList: PlayList) {
         viewModelScope.launch(Dispatchers.IO) {
             interactor.saveTrackIdsToPlayListToDb(playList)
         }

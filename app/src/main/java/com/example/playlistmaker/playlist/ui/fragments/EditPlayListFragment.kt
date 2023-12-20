@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -18,7 +19,6 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.app.dpToPx
 import com.example.playlistmaker.databinding.AlbumCreatorFragmentBinding
 import com.example.playlistmaker.playlist.ui.viewmodel.EditPlaylistViewModel
-import com.example.playlistmaker.playlist.ui.viewmodel.PlayListsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import java.io.File
@@ -125,6 +125,19 @@ class EditPlayListFragment : PlayListCreatorFragment() {
             playListsVM.savePlayList(album)
             findNavController().navigateUp()
         }
+
+        binding.backNewList.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    findNavController().navigateUp()
+                }
+
+            })
     }
 
     companion object {

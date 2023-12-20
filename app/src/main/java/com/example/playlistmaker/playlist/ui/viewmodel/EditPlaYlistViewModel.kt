@@ -18,7 +18,7 @@ class EditPlaylistViewModel(
 ) : PlayListsViewModel(playListInteractor, json) {
 
     private lateinit var playlist: PlayList
-    fun getPlayListVM(): PlayList{
+    fun getPlayListVM(): PlayList {
         return playlist
     }
 
