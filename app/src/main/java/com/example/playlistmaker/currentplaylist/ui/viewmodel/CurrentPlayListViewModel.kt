@@ -121,26 +121,28 @@ class CurrentPlayListViewModel(
 
     private fun getSummaryTime(tracks: List<Track>): String {
         var timeTracks = 0L
+        var timeSec = 0L
         for (track in tracks) {
-            val df = SimpleDateFormat("mm:ss")
-            timeTracks += df.parse(track.trackTime).time
+            val df = SimpleDateFormat("mm:ss", Locale.getDefault())
+            timeTracks += df.parse(track.trackTime).minutes
+            timeSec += df.parse(track.trackTime).seconds
         }
-        val minutes = SimpleDateFormat("mm", Locale.getDefault()).format(timeTracks)
-        val end = getEndMessageForTime(minutes.toInt())
-        return "${minutes} ${end}"
+        timeTracks += timeSec / 60
+        val end = getEndMessageForTime(timeTracks)
+        return if (timeTracks < 10L) "0${timeTracks} ${end}" else "${timeTracks} ${end}"
     }
 
     private fun getCounter(playList: PlayList): String {
         return "${playList.quantityTracks} ${getEndMessage(playList.quantityTracks)}"
     }
 
-    private fun getEndMessageForTime(time: Int): String {
+    private fun getEndMessageForTime(time: Long): String {
         val endMessage = when (time % 100) {
-            in 11..19 -> "минут"
+            in 11L..19L -> "минут"
             else -> {
                 when (time % 10) {
-                    1 -> "минута"
-                    in 2..4 -> "минуты"
+                    1L -> "минута"
+                    in 2L..4L -> "минуты"
                     else -> "минут"
                 }
             }
