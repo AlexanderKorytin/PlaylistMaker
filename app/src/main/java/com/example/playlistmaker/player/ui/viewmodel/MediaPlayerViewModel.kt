@@ -20,7 +20,6 @@ import com.example.playlistmaker.playlist.ui.models.ToastStase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -39,14 +38,16 @@ class MediaPlayerViewModel(
 
     private var timerJob: Job? = null
 
-    private fun preparePlayer() {
-            viewModelScope.launch(Dispatchers.IO) {
-                val listId = currentPlayListInteractor.getPlayListIdsCurrentTrack(
-                        playedTrack.trackId
-                    )
-                playedTrack.playListIds = listId
-            }
-        mediaPlayerInteractor.prepare(playedTrack)
+    private suspend fun preparePlayer() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val listId = currentPlayListInteractor.getPlayListIdsCurrentTrack(
+                playedTrack.trackId
+            )
+            playedTrack.playListIds = listId
+            async {
+                mediaPlayerInteractor.prepare(playedTrack)
+            }.await()
+        }
         checkingPreparePlayer()
     }
 
@@ -112,8 +113,8 @@ class MediaPlayerViewModel(
         )
         viewModelScope.launch {
             currentSingInFavorite.postValue(playedTrack.inFavorite)
+            preparePlayer()
         }
-        preparePlayer()
     }
 
     private fun startPlayer() {

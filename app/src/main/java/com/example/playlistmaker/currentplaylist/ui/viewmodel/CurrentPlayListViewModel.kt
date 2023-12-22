@@ -1,6 +1,5 @@
 package com.example.playlistmaker.currentplaylist.ui.viewmodel
 
-import android.icu.text.SimpleDateFormat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,7 +14,6 @@ import com.example.playlistmaker.util.getEndMessage
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.Date
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -134,7 +132,7 @@ class CurrentPlayListViewModel(
         timeTracks += timeSec
         val timeSum = timeTracks.toInt(DurationUnit.MINUTES)
         val end = getEndMessageForTime(timeSum)
-        return if(timeSum<10)"0${timeSum} ${end}" else "${timeSum} ${end}"
+        return if (timeSum < 10) "0${timeSum} ${end}" else "${timeSum} ${end}"
     }
 
     private fun getCounter(playList: PlayList): String {
