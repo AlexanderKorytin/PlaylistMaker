@@ -32,6 +32,7 @@ import java.io.File
 class CurrentPlayListFragment : Fragment() {
     private var _binding: CurrentPlaylistFragmentBinding? = null
     private val binding get() = _binding!!
+    var dialogFlag = false
 
     private var adapter: CurrentPlayListAdapter? = null
 
@@ -65,8 +66,13 @@ class CurrentPlayListFragment : Fragment() {
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
-                    BottomSheetBehavior.STATE_COLLAPSED -> binding.overlay.isVisible = true
-                    BottomSheetBehavior.STATE_HIDDEN -> binding.overlay.isVisible = false
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                        binding.overlay.isVisible = true
+                    }
+
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.overlay.isVisible = dialogFlag
+                    }
                 }
             }
 
@@ -129,7 +135,7 @@ class CurrentPlayListFragment : Fragment() {
         }
 
         binding.playlistSharing.setOnClickListener {
-           sharing()
+            sharing()
         }
 
         binding.playlistSetting.setOnClickListener {
@@ -142,17 +148,22 @@ class CurrentPlayListFragment : Fragment() {
         }
 
         binding.deletePlaylist.setOnClickListener {
-            settingBottomSheetBehaivor.state = BottomSheetBehavior.STATE_HIDDEN
-            val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+            binding.overlay.isVisible = true
+            dialogFlag = true
+            MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
                 .setMessage("${requireContext().getString(R.string.playlist_del_alert_dialog_message)} «${binding.currentPlaylistName.text}»?")
                 .setCancelable(false)
                 .setNegativeButton(R.string.no) { dialog, which ->
+                    dialogFlag = false
+                    binding.overlay.isVisible = false
                 }
-                .setPositiveButton(R.string.yes) { doalog, which ->
+                .setPositiveButton(R.string.yes) { dialog, which ->
                     currentPlayListVM.deletePlayList()
+                    dialogFlag = false
+                    binding.overlay.isVisible = false
                     findNavController().navigateUp()
-                }
-            dialog.show()
+                }.show()
+            settingBottomSheetBehaivor.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
         binding.editInformation.setOnClickListener {
@@ -174,20 +185,25 @@ class CurrentPlayListFragment : Fragment() {
         _binding = null
     }
 
-    private fun sharing(){
+    private fun sharing() {
         if (adapter?.currentList?.isEmpty() == true) {
+            binding.overlay.isVisible = true
+            dialogFlag = true
             MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
                 .setMessage(R.string.no_tracks_for_sharing)
                 .setCancelable(false)
                 .setPositiveButton(R.string.close) { dialog, which ->
+                    dialogFlag = false
+                    binding.overlay.isVisible = false
                 }.show()
         } else {
             currentPlayListVM.sharingPlayList()
         }
     }
+
     private fun onLongClick(trackUI: TrackUI) {
         binding.overlay.isVisible = true
-        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+        MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
             .setMessage(R.string.track_delete_dialog_title)
             .setCancelable(false)
             .setNegativeButton(R.string.no) { dialog, which ->
@@ -196,8 +212,7 @@ class CurrentPlayListFragment : Fragment() {
             .setPositiveButton(R.string.yes) { dialog, which ->
                 binding.overlay.isVisible = false
                 currentPlayListVM.deleteTrack(trackUI.toTrack())
-            }
-        dialog.show()
+            }.show()
     }
 
     private fun onClick(trackUI: TrackUI) {
