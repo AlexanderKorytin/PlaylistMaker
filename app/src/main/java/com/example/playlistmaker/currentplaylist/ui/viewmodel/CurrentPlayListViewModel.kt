@@ -15,7 +15,11 @@ import com.example.playlistmaker.util.getEndMessage
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.Locale
+import java.util.Date
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.DurationUnit
 
 class CurrentPlayListViewModel(
     private val playListId: Int,
@@ -120,29 +124,30 @@ class CurrentPlayListViewModel(
     }
 
     private fun getSummaryTime(tracks: List<Track>): String {
-        var timeTracks = 0L
-        var timeSec = 0L
+        var timeTracks = Duration.ZERO
+        var timeSec = Duration.ZERO
         for (track in tracks) {
-            val df = SimpleDateFormat("mm:ss", Locale.getDefault())
-            timeTracks += df.parse(track.trackTime).minutes
-            timeSec += df.parse(track.trackTime).seconds
+            val str = track.trackTime.split(':')
+            timeTracks += str[0].toInt().minutes
+            timeSec += str[1].toInt().seconds
         }
-        timeTracks += timeSec / 60
-        val end = getEndMessageForTime(timeTracks)
-        return if (timeTracks < 10L) "0${timeTracks} ${end}" else "${timeTracks} ${end}"
+        timeTracks += timeSec
+        val timeSum = timeTracks.toInt(DurationUnit.MINUTES)
+        val end = getEndMessageForTime(timeSum)
+        return if(timeSum<10)"0${timeSum} ${end}" else "${timeSum} ${end}"
     }
 
     private fun getCounter(playList: PlayList): String {
         return "${playList.quantityTracks} ${getEndMessage(playList.quantityTracks)}"
     }
 
-    private fun getEndMessageForTime(time: Long): String {
+    private fun getEndMessageForTime(time: Int): String {
         val endMessage = when (time % 100) {
-            in 11L..19L -> "минут"
+            in 11..19 -> "минут"
             else -> {
                 when (time % 10) {
-                    1L -> "минута"
-                    in 2L..4L -> "минуты"
+                    1 -> "минута"
+                    in 2..4 -> "минуты"
                     else -> "минут"
                 }
             }
