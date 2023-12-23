@@ -1,18 +1,21 @@
 package com.example.playlistmaker.currentplaylist.ui.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.R
 import com.example.playlistmaker.currentplaylist.domain.api.CurrentPlayListInteractor
 import com.example.playlistmaker.currentplaylist.ui.models.CurrentPlayListScreenState
 import com.example.playlistmaker.currentplaylist.ui.models.PlayListUI
 import com.example.playlistmaker.playlist.domain.models.PlayList
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.mappers.MapToTrackUI
-import com.example.playlistmaker.util.getEndMessage
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
@@ -23,13 +26,15 @@ class CurrentPlayListViewModel(
     private val playListId: Int,
     private val currentPlayListInteractor: CurrentPlayListInteractor,
     val mapper: MapToTrackUI,
+    private val context: Context,
     val json: Gson
 ) : ViewModel() {
 
-    private lateinit var album: PlayList
+    private var _album: PlayList? = null
+    private var _trackList: List<Track>? = null
+    private var _timeTracks: String? = null
 
-    private lateinit var trackList: List<Track>
-    private lateinit var timeTracks: String
+    private val album get() = _album!!
 
     fun getPlayList(): PlayList {
         return album
@@ -39,19 +44,23 @@ class CurrentPlayListViewModel(
         return playListId
     }
 
+    private var _sharingmessage: MutableStateFlow<String> = MutableStateFlow("")
 
-    private val playlistScreenState: MutableLiveData<PlayListUI> = MutableLiveData()
+    fun getSharingMessage(): SharedFlow<String> = _sharingmessage
 
-    fun getPlayListImmutableState(): LiveData<PlayListUI> = playlistScreenState
+    private val _playlistScreenState: MutableLiveData<PlayListUI> = MutableLiveData()
 
-    private val currentPlayListScreenState: MutableLiveData<CurrentPlayListScreenState> =
+    fun getPlayListImmutableState(): LiveData<PlayListUI> = _playlistScreenState
+
+    private val _currentPlayListScreenState: MutableLiveData<CurrentPlayListScreenState> =
         MutableLiveData()
 
-    fun getPlayListMutableState(): LiveData<CurrentPlayListScreenState> = currentPlayListScreenState
+    fun getPlayListMutableState(): LiveData<CurrentPlayListScreenState> =
+        _currentPlayListScreenState
 
     fun getCurrentPlayListById() {
         viewModelScope.launch(Dispatchers.IO) {
-            album = currentPlayListInteractor.getPlayListById(playListId)
+            _album = currentPlayListInteractor.getPlayListById(playListId)
             getTracks(album.tracksIds)
             val albumUI = PlayListUI(
                 playListName = album.playListName,
@@ -59,7 +68,7 @@ class CurrentPlayListViewModel(
                 counterTrack = getCounter(album),
                 playListCover = album.playListCover
             )
-            playlistScreenState.postValue(albumUI)
+            _playlistScreenState.postValue(albumUI)
         }
     }
 
@@ -68,7 +77,7 @@ class CurrentPlayListViewModel(
             .collect { result ->
                 when {
                     result.isEmpty() -> {
-                        currentPlayListScreenState.postValue(
+                        _currentPlayListScreenState.postValue(
                             CurrentPlayListScreenState.Empty(getSummaryTime(result))
                         )
                     }
@@ -82,10 +91,10 @@ class CurrentPlayListViewModel(
                             resultUI[index] = result[i]
                         }
                         resultUI.reverse()
-                        trackList = resultUI
+                        _trackList = resultUI
                         val time = getSummaryTime(resultUI)
-                        timeTracks = time
-                        currentPlayListScreenState.postValue(
+                        _timeTracks = time
+                        _currentPlayListScreenState.postValue(
                             CurrentPlayListScreenState.Content(resultUI, time)
                         )
                     }
@@ -93,22 +102,13 @@ class CurrentPlayListViewModel(
             }
     }
 
-    fun sharingPlayList() {
-        var message = ""
-        message += "playList: ${album.playListName}\n"
-        if (album.playListDescription.isNotEmpty()) message += "${album.playListDescription}\n"
-        message += if (album.quantityTracks < 10) "quantity tracks: 0${album.quantityTracks}\n"
-        else "quantity tracks: ${album.quantityTracks}\n"
-        message += "tracks:\n"
-        for (i in 0 until trackList.size) {
-            message += "${i + 1}. ${trackList[i].artistName} - ${trackList[i].trackName} (${trackList[i].trackTime})\n"
-        }
-        currentPlayListInteractor.shareTrackList(message)
+    suspend fun getSharingPlayListMessage() {
+        _sharingmessage.emit(currentPlayListInteractor.getSharingMessage(playListId))
     }
 
     fun deleteTrack(track: Track) {
         viewModelScope.launch(Dispatchers.IO) {
-            album = currentPlayListInteractor.getPlayListById(playListId)
+            _album = currentPlayListInteractor.getPlayListById(playListId)
             currentPlayListInteractor.deleteTrackFromPlayList(track, album)
             getCurrentPlayListById()
         }
@@ -131,25 +131,16 @@ class CurrentPlayListViewModel(
         }
         timeTracks += timeSec
         val timeSum = timeTracks.toInt(DurationUnit.MINUTES)
-        val end = getEndMessageForTime(timeSum)
+        val end = context.resources.getQuantityString(R.plurals.minutes_plurals, timeSum)
         return if (timeSum < 10) "0${timeSum} ${end}" else "${timeSum} ${end}"
     }
 
     private fun getCounter(playList: PlayList): String {
-        return "${playList.quantityTracks} ${getEndMessage(playList.quantityTracks)}"
-    }
-
-    private fun getEndMessageForTime(time: Int): String {
-        val endMessage = when (time % 100) {
-            in 11..19 -> "минут"
-            else -> {
-                when (time % 10) {
-                    1 -> "минута"
-                    in 2..4 -> "минуты"
-                    else -> "минут"
-                }
-            }
-        }
-        return endMessage
+        return "${playList.quantityTracks} ${
+            context.resources.getQuantityString(
+                R.plurals.tracks_plurals,
+                playList.quantityTracks
+            )
+        }"
     }
 }

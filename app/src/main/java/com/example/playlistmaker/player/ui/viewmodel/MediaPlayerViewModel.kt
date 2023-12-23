@@ -43,7 +43,8 @@ class MediaPlayerViewModel(
             val listId = currentPlayListInteractor.getPlayListIdsCurrentTrack(
                 playedTrack.trackId
             )
-            playedTrack.playListIds = listId
+            val newPlayedTrack = playedTrack.copy(playListIds = listId)
+            playedTrack = newPlayedTrack
             async {
                 mediaPlayerInteractor.prepare(playedTrack)
             }.await()
@@ -52,26 +53,26 @@ class MediaPlayerViewModel(
     }
 
 
-    private var mediaPlayerCurrentTimePlaying =
+    private var _mediaPlayerCurrentTimePlaying =
         SimpleDateFormat(
             "mm:ss", Locale.getDefault()
         ).format(mediaPlayerInteractor.getTimerStart())
 
-    private val toastState: MutableLiveData<ToastStase> = MutableLiveData()
+    private val _toastState: MutableLiveData<ToastStase> = MutableLiveData()
 
-    fun getToastState(): LiveData<ToastStase> = toastState
+    fun getToastState(): LiveData<ToastStase> = _toastState
 
-    private val bottomSheetState: MutableLiveData<PlayListsScreenState> = MutableLiveData()
-    fun getBootomSheetState(): LiveData<PlayListsScreenState> = bottomSheetState
+    private val _bottomSheetState: MutableLiveData<PlayListsScreenState> = MutableLiveData()
+    fun getBootomSheetState(): LiveData<PlayListsScreenState> = _bottomSheetState
 
-    private var currentTrack =
+    private var _currentTrack =
         MutableLiveData<ClickedTrack>(clickedTrackConverter.map(clickedTrack))
 
-    fun getCurrentTrack(): LiveData<ClickedTrack> = currentTrack
+    fun getCurrentTrack(): LiveData<ClickedTrack> = _currentTrack
 
-    private var playerScreenState = MutableLiveData<MediaPlayerScreenState>(
+    private var _playerScreenState = MutableLiveData<MediaPlayerScreenState>(
         MediaPlayerScreenState(
-            mediaPlayerCurrentTimePlaying,
+            _mediaPlayerCurrentTimePlaying,
             mediaPlayerInteractor.getPlayerState()
         )
     )
@@ -79,15 +80,15 @@ class MediaPlayerViewModel(
     fun getAllPlayLists() {
         viewModelScope.launch(Dispatchers.IO) {
             playListInteractor.getAllPlayLists().collect {
-                if (it.isNotEmpty()) bottomSheetState.postValue(
+                if (it.isNotEmpty()) _bottomSheetState.postValue(
                     PlayListsScreenState.PlayListsContent(it)
                 )
-                else bottomSheetState.postValue(PlayListsScreenState.Empty)
+                else _bottomSheetState.postValue(PlayListsScreenState.Empty)
             }
         }
     }
 
-    fun getPlayerScreenState(): LiveData<MediaPlayerScreenState> = playerScreenState
+    fun getPlayerScreenState(): LiveData<MediaPlayerScreenState> = _playerScreenState
 
     private var currentSingInFavorite: MutableLiveData<Boolean> =
         MutableLiveData(playedTrack.inFavorite)
@@ -99,15 +100,16 @@ class MediaPlayerViewModel(
             withContext(Dispatchers.IO) {
                 favoriteTracksInteractor.changeSignFavorite(playedTrack.mapClickedTrackToTrack())
             }
-            playedTrack.inFavorite = !playedTrack.inFavorite
+            val newTrack = playedTrack.copy(inFavorite = !playedTrack.inFavorite)
+            playedTrack = newTrack
             currentSingInFavorite.postValue(playedTrack.inFavorite)
         }
 
     }
 
     init {
-        playerScreenState.value = MediaPlayerScreenState(
-            mediaPlayerCurrentTimePlaying,
+        _playerScreenState.value = MediaPlayerScreenState(
+            _mediaPlayerCurrentTimePlaying,
             mediaPlayerInteractor.getPlayerState()
 
         )
@@ -121,7 +123,7 @@ class MediaPlayerViewModel(
         val currentPlayerStateState = getPlayerScreenState()
         mediaPlayerInteractor.play()
         updateTimerMedia()
-        playerScreenState.value =
+        _playerScreenState.value =
             currentPlayerStateState.value?.copy(playerState = mediaPlayerInteractor.getPlayerState())
     }
 
@@ -133,13 +135,13 @@ class MediaPlayerViewModel(
                     playList.playListId
                 )
             }
-            toastState.postValue(ToastStase.isLocation(playList))
+            _toastState.postValue(ToastStase.isLocation(playList))
         } else {
             playList.tracksIds.add(playedTrack.trackId)
             track.playListIds.add(playList.playListId)
             viewModelScope.launch(Dispatchers.IO) {
                 playListInteractor.saveTrack(playedTrack.mapClickedTrackToTrack(), playList)
-                toastState.postValue(ToastStase.notLocation(playList))
+                _toastState.postValue(ToastStase.notLocation(playList))
             }
         }
     }
@@ -148,7 +150,7 @@ class MediaPlayerViewModel(
         val currentPlayerStateState = getPlayerScreenState()
         mediaPlayerInteractor.pause()
         timerJob?.cancel()
-        playerScreenState.value =
+        _playerScreenState.value =
             currentPlayerStateState.value?.copy(playerState = mediaPlayerInteractor.getPlayerState())
     }
 
@@ -164,14 +166,14 @@ class MediaPlayerViewModel(
                 val currentTime = SimpleDateFormat(
                     "mm:ss", Locale.getDefault()
                 ).format(mediaPlayerInteractor.getCurrentPosition())
-                playerScreenState.value =
+                _playerScreenState.value =
                     MediaPlayerScreenState(currentTime, mediaPlayerInteractor.getPlayerState())
             }
             if (mediaPlayerInteractor.getPlayerState() == PlayerState.STATE_PREPARED) {
                 val currentTime = SimpleDateFormat(
                     "mm:ss", Locale.getDefault()
                 ).format(mediaPlayerInteractor.getTimerStart())
-                playerScreenState.value =
+                _playerScreenState.value =
                     MediaPlayerScreenState(currentTime, mediaPlayerInteractor.getPlayerState())
             }
         }
@@ -184,8 +186,8 @@ class MediaPlayerViewModel(
                 while (mediaPlayerInteractor.getPlayerState() != PlayerState.STATE_PREPARED) {
                     delay(UPDATE_TIMER_TRACK)
                 }
-                playerScreenState.value = MediaPlayerScreenState(
-                    mediaPlayerCurrentTimePlaying,
+                _playerScreenState.value = MediaPlayerScreenState(
+                    _mediaPlayerCurrentTimePlaying,
                     mediaPlayerInteractor.getPlayerState()
                 )
             }
@@ -194,7 +196,7 @@ class MediaPlayerViewModel(
     }
 
     fun toastWasShown() {
-        toastState.value = ToastStase.None
+        _toastState.value = ToastStase.None
     }
 
     fun playbackControl() {

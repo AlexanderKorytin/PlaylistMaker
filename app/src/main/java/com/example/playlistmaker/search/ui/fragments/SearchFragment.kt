@@ -49,7 +49,7 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         clickedTrackDebounce = debounce<TrackUI>(
-            CLICED_TRACK_DELAY,
+            CLICED_TRACK_DELAY_MILLIS,
             viewLifecycleOwner.lifecycleScope,
             false
         ) { track ->
@@ -283,7 +283,7 @@ class SearchFragment : Fragment() {
     }
 
     companion object {
-        private const val CLICED_TRACK_DELAY = 300L
+        private const val CLICED_TRACK_DELAY_MILLIS = 300L
     }
 }
 //---------------------------------------------------

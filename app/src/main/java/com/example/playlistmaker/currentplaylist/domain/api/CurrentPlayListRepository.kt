@@ -15,7 +15,7 @@ interface CurrentPlayListRepository {
 
     suspend fun deleteTrackFromDB(track: Track, playList: PlayList)
 
-    fun shareTrackList(message: String)
+    suspend fun getSharingMessage(playListID: Int): String
 
     suspend fun deletePlayListFromBD(playList: PlayList)
 }

@@ -1,10 +1,13 @@
 package com.example.playlistmaker.currentplaylist.ui.fragments
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -25,6 +28,8 @@ import com.example.playlistmaker.search.ui.models.TrackUI
 import com.example.playlistmaker.util.debounce
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import java.io.File
@@ -83,7 +88,7 @@ class CurrentPlayListFragment : Fragment() {
         })
 
         settingBottomSheetBehaivor.state = BottomSheetBehavior.STATE_HIDDEN
-        trackClickDebounce = debounce<TrackUI>(CLICKDEBOUNCE, lifecycleScope, false) {
+        trackClickDebounce = debounce<TrackUI>(CLICK_DEBOUNCE_MILLIS, lifecycleScope, false) {
             findNavController().navigate(
                 R.id.action_currentPlayListFragment2_to_mediaPlayerFragment,
                 MediaPlayerFragment.createArgs(currentPlayListVM.json.toJson(it))
@@ -197,7 +202,27 @@ class CurrentPlayListFragment : Fragment() {
                     binding.overlay.isVisible = false
                 }.show()
         } else {
-            currentPlayListVM.sharingPlayList()
+            lifecycleScope.launch(Dispatchers.IO) {
+                currentPlayListVM.getSharingPlayListMessage()
+                currentPlayListVM.getSharingMessage().collect {
+                    val sharingIntent = Intent(Intent.ACTION_SEND)
+                    sharingIntent.putExtra(Intent.EXTRA_TEXT, it)
+                    sharingIntent.type = "text/plain"
+                    sharingIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    sharingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    sharingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    try {
+                        requireContext().startActivity(Intent.createChooser(sharingIntent, it))
+                    } catch (activityNotFound: ActivityNotFoundException) {
+                        Toast.makeText(
+                            context,
+                            requireContext().getString(R.string.app_not_found),
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    }
+                }
+            }
         }
     }
 
@@ -239,7 +264,7 @@ class CurrentPlayListFragment : Fragment() {
 
     companion object {
         private const val CURRENT_PLAYLIST_ID = "current_playlist_id"
-        private const val CLICKDEBOUNCE = 300L
+        private const val CLICK_DEBOUNCE_MILLIS = 300L
         fun createArgs(currentPlayListId: Int): Bundle =
             bundleOf(CURRENT_PLAYLIST_ID to currentPlayListId)
     }

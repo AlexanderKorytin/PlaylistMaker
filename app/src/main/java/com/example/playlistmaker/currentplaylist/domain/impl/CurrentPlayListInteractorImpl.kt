@@ -14,7 +14,7 @@ class CurrentPlayListInteractorImpl(
     }
 
     override suspend fun getPlayListById(playListId: Int): PlayList {
-       return currentPlayListRepository.getPlayListById(playListId)
+        return currentPlayListRepository.getPlayListById(playListId)
     }
 
     override suspend fun saveTrackPlayListIdsChange(track: Track, playListId: Int) {
@@ -29,8 +29,8 @@ class CurrentPlayListInteractorImpl(
         currentPlayListRepository.deleteTrackFromDB(track, playList)
     }
 
-    override fun shareTrackList(message: String) {
-        currentPlayListRepository.shareTrackList(message)
+    override suspend fun getSharingMessage(playListId: Int): String {
+        return currentPlayListRepository.getSharingMessage(playListId)
     }
 
     override suspend fun deletePlayList(playList: PlayList) {

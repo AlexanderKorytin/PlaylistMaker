@@ -14,8 +14,8 @@ data class ClickedTrack(
     val primaryGenreName: String,
     val previewUrl: String,
     val coverArtWork: String,
-    var inFavorite: Boolean,
-    var playListIds: MutableList<Int> = mutableListOf<Int>()
+    val inFavorite: Boolean,
+    val playListIds: MutableList<Int>
 ) {
     fun mapClickedTrackToTrack(): Track {
         return Track(

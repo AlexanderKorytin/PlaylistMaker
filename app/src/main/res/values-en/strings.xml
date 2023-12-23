@@ -51,4 +51,7 @@
     <string name="no">No</string>
     <string name="playlist_del_alert_dialog_message">Do you want to delete a playlist</string>
     <string name="save">Save</string>
+    <string name="playlist">playList</string>
+    <string name="quantity_tracks">quantity tracks</string>
+    <string name="tracks">tracks</string>
 </resources>

@@ -22,7 +22,6 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.app.dpToPx
 import com.example.playlistmaker.databinding.ActivityMediaBinding
-import com.example.playlistmaker.player.domain.models.ClickedTrack
 import com.example.playlistmaker.player.domain.models.PlayerState
 import com.example.playlistmaker.player.ui.PlayListsPlayerAdapter
 import com.example.playlistmaker.player.ui.models.ClickedTrackGson
@@ -73,7 +72,7 @@ class MediaPlayerFragment : Fragment() {
         binding.playlistsRecyclerPlayer.adapter = bottomSheetAdapter
 
         clickedPlayListDebounce = debounce<PlayList>(
-            CLICKED_PLAYLIST_DELAY,
+            CLICKED_PLAYLIST_DELAY_MILLIS,
             lifecycleScope,
             false
         ) {
@@ -327,7 +326,7 @@ class MediaPlayerFragment : Fragment() {
     companion object {
         private val CLICKED_TRACK = "CLICKED_TRACK"
         private const val CURRENTTRACK = "clickedTrack"
-        private const val CLICKED_PLAYLIST_DELAY = 300L
+        private const val CLICKED_PLAYLIST_DELAY_MILLIS = 300L
         fun createArgs(clickedTrack: String?): Bundle = bundleOf(CURRENTTRACK to clickedTrack)
     }
 }

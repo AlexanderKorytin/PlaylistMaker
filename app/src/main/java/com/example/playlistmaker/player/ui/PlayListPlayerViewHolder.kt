@@ -8,7 +8,6 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.PlaylistItemBottomSheetBinding
 import com.example.playlistmaker.playlist.domain.models.PlayList
-import com.example.playlistmaker.util.getEndMessage
 import java.io.File
 
 class PlayListPlayerViewHolder(private val parentBinding: PlaylistItemBottomSheetBinding) :
@@ -21,8 +20,12 @@ class PlayListPlayerViewHolder(private val parentBinding: PlaylistItemBottomShee
         )
         val file = File(filePath, playList.playListCover)
 
-        parentBinding.playlistQuantityTracksBottomSheet.text =
-            "${playList.quantityTracks} ${getEndMessage(playList.quantityTracks)}"
+        parentBinding.playlistQuantityTracksBottomSheet.text = "${playList.quantityTracks} ${
+            itemView.context.resources.getQuantityString(
+                R.plurals.tracks_plurals,
+                playList.quantityTracks
+            )
+        }"
         parentBinding.playlistNameBottomSheet.text = playList.playListName
         Glide
             .with(parentBinding.root.context)

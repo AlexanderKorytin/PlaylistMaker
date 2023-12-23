@@ -1,9 +1,6 @@
 package com.example.playlistmaker.currentplaylist.data.db.repository
 
-import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.Intent
-import android.widget.Toast
 import com.example.playlistmaker.R
 import com.example.playlistmaker.core.db.AppDataBase
 import com.example.playlistmaker.currentplaylist.domain.api.CurrentPlayListRepository
@@ -83,17 +80,29 @@ class CurrentPlaListRepositoryImpl(
     }
 
 
-    override fun shareTrackList(message: String) {
-        val shareAppIntent = Intent(Intent.ACTION_SEND)
-        shareAppIntent.putExtra(Intent.EXTRA_TEXT, message)
-        shareAppIntent.type = "text/plain"
-        shareAppIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        try {
-            context.startActivity(shareAppIntent)
-        } catch (activityNotFound: ActivityNotFoundException) {
-            Toast.makeText(context, context.getString(R.string.app_not_found), Toast.LENGTH_SHORT)
-                .show()
+    override suspend fun getSharingMessage(playListID: Int): String {
+        val album = getPlayListById(playListID)
+        val trackList = mutableListOf<Track>()
+        getCurrentPlayListTracks(album.tracksIds).collect {
+            trackList.addAll(it)
         }
+        var message = StringBuilder("")
+        message.append("${context.getString(R.string.playlist)}: ${album.playListName}\n")
+        if (album.playListDescription.isNotEmpty()) {
+            message.append("${album.playListDescription}\n")
+        }
+        message.append(
+            if (album.quantityTracks < 10) {
+                "${context.getString(R.string.quantity_tracks)}: 0${album.quantityTracks}\n"
+            } else {
+                "${context.getString(R.string.quantity_tracks)}: ${album.quantityTracks}\n"
+            }
+        )
+        message.append("${context.getString(R.string.tracks)}:\n")
+        for (i in 0 until trackList.size) {
+            message.append("${i + 1}. ${trackList[i].artistName} - ${trackList[i].trackName} (${trackList[i].trackTime})\n")
+        }
+        return message.toString()
     }
 
     override suspend fun deletePlayListFromBD(playList: PlayList) {
