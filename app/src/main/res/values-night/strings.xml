@@ -2,4 +2,5 @@
 <resources>
     <string name="new_playlist">Новый плейлист</string>
     <string name="playlist_name_hint">Название*</string>
+    <string name="playlist_empty">Не добавлено ни одного трека</string>
 </resources>

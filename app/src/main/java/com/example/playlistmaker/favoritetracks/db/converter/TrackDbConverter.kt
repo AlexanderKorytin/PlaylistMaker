@@ -2,8 +2,10 @@ package com.example.playlistmaker.favoritetracks.db.converter
 
 import com.example.playlistmaker.favoritetracks.db.entity.TrackEntity
 import com.example.playlistmaker.search.domain.models.Track
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
-class TrackDbConverter {
+class TrackDbConverter(private val json: Gson) {
     fun map(track: Track): TrackEntity {
         return TrackEntity(
             trackId = track.trackId,
@@ -33,7 +35,8 @@ class TrackDbConverter {
             primaryGenreName = trackEntity.primaryGenreName,
             previewUrl = trackEntity.previewUrl,
             coverArtWork = trackEntity.coverArtWork,
-            inFavorite = true
+            inFavorite = true,
+            playListIds = arrayListOf()
         )
     }
 

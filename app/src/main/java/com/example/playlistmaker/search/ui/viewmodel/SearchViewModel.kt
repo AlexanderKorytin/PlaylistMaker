@@ -31,13 +31,13 @@ class SearchViewModel(
         debounce<String>(SEARCH_DEBOUNCE_DELAY, viewModelScope, true) {
             getMusic(it)
         }
-    private val currentSearchViewScreenState = MutableLiveData<SearchScreenState>()
+    private val _currentSearchViewScreenState = MutableLiveData<SearchScreenState>()
     fun getcurrentSearchViewScreenState(): LiveData<SearchScreenState> =
-        currentSearchViewScreenState
+        _currentSearchViewScreenState
 
     fun clearSearchHistory() {
         searchHistoryInteractor.clear()
-        currentSearchViewScreenState.value = (SearchScreenState.EmptyHistory(emptyList(), false))
+        _currentSearchViewScreenState.value = (SearchScreenState.EmptyHistory(emptyList(), false))
     }
 
     fun showSearchHistory(flag: Boolean) {
@@ -45,13 +45,13 @@ class SearchViewModel(
             withContext(Dispatchers.IO) {
                 getSearchHstoryTracks().collect { listHistory ->
                     if (flag && listHistory.isNotEmpty()) {
-                        currentSearchViewScreenState.postValue(
+                        _currentSearchViewScreenState.postValue(
                             SearchScreenState.Hictory(
                                 listHistory.map { it -> trackToTrackUI.map(it) }, false
                             )
                         )
                     } else {
-                        currentSearchViewScreenState.postValue(
+                        _currentSearchViewScreenState.postValue(
                             (SearchScreenState.EmptyHistory(emptyList(), false))
                         )
                     }
@@ -63,7 +63,7 @@ class SearchViewModel(
 
     private var latestSearchText: String? = null
     fun searchDebounce(textSearch: String) {
-        currentSearchViewScreenState.value =
+        _currentSearchViewScreenState.value =
             SearchScreenState.Start(setVisibilityClearButton.execute(textSearch))
         if (latestSearchText != textSearch) {
             latestSearchText = textSearch
@@ -81,7 +81,7 @@ class SearchViewModel(
 
     fun getMusic(textSearch: String) {
         if (textSearch.isNotEmpty()) {
-            currentSearchViewScreenState.value =
+            _currentSearchViewScreenState.value =
                 SearchScreenState.IsLoading(setVisibilityClearButton.execute(textSearch))
 
             viewModelScope.launch {
@@ -101,14 +101,14 @@ class SearchViewModel(
     private fun processResult(data: List<Track>?, error: String?, textSearch: String) {
         if (data != null) {
             if (data.isNotEmpty()) {
-                currentSearchViewScreenState.postValue(
+                _currentSearchViewScreenState.postValue(
                     SearchScreenState.Content(
                         mapToTrackUI.mapList(data),
                         setVisibilityClearButton.execute(textSearch)
                     )
                 )
             } else {
-                currentSearchViewScreenState.postValue(
+                _currentSearchViewScreenState.postValue(
                     SearchScreenState.Empty(
                         setVisibilityClearButton.execute(textSearch)
                     )
@@ -117,7 +117,7 @@ class SearchViewModel(
         }
 
         if (error != null) {
-            currentSearchViewScreenState.postValue(
+            _currentSearchViewScreenState.postValue(
                 SearchScreenState.Error(
                     "",
                     setVisibilityClearButton.execute(textSearch)

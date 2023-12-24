@@ -36,7 +36,8 @@ class TracksRepositoryImpl(
                         it.getParam(it.primaryGenreName),
                         it.getParam(it.previewUrl),
                         it.getCoverArtwork(),
-                        inFavorite = listId.contains(it.trackId)
+                        inFavorite = listId.contains(it.trackId),
+                        playListIds = mutableListOf<Int>() as ArrayList<Int>
                     )
                 }
                 emit(SearchResultData.Data(resultSearch))

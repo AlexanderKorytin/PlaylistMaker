@@ -13,6 +13,6 @@ val favoriteTracksDataModule = module {
     }
 
     factory<TrackDbConverter> {
-        TrackDbConverter()
+        TrackDbConverter(json = get())
     }
 }

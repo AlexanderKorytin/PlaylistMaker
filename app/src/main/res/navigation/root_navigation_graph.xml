@@ -50,6 +50,13 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_mediaLibraryFragment_to_currentPlayListFragment2"
+            app:destination="@id/currentPlayListFragment2"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/agreementFragment"
@@ -74,4 +81,24 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
     </fragment>
+    <fragment
+        android:id="@+id/currentPlayListFragment2"
+        android:name="com.example.playlistmaker.currentplaylist.ui.fragments.CurrentPlayListFragment"
+        android:label="current_playlist_fragment"
+        tools:layout="@layout/current_playlist_fragment" >
+        <action
+            android:id="@+id/action_currentPlayListFragment2_to_mediaPlayerFragment"
+            app:destination="@id/mediaPlayerFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_currentPlayListFragment2_to_editPlayListFragment"
+            app:destination="@id/editPlayListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editPlayListFragment"
+        android:name="com.example.playlistmaker.playlist.ui.fragments.EditPlayListFragment"
+        android:label="EditPlayListFragment" />
 </navigation>

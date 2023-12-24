@@ -19,7 +19,7 @@ val playerViewModelModule = module {
             clickedTrackConverter = get(),
             favoriteTracksInteractor = get(),
             playListInteractor = get(),
-            json = get()
+            currentPlayListInteractor = get()
         )
     }
 }

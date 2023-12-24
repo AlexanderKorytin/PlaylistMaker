@@ -6,13 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
+import com.example.playlistmaker.currentplaylist.ui.fragments.CurrentPlayListFragment
 import com.example.playlistmaker.databinding.TabAlbumsFragmentBinding
 import com.example.playlistmaker.playlist.domain.models.PlayList
 import com.example.playlistmaker.playlist.ui.PlayListAdapter
 import com.example.playlistmaker.playlist.ui.models.PlayListsScreenState
 import com.example.playlistmaker.playlist.ui.viewmodel.PlayListsViewModel
+import com.example.playlistmaker.util.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlayListsFragment : Fragment() {
@@ -20,6 +23,8 @@ class PlayListsFragment : Fragment() {
     private val binding get() = _binding!!
     private val playListsVM: PlayListsViewModel by viewModel<PlayListsViewModel>()
     private var adapter: PlayListAdapter? = null
+
+    private lateinit var playListClickDebounce: (PlayList) -> Unit
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,7 +37,13 @@ class PlayListsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = PlayListAdapter()
+        playListClickDebounce = debounce<PlayList>(CLICKDEBOUNCE, lifecycleScope, false) {
+            findNavController().navigate(
+                R.id.action_mediaLibraryFragment_to_currentPlayListFragment2,
+                CurrentPlayListFragment.createArgs(it.playListId)
+            )
+        }
+        adapter = PlayListAdapter { playListClickDebounce(it) }
         binding.albumsList.adapter = adapter
         playListsVM.getAllPlayLists()
         playListsVM.getScreenState().observe(viewLifecycleOwner) {
@@ -73,6 +84,7 @@ class PlayListsFragment : Fragment() {
     }
 
     companion object {
+        private const val CLICKDEBOUNCE = 300L
         fun newInstance(): PlayListsFragment = PlayListsFragment()
     }
 }

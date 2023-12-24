@@ -23,17 +23,3 @@ fun <T> debounce(delayMillis: Long,
         }
     }
 }
-
-fun getEndMessage(count: Int): String {
-    val endMessage = when (count % 100) {
-        in 11..19 -> "треков"
-        else -> {
-            when (count % 10) {
-                1 -> "трек"
-                in 2..4 -> "трека"
-                else -> "треков"
-            }
-        }
-    }
-    return endMessage
-}

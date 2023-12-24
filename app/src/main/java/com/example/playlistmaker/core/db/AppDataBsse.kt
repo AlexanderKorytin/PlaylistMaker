@@ -4,10 +4,10 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.example.playlistmaker.favoritetracks.db.dao.FavoriteTracksDao
 import com.example.playlistmaker.favoritetracks.db.entity.TrackEntity
-import com.example.playlistmaker.playlist.data.db.dao.AllTracksDao
+import com.example.playlistmaker.currentplaylist.data.db.dao.AllTracksDao
 import com.example.playlistmaker.playlist.data.db.dao.PlaylistsBaseDao
 import com.example.playlistmaker.playlist.data.db.entity.PlayListEntity
-import com.example.playlistmaker.playlist.data.db.entity.TrackPLEntity
+import com.example.playlistmaker.currentplaylist.data.db.entity.TrackPLEntity
 
 @Database(entities = [TrackEntity::class, PlayListEntity::class, TrackPLEntity::class], version = 1)
 abstract class AppDataBase : RoomDatabase() {

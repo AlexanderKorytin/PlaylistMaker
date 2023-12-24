@@ -1,17 +1,22 @@
 package com.example.playlistmaker.playlist.data.db.converter
 
-import com.example.playlistmaker.playlist.data.db.entity.TrackPLEntity
+import com.example.playlistmaker.currentplaylist.data.db.entity.TrackPLEntity
 import com.example.playlistmaker.playlist.data.db.entity.PlayListEntity
 import com.example.playlistmaker.playlist.domain.models.PlayList
 import com.example.playlistmaker.search.domain.models.Track
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
-class PlayListDbConverter {
+class PlayListDbConverter(private val json: Gson) {
     fun map(playListEntity: PlayListEntity): PlayList {
         return PlayList(
             playListId = playListEntity.playListId,
             playListName = playListEntity.playListName,
             playListCover = playListEntity.playListCover,
-            tracksIds = playListEntity.tracksIds,
+            tracksIds = json.fromJson(
+                playListEntity.tracksIds,
+                object : TypeToken<ArrayList<Long>>() {}.type
+            ),
             quantityTracks = playListEntity.quantityTracks,
             playListDescription = playListEntity.playListDescription
         )
@@ -22,7 +27,7 @@ class PlayListDbConverter {
             playListId = playList.playListId,
             playListName = playList.playListName,
             playListCover = playList.playListCover,
-            tracksIds = playList.tracksIds,
+            tracksIds = json.toJson(playList.tracksIds),
             quantityTracks = playList.quantityTracks,
             playListDescription = playList.playListDescription,
         )
@@ -41,6 +46,7 @@ class PlayListDbConverter {
             previewUrl = track.previewUrl,
             primaryGenreName = track.primaryGenreName,
             coverArtWork = track.coverArtWork,
+            playlistIds = json.toJson(track.playListIds)
         )
     }
 
@@ -57,7 +63,11 @@ class PlayListDbConverter {
             primaryGenreName = trackEntity.primaryGenreName,
             previewUrl = trackEntity.previewUrl,
             coverArtWork = trackEntity.coverArtWork,
-            inFavorite = true
+            inFavorite = true,
+            playListIds = json.fromJson(
+                trackEntity.playlistIds,
+                object : TypeToken<ArrayList<Int>>() {}.type
+            )
         )
     }
 

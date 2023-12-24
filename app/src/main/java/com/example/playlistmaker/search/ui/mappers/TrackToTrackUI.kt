@@ -17,7 +17,8 @@ object TrackToTrackUI {
             track.primaryGenreName,
             track.previewUrl,
             track.coverArtWork,
-            track.inFavorite
+            track.inFavorite,
+            track.playListIds
         )
     }
 }

@@ -2,6 +2,9 @@ package com.example.playlistmaker.app
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.currentplaylist.di.currentPlaListDataModule
+import com.example.playlistmaker.currentplaylist.di.currentPlayListDomainModule
+import com.example.playlistmaker.currentplaylist.di.currentPlayListViewModelModule
 import com.example.playlistmaker.favoritetracks.di.favoriteTracksDataModule
 import com.example.playlistmaker.favoritetracks.di.favoriteTracksDomainModule
 import com.example.playlistmaker.favoritetracks.di.favoriteTracksViewModelViewModelModule
@@ -9,6 +12,7 @@ import com.example.playlistmaker.player.di.playerDomainModule
 import com.example.playlistmaker.player.di.playerViewModelModule
 import com.example.playlistmaker.playlist.di.playListsDataModule
 import com.example.playlistmaker.playlist.di.playListsDomainModule
+import com.example.playlistmaker.playlists.di.editPlayListViewModelModule
 import com.example.playlistmaker.playlists.di.playListsViewModelModule
 import com.example.playlistmaker.search.di.searchDataModule
 import com.example.playlistmaker.search.di.searchDomainModule
@@ -29,8 +33,7 @@ class App : Application() {
 
 
     private var darkTheme: Boolean = false
-    private var isfirstStart = true
-    private var firstStart: Boolean = true
+    var isfirstStart = true
 
     override fun onCreate() {
         super.onCreate()
@@ -55,18 +58,22 @@ class App : Application() {
                 playListsViewModelModule,
                 playListsDataModule,
                 playListsDomainModule,
+                editPlayListViewModelModule,
 
                 favoriteTracksViewModelViewModelModule,
                 favoriteTracksDataModule,
-                favoriteTracksDomainModule
+                favoriteTracksDomainModule,
+
+                currentPlaListDataModule,
+                currentPlayListDomainModule,
+                currentPlayListViewModelModule
+
             )
         }
         val switchPreference = getSharedPreferences(APP_SETTINGS_PREF_KEY, MODE_PRIVATE)
         val darkThemeEnabled: Boolean = switchPreference.getBoolean(DARK_THEME, darkTheme)
 
         isfirstStart = switchPreference.getBoolean(IS_FIRST_START, true)
-        if (isfirstStart) switchPreference.edit().putBoolean(IS_FIRST_START, false).apply()
-
         switchTheme(darkThemeEnabled)
     }
 

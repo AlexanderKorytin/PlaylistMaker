@@ -1,6 +1,7 @@
 package com.example.playlistmaker.settings.ui.fragments
 
 import android.annotation.SuppressLint
+import android.app.Application
 import android.os.Bundle
 import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
@@ -9,6 +10,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
+import com.example.playlistmaker.app.APP_SETTINGS_PREF_KEY
+import com.example.playlistmaker.app.App
+import com.example.playlistmaker.app.IS_FIRST_START
 import com.example.playlistmaker.databinding.SettingsFragmentBinding
 import com.example.playlistmaker.settings.ui.viewmodel.SettingsViewModel
 import com.example.playlistmaker.sharing.ui.fragments.AgreementFragment
@@ -33,6 +37,8 @@ class SettingsFragment : Fragment() {
     @SuppressLint("MissingInflatedId", "UseSwitchCompatOrMaterialCode")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val switchPreference =
+            requireContext().getSharedPreferences(APP_SETTINGS_PREF_KEY, Application.MODE_PRIVATE)
         settinsVM.seeUserAgreement()
         settinsVM.getCurrentTheme().observe(viewLifecycleOwner) {
             binding.themeSwitch.isChecked = it.isNight
@@ -41,6 +47,7 @@ class SettingsFragment : Fragment() {
             link = it
         }
         binding.themeSwitch.setOnCheckedChangeListener { switcher, checked ->
+            switchPreference.edit().putBoolean(IS_FIRST_START, false).apply()
             settinsVM.updateNightTheme(checked)
         }
 

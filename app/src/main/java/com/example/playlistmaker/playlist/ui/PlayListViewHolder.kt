@@ -10,7 +10,6 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.app.dpToPx
 import com.example.playlistmaker.databinding.PlaylistItemBinding
 import com.example.playlistmaker.playlist.domain.models.PlayList
-import com.example.playlistmaker.util.getEndMessage
 import java.io.File
 
 class PlayListViewHolder(private val parentViewBinding: PlaylistItemBinding) :
@@ -25,7 +24,12 @@ class PlayListViewHolder(private val parentViewBinding: PlaylistItemBinding) :
         val file = File(filePath, playList.playListCover)
 
         parentViewBinding.quantityTracks.text =
-            "${playList.quantityTracks} ${getEndMessage(playList.quantityTracks)}"
+            "${playList.quantityTracks} ${
+                itemView.context.resources.getQuantityString(
+                    R.plurals.tracks_plurals,
+                    playList.quantityTracks
+                )
+            }"
         parentViewBinding.playlistNameRecycler.text = playList.playListName
         Glide
             .with(parentViewBinding.root.context)

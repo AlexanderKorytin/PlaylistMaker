@@ -1,4 +1,4 @@
-package com.example.playlistmaker.playlist.data.db.entity
+package com.example.playlistmaker.currentplaylist.data.db.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -20,5 +20,6 @@ data class TrackPLEntity(
     val primaryGenreName: String,
     val previewUrl: String,
     val coverArtWork: String,
-    val insertignTime: Long = Calendar.getInstance().time.time
+    val insertignTime: Long = Calendar.getInstance().time.time,
+    val playlistIds: String = ""
 )

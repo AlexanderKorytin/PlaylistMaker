@@ -1,5 +1,7 @@
 package com.example.playlistmaker.search.ui.models
 
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.playlistmaker.search.domain.models.Track
 
 data class TrackUI
@@ -15,7 +17,8 @@ data class TrackUI
     val primaryGenreName: String,
     val previewUrl: String,
     val coverArtWork: String,
-    var inFavorite: Boolean
+    var inFavorite: Boolean,
+    var playlistId: MutableList<Int>
 ) {
     fun toTrack(): Track {
         return Track(
@@ -30,7 +33,8 @@ data class TrackUI
             primaryGenreName = primaryGenreName,
             previewUrl = previewUrl,
             coverArtWork = coverArtWork,
-            inFavorite = inFavorite
+            inFavorite = inFavorite,
+            playListIds = playlistId as ArrayList<Int>
         )
     }
 }

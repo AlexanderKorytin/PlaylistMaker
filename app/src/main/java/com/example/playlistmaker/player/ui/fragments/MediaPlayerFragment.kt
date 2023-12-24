@@ -48,7 +48,7 @@ class MediaPlayerFragment : Fragment() {
     private lateinit var clickedPlayListDebounce: (PlayList) -> Unit
 
     private val playerVM: MediaPlayerViewModel by viewModel<MediaPlayerViewModel> {
-        parametersOf(ClickedTrackGson(arguments?.getString("clickedTrack") ?: ""))
+        parametersOf(ClickedTrackGson(arguments?.getString(CURRENTTRACK) ?: ""))
     }
 
     override fun onCreateView(
@@ -72,7 +72,7 @@ class MediaPlayerFragment : Fragment() {
         binding.playlistsRecyclerPlayer.adapter = bottomSheetAdapter
 
         clickedPlayListDebounce = debounce<PlayList>(
-            CLICKED_PLAYLIST_DELAY,
+            CLICKED_PLAYLIST_DELAY_MILLIS,
             lifecycleScope,
             false
         ) {
@@ -168,7 +168,7 @@ class MediaPlayerFragment : Fragment() {
             } else binding.playPause.isEnabled = true
 
             Glide
-                .with(this)
+                .with(requireContext())
                 .load(track.coverArtWork)
                 .placeholder(R.drawable.placeholder_media_image)
                 .transform(CenterCrop(), RoundedCorners(radiusIconTrackPx))
@@ -302,7 +302,7 @@ class MediaPlayerFragment : Fragment() {
     }
 
     private fun onClickPlayList(playList: PlayList) {
-        playerVM.checkLocationTrackInPL(playList)
+        playerVM.checkLocationTrackInPL(playList, playerVM.playedTrack)
     }
 
 
@@ -326,7 +326,7 @@ class MediaPlayerFragment : Fragment() {
     companion object {
         private val CLICKED_TRACK = "CLICKED_TRACK"
         private const val CURRENTTRACK = "clickedTrack"
-        private const val CLICKED_PLAYLIST_DELAY = 300L
+        private const val CLICKED_PLAYLIST_DELAY_MILLIS = 300L
         fun createArgs(clickedTrack: String?): Bundle = bundleOf(CURRENTTRACK to clickedTrack)
     }
 }

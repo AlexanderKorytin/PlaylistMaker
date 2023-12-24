@@ -3,6 +3,9 @@ package com.example.playlistmaker.favoritetracks.db.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.util.Calendar
 
 @Entity(tableName = "favorite_tracks")
@@ -19,5 +22,5 @@ data class TrackEntity(
     val primaryGenreName: String,
     val previewUrl: String,
     val coverArtWork: String,
-    val insertignTime: Long = Calendar.getInstance().time.time
+    val insertignTime: Long = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC),
 )

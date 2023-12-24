@@ -39,18 +39,20 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
 
-class PlayListCreatorFragment : Fragment() {
-    private var _binding: AlbumCreatorFragmentBinding? = null
-    private val binding get() = _binding!!
-    private var coverUri: String? = null
-    private val playListsVM by viewModel<PlayListsViewModel>()
+open class PlayListCreatorFragment : Fragment() {
+
+    open var _binding: AlbumCreatorFragmentBinding? = null
+    open val binding get() = _binding!!
+
+    protected var coverUri: String? = null
+    open val playListsVM by viewModel<PlayListsViewModel>()
     private val requester = PermissionRequester.instance()
 
-    val pickMedia =
+    protected var pickMedia =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            val radiusIconTrackDp = 8.0f
+            val radiusIconTrackPx = dpToPx(radiusIconTrackDp, requireContext())
             if (uri != null) {
-                val radiusIconTrackDp = 8.0f
-                val radiusIconTrackPx = dpToPx(radiusIconTrackDp, requireContext())
                 Glide.with(requireContext())
                     .load(uri)
                     .transform(CenterCrop(), RoundedCorners(radiusIconTrackPx))
@@ -99,9 +101,9 @@ class PlayListCreatorFragment : Fragment() {
 
             override fun afterTextChanged(s: Editable?) {}
         }
-        with(binding){
+        with(binding) {
             namePlaylist.setOnFocusChangeListener { _, focus ->
-                if (focus|| namePlaylist.text.isNotEmpty()) namePlaylist.background =
+                if (focus || namePlaylist.text.isNotEmpty()) namePlaylist.background =
                     requireContext().getDrawable(R.drawable.playlist_edittext_not_empty)
                 else namePlaylist.background =
                     requireContext().getDrawable(R.drawable.playlist_edittext_empty)
@@ -123,7 +125,7 @@ class PlayListCreatorFragment : Fragment() {
         }
         with(binding) {
             descriptionPlaylist.setOnFocusChangeListener { _, focus ->
-                if (focus||descriptionPlaylist.text.isNotEmpty()) descriptionPlaylist.background =
+                if (focus || descriptionPlaylist.text.isNotEmpty()) descriptionPlaylist.background =
                     requireContext().getDrawable(R.drawable.playlist_edittext_not_empty)
                 else descriptionPlaylist.background =
                     requireContext().getDrawable(R.drawable.playlist_edittext_empty)
@@ -148,7 +150,7 @@ class PlayListCreatorFragment : Fragment() {
                     playListName = binding.namePlaylist.text.toString(),
                     playListCover = coverUri ?: "",
                     playListDescription = binding.descriptionPlaylist.text.toString(),
-                    tracksIds = ""
+                    tracksIds = ArrayList()
                 )
             )
             findNavController().navigateUp()
@@ -179,7 +181,7 @@ class PlayListCreatorFragment : Fragment() {
         _binding = null
     }
 
-    private suspend fun chekedPermission() {
+    protected suspend fun chekedPermission() {
         requester.request(Manifest.permission.CAMERA).collect { result ->
             when (result) {
                 is PermissionResult.Granted -> {
@@ -203,7 +205,7 @@ class PlayListCreatorFragment : Fragment() {
     }
 
 
-    private fun saveImageToPrivateStorage(uri: Uri) {
+    protected fun saveImageToPrivateStorage(uri: Uri) {
         val filePath = File(
             requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
             "playlist_maker_album"
