@@ -17,6 +17,7 @@ import com.example.playlistmaker.playlist.domain.api.PlayListInteractor
 import com.example.playlistmaker.playlist.domain.models.PlayList
 import com.example.playlistmaker.playlist.ui.models.PlayListsScreenState
 import com.example.playlistmaker.playlist.ui.models.ToastStase
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
@@ -31,7 +32,8 @@ class MediaPlayerViewModel(
     private val favoriteTracksInteractor: FavoriteTracksInteractor,
     private val playListInteractor: PlayListInteractor,
     clickedTrackConverter: MapClickedTrackGsonToClickedTrack,
-    private val currentPlayListInteractor: CurrentPlayListInteractor
+    private val currentPlayListInteractor: CurrentPlayListInteractor,
+    val analytics: FirebaseAnalytics
 ) : ViewModel() {
 
     var playedTrack = clickedTrackConverter.map(clickedTrack)

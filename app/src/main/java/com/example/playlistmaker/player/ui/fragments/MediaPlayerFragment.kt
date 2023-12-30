@@ -31,6 +31,8 @@ import com.example.playlistmaker.playlist.ui.models.PlayListsScreenState
 import com.example.playlistmaker.playlist.ui.models.ToastStase
 import com.example.playlistmaker.util.debounce
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.logEvent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -200,6 +202,9 @@ class MediaPlayerFragment : Fragment() {
         }
 
         binding.addFavorite.setOnClickListener {
+            playerVM.analytics.logEvent("change_Favorite"){
+                param("change favorite", playerVM.playedTrack.trackName)
+            }
             playerVM.changedSingInFavorite()
         }
 
