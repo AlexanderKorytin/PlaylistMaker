@@ -11,6 +11,7 @@
 
 -----
 
+#### Версия языка kotlin: jvmTarget = '17'
 #### Зависимости: Room, coroutines, viewpager2, fragment, glide, gson, retrofit2, peko
 
 -----
