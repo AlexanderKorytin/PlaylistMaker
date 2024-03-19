@@ -20,9 +20,13 @@ Gradle JDK version '17.0.9'
 Git,  XML,  JSON,  Kotlin,  Room,  MVVM,  Android SDK,  Single Activity,  Fragments,  Retrofit2,  ConstraintLayout,  RecyclerView,  SharedPreferences,  Permissions, Gradle, Coroutines, Flow, LiveData, Jetpack Navigation Component, Koin, Glide, view pager 
 
 -----
-### Инструкция
+### Инструкция по установке
 
 1. Откройте Android studio
 2. Нажмите кнопку "Get from VCS"
 3. В поле "URL:" вставте ссылку github на этот проект и нажмите "clone"
 4. при необходимости скачайте нужную версию Gradle JDK
+
+### Инструкция по использованию
+
+При открытии приложения 
