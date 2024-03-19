@@ -24,7 +24,7 @@ Git,  XML,  JSON,  Kotlin,  Room,  MVVM,  Android SDK,  Single Activity,  Fragme
 
 1. Откройте Android studio
 2. Нажмите кнопку "Get from VCS"
-3. В поле "URL:" вставте ссылку github на этот проект и нажмите "clone"
+3. В поле "URL:" вставте ссылку [github] (https://github.com/AlexanderKorytin/PlaylistMaker.git) на этот проект и нажмите "clone"
 4. при необходимости скачайте нужную версию Gradle JDK
 
 ### Инструкция по использованию
