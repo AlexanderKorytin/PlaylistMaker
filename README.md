@@ -29,9 +29,9 @@ Git,  XML,  JSON,  Kotlin,  Room,  MVVM,  Android SDK,  Single Activity,  Fragme
 
 ### Инструкция по использованию
 
-При открытии приложения вы увидите экран
+При запуске приложения откроется экран:
 
+![Screenshot_20240319-143023](https://github.com/AlexanderKorytin/PlaylistMaker/assets/124441554/c01aebcb-31b3-418e-a62d-5533d07aa72b)
 
-![Screenshot_20240319-142910](https://github.com/AlexanderKorytin/PlaylistMaker/assets/124441554/aacbb2b2-082f-4698-b7d4-e5a27b0a391f)
 
 
