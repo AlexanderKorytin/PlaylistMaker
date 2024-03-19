@@ -5,11 +5,11 @@
 
 -----
 
-### совместимость Android 10 (min SDK 29)
+#### совместимость Android 10 (min SDK 29)
 
 -----
 
-### Зависимости: Room, coroutines, viewpager2, fragment, glide, gson, retrofit2, peko
+#### Зависимости: Room, coroutines, viewpager2, fragment, glide, gson, retrofit2, peko
 
 -----
 ### Технологии:
